@@ -2,10 +2,6 @@
 /application/cache/*
 /application/config/config.php
 /application/config/database.php
-/arrowchat
-/captcha
-/system
-/uploads
 /Collections
 /cash-it.biz
 /help
