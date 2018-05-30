@@ -2,6 +2,7 @@
 /application/cache/*
 /application/config/config.php
 /application/config/database.php
+/vendor
 /Collections
 /cash-it.biz
 /help
