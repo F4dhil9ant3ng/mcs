@@ -77,6 +77,10 @@ the <section></section> and you can use wells or panels instead
 
 <script type="text/javascript">
 
+	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('records', $this->role_id, 'view',   $this->client_id) : true; ?>';
+	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('records', $this->role_id, 'update',   $this->client_id) : true; ?>';
+	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('records', $this->role_id, 'delete',   $this->client_id) : true; ?>';
+
 	$(".create").click(function (e) {
 		var title = $(this).attr('data-original-title');
 		e.preventDefault();
@@ -340,9 +344,13 @@ the <section></section> and you can use wells or panels instead
 		                //row['statuses'] != 0
 		                "render": function (data, type, row) {
 							if(_type == 'custom-record'){
-		                    	newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_details');?>" href="'+BASE_URL+'records/details/'+row['record_id']+'/'+row['client_id']+'" class="bootbox link">'+row['name']+'</a>';
+								if(can_view){
+		                    		newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_details');?>" href="'+BASE_URL+'records/details/'+row['record_id']+'/'+row['client_id']+'" class="bootbox link">'+row['name']+'</a>';
+								}
 							}else{
-								newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_details');?>" href="'+BASE_URL+'records/details/'+row['record_id']+'" class="bootbox link">'+row['name']+'</a>';
+								if(can_view){
+									newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_details');?>" href="'+BASE_URL+'records/details/'+row['record_id']+'" class="bootbox link">'+row['name']+'</a>';
+								}
 							}
 							return newData;
 
@@ -417,13 +425,19 @@ the <section></section> and you can use wells or panels instead
 		                    newData = "";
 
 		                    if(_type == 'custom-record'){
-		                    	newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'records/delete_record/'+row['record_id']+'/'+row['client_id']+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
-								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'records/view/'+row['record_id']+'/'+row['client_id']+'" class="bootbox"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
-								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_add_fields');?>"  href="'+BASE_URL+'custom_fields/view/-1/records_'+row['slug']+'_'+row['client_id']+'" class="bootbox"><i class="fas fa-book fa-lg"></i></a>';
+								if(can_delete){
+									newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'records/delete_record/'+row['record_id']+'/'+row['client_id']+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
+								}
+								if(can_update){
+									newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'records/view/'+row['record_id']+'/'+row['client_id']+'" class="bootbox"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
+								}
+									newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_add_fields');?>"  href="'+BASE_URL+'custom_fields/view/-1/records_'+row['slug']+'_'+row['client_id']+'" class="bootbox"><i class="fas fa-book fa-lg"></i></a>';
 		                    }else{
-		                    	newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'records/delete_record/'+row['record_id']+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
-		                    	newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'records/view/'+row['record_id']+'" class="bootbox"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
-		                    	newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_add_fields');?>"  href="'+BASE_URL+'custom_fields/view/-1/records_'+row['slug']+'" class="bootbox"><i class="fas fa-book fa-lg"></i></a>';
+		                    	// newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'records/delete_record/'+row['record_id']+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
+								if(can_update){
+									newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'records/view/'+row['record_id']+'" class="bootbox"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
+								}
+									newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_add_fields');?>"  href="'+BASE_URL+'custom_fields/view/-1/records_'+row['slug']+'" class="bootbox"><i class="fas fa-book fa-lg"></i></a>';
 		                    }
 
 							return newData;

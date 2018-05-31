@@ -73,7 +73,7 @@ class User extends Secure
 			$this->load->library('datatables');
 	        $isfiltered = $this->input->post('filter');
 
-	        $this->datatables->select("users.id as id, CONCAT(IF(up.lastname != '', up.lastname, ''),',',IF(up.firstname != '', up.firstname, '')) as fullname, username, email, DATE_FORMAT(users.created, '%M %d, %Y') as created, avatar, DATE_FORMAT(CONCAT(IF(up.bYear != '', up.bYear, ''),'-',IF(up.bMonth != '', up.bMonth, ''),'-',IF(up.bDay != '', up.bDay, '')), '%M %d, %Y') as birthday, address, mobile, DATE_FORMAT(users.last_login, '%M %d, %Y') as last_login, users.client_id as lic", false);
+	        $this->datatables->select("users.id as id, CONCAT(IF(up.lastname != '', up.lastname, ''),',',IF(up.firstname != '', up.firstname, '')) as fullname, username, role_name, email, DATE_FORMAT(users.created, '%M %d, %Y') as created, avatar, DATE_FORMAT(CONCAT(IF(up.bYear != '', up.bYear, ''),'-',IF(up.bMonth != '', up.bMonth, ''),'-',IF(up.bDay != '', up.bDay, '')), '%M %d, %Y') as birthday, address, mobile, DATE_FORMAT(users.last_login, '%M %d, %Y') as last_login, users.client_id as lic", false);
 	        
 			$this->datatables->where('users.deleted', 0);
 			$this->datatables->where('users.client_id', $this->client_id);
@@ -81,7 +81,8 @@ class User extends Secure
 				$this->datatables->where('DATE(created) BETWEEN ' . $this->db->escape($isfiltered) . ' AND ' . $this->db->escape($isfiltered));
 			}
 			$this->datatables->join('users_profiles as up', 'users.id = up.user_id', 'left', false);
-	        
+			$this->datatables->join('roles as r', 'users.role_id = r.role_id', 'left', false);
+			
 	        $this->datatables->from('users');
 
 	        echo $this->datatables->generate('json', 'UTF-8');

@@ -14,8 +14,8 @@
 			<button type="button" class="btn btn-primary">Delete</button>
 			<button type="button" class="btn btn-primary">Update</button>
 			-->
-			<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('role', $this->role_id, 'create',  $this->client_id) : true) { ?>
-			<button type="button" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="create btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo $this->lang->line('__common_create');?></button>
+			<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('roles', $this->role_id, 'create',  $this->client_id) : true) { ?>
+				<button type="button" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="create btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo $this->lang->line('__common_create');?></button>
 			<?php } ?>
 		</div>
 	</div>
@@ -65,9 +65,10 @@ the <section></section> and you can use wells or panels instead
 
 <script type="text/javascript">
 
-	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('role', $this->role_id, 'view',   $this->client_id) : true;; ?>';
-	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('role', $this->role_id, 'update',   $this->client_id) : true;; ?>';
-	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('role', $this->role_id, 'delete',   $this->client_id) : true; ?>';
+	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('roles', $this->role_id, 'view',   $this->client_id) : true; ?>';
+	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('roles', $this->role_id, 'update',   $this->client_id) : true; ?>';
+	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('roles', $this->role_id, 'delete',   $this->client_id) : true; ?>';
+	
 	var admin_role_id = '<?php echo $this->admin_role_id;?>';
 	var patient_role_id = '<?php echo $this->patient_role_id;?>';
 
