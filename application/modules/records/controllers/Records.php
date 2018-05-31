@@ -264,7 +264,7 @@ class Records extends Secure
 		echo json_encode($this->Record->get_current_data('medications', $user_id, $complaint_date));
 	}
 
-	function create_custom($type, $user_id, $cdate = null)
+	function create_custom($type, $user_id, $cdate = null, $client_id = null)
 	{ //$id=-1, 
 		$data['user_id'] = $user_id;
 		$data['title'] = sprintf($this->lang->line('records_title'), $type);
@@ -272,7 +272,16 @@ class Records extends Secure
 		$data['cdate'] = $cdate;
 		
 		$this->load->model('custom_fields/Custom_field');
-		$data['custom_fields'] = $this->Custom_field->get_custom('records_'.$type)->result();
+		// $data['custom_fields'] = $this->Custom_field->get_custom('records_'.$type)->result();
+
+		$table = ($client_id != null) ? 'custom_records' : 'records';
+		// $data['info'] = $this->Record->get_info_by_id($id, $table);
+
+		if ($client_id != null) {
+			$data['custom_fields'] = $this->Custom_field->get_custom('records_'.$type.'_'.$this->client_id)->result();
+		} else {
+			$data['custom_fields'] = $this->Custom_field->get_custom('records_'.$type)->result();
+		}
 		
 		$this->load->view('records/custom_form', $data);
 	}

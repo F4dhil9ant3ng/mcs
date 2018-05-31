@@ -178,13 +178,13 @@ div#prescriptions {
 										                	<span class="text-muted"><?php echo date($this->config->item('dateformat'), strtotime($row['date']));?></span>
 										                <?php }
 										            } ?>
-										            <a href="<?php echo site_url('records/delete_custom_field/'.$row['id'].'/'.$records_block->slug.'_'.$this->client_id);?>" id="<?php echo $row['id'];?>" class="delete_record"><i class="far fa-trash-alt fa-lg"></i></a>
+										            <a href="<?php echo site_url('records/delete_custom_field/'.$row['id'].'/'.$records_block->slug);?>" id="<?php echo $row['id'];?>" class="delete_record"><i class="far fa-trash-alt fa-lg"></i></a>
 												</div>
 											<?php } ?>
 										
 								<?php }else{?>
 									<p class="text-center"> No Record Found! <br/>
-										<a title="Add new" href="<?php echo site_url('records/create_custom/'.$records_block->slug.'_'.$this->client_id.'/'.$info->id);?>" class="btn btn-success btn-xs bootbox">Add New</a></p>
+										<a title="Add new" href="<?php echo site_url('records/create_custom/'.$records_block->slug.'/'.$info->id);?>" class="btn btn-success btn-xs bootbox">Add New</a></p>
 								<?php } ?>
 							</div>
 						<?php 
@@ -326,6 +326,133 @@ div#prescriptions {
 
 	</div>
 
+	<div class="jarviswidget" id="widget-records" role="widget">
+		<!-- widget options:
+		usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+		data-widget-colorbutton="false"
+		data-widget-editbutton="false"
+		data-widget-togglebutton="false"
+		data-widget-deletebutton="false"
+		data-widget-fullscreenbutton="false"
+		data-widget-custombutton="false"
+		data-widget-collapsed="true"
+		data-widget-sortable="false"
+
+		-->
+		
+		<header role="heading">
+			<h2>Custom Records Tabs</h2>
+			<?php if($custom_records_tabs->num_rows() > 0) { ?>
+			<ul id="widget-tab-2" class="nav nav-tabs pull-right">
+			<?php 
+				$i = 0;
+				foreach ($custom_records_tabs->result() as $custom_records_tab) { ?>
+					<li class="<?php if($i == 0) echo 'active';?>">
+						<a data-toggle="tab" href="#record_<?php echo $custom_records_tab->record_id;?>"> <span class="hidden-mobile hidden-tablet"> <?php echo $custom_records_tab->name;?> </span> </a>
+					</li>
+			<?php $i++; } ?>
+			</ul>
+			<?php } ?>
+			<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+		</header>
+
+		<!-- widget div-->
+		<div role="content">
+
+			<!-- widget edit box -->
+			<div class="jarviswidget-editbox">
+				<!-- This area used as dropdown edit box -->
+
+			</div>
+			<!-- end widget edit box -->
+
+			<!-- widget content -->
+			<div class="widget-body">
+				<div class="tab-content padding-10-0">
+					<?php if($custom_records_tabs->num_rows() > 0) { ?>
+						<?php 
+							$i = 0;
+							foreach ($custom_records_tabs->result() as $custom_records_tab) { ?>
+							<div class="tab-pane fade <?php if($i == 0) echo 'active in';?>" id="record_<?php echo $custom_records_tab->record_id;?>">
+								<?php $record_data = $this->Custom->get_all_custom($custom_records_tab->slug, $info->id, $this->client_id);
+								if(count($record_data) > 0) { 
+
+									$custom_fields = $this->Custom_field->get_custom('records_'.$custom_records_tab->slug.'_'.$this->client_id);
+									?>
+									<table class="table">
+										<thead>
+											<tr>
+												<th>
+													Date
+												</th>
+												<?php 
+												if($custom_fields->num_rows() > 0) {
+									                foreach ($custom_fields->result() as $custom_field) { ?>
+									                    <th>
+															<?php echo $custom_field->custom_field_label;?>
+														</th>
+									                <?php }
+									            } ?>
+									            
+												<th>
+													<a title="Add new" href="<?php echo site_url('records/create_custom/'.$custom_records_tab->slug.'_'.$this->client_id.'/'.$info->id);?>" class="bootbox pull-right btn btn-success btn-xs">
+														<i class="fa fa-plus"></i> <?php echo $this->lang->line('common_add_new');?>
+													</a>
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											<?php foreach($record_data as $row) { ?>
+												<tr id="row-<?php echo $row['id'];?>">
+													<td>
+														<span class="text-muted"><?php echo $row['date']; ?></span>
+														
+													</td>
+													<?php 
+													if($custom_fields->num_rows() > 0) {
+
+										                foreach ($custom_fields->result() as $custom_field) { ?>
+										                    <td>
+																<p><strong id="history-<?php echo $row['id'];?>"><?php echo $row[''.$custom_field->custom_field_column.'']; ?></strong>
+																<span><?php if($custom_field->custom_field_symbol != null) echo '( '.$custom_field->custom_field_symbol.' )';?></span></p>
+															</td>
+															
+										                <?php }
+										            } ?>
+													<td class="text-right">
+														<a href="<?php echo site_url('records/delete_custom_field/'.$row['id'].'/'.$custom_records_tab->slug.'_'.$this->client_id);?>" id="<?php echo $row['id'];?>" class="delete_record"><i class="far fa-trash-alt fa-lg"></i></a>
+													</td>
+												</tr>
+											<?php } ?>
+										</tbody>
+									</table>
+								<?php }else{?>
+									<div id="empty-content">
+										<h3>No <?php echo ucfirst(str_replace('_', ' ', $custom_records_tab->slug));?> Record Found! <a title="Add new" href="<?php echo site_url('records/create_custom/'.$custom_records_tab->slug.'_'.$this->client_id.'/'.$info->id);?>" class="bootbox">Add new</a></h3>
+									</div>
+								<?php } ?>				
+									
+							</div>
+
+						<?php $i++; } ?>
+					<?php } else { ?>
+						<div id="empty-content">
+							<i class="fa fa-list fa-5x"></i> 
+							<h1>No Custom Record found! </h1>
+						</div>
+					<?php } ?>
+				
+
+
+				</div>
+			</div>
+			<!-- end widget content -->
+
+		</div>
+		<!-- end widget div -->
+
+	</div>
 	<!--
 	The ID "widget-grid" will start to initialize all widgets below
 	You do not need to use widgets if you dont want to. Simply remove

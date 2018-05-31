@@ -113,7 +113,7 @@ class Queings extends Secure
 
 		$info = $this->Patient->get_profile_info($id);
 		
-		$next_visit = $this->Custom->get_record('next_visit_'.$this->client_id, $info->id, false, date('Y-m-d'));
+		$next_visit = $this->Custom->get_record('next_visit', $info->id, false, date('Y-m-d'));
 
 		$age = (date("md", date("U", mktime(0, 0, 0, $info->bMonth, $info->bDay, $info->bYear))) > date("md")
 				? ((date("Y") - $info->bYear) - 1)
@@ -144,7 +144,7 @@ class Queings extends Secure
 		//get default rxpad template
 		//rx_template
 		
-		$tx_template = ($this->config->item('rx_template') != '') ? $this->Template->get_info($this->config->item('rx_template'))->temp_content : $this->Template->get_info(1)->temp_content;
+		$tx_template = ($this->config->item('rx_template') != '') ? $this->Template->get_info($this->config->item('rx_template'))->temp_content : $this->load->view("rxpad_layout");
 
 		//Replace variables from the Templates
         $html_ = str_replace(
@@ -190,9 +190,9 @@ class Queings extends Secure
 				$info->bYear. '-' .$info->bMonth. '-' .$info->bDay,
 				$age, 
 				($info->address) ? $info->address : '--',
-				($info->country) ? $this->location_lib->info('countries', $info->country)->name : '--',	// $this->location_lib->get_info($info->country)->name : '--',				
-				($info->city) ? $this->location_lib->info('cities', $info->city)->name : '--',	// $this->location_lib->get_info($info->city)->name : '--', 
-				($info->state) ? $this->location_lib->info('states', $info->state)->name : '--',	// $this->location_lib->get_info($info->state)->name : '--', 
+				($info->country) ? $this->location_lib->get_info($info->country)->name : '--',	// $this->location_lib->get_info($info->country)->name : '--',				
+				($info->city) ? $this->location_lib->get_info($info->city)->name : '--',	// $this->location_lib->get_info($info->city)->name : '--', 
+				($info->state) ? $this->location_lib->get_info($info->state)->name : '--',	// $this->location_lib->get_info($info->state)->name : '--', 
 				($info->zip) ? $info->zip : '--',
 				($info->mobile) ? $info->mobile : '--',
 				//preserve details
@@ -220,7 +220,7 @@ class Queings extends Secure
         //End 
 
         $data['pdf_html'] = html_entity_decode(html_entity_decode($html_));
-		$this->load->view("ajax/rxpad", $data);
+		$this->load->view("rxpad", $data);
 
     }
 	
