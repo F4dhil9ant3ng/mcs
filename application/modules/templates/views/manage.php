@@ -65,8 +65,8 @@ the <section></section> and you can use wells or panels instead
 
 <script type="text/javascript">
 
-	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('templates', $this->role_id, 'view',   $this->client_id) : true;; ?>';
-	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('templates', $this->role_id, 'update',   $this->client_id) : true;; ?>';
+	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('templates', $this->role_id, 'view',   $this->client_id) : true; ?>';
+	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('templates', $this->role_id, 'update',   $this->client_id) : true; ?>';
 	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('templates', $this->role_id, 'delete',   $this->client_id) : true; ?>';
 
 	$(".create").click(function (e) {
@@ -325,8 +325,13 @@ the <section></section> and you can use wells or panels instead
 		                // this case `data: 1`.
 		                //row['statuses'] != 0
 		                "render": function (data, type, row) {
-
-		                    newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_preview');?> - '+row['name']+'" href="'+BASE_URL+'templates/details/'+row['id']+'" class="bootbox link">'+row['name']+'</a>';
+							newData = '';
+							if(can_view){
+								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_preview');?> - '+row['name']+'" href="'+BASE_URL+'templates/details/'+row['id']+'" class="bootbox link">'+row['name']+'</a>';
+							}else{
+								newData += row['name'];
+							}
+		                   
 		                    return newData;
 
 		                },

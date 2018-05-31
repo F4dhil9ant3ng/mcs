@@ -14,7 +14,9 @@
 			<button type="button" class="btn btn-primary">Delete</button>
 			<button type="button" class="btn btn-primary">Update</button>
 			-->
-			<button type="button" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="hidden create btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo $this->lang->line('__common_create');?></button>
+			<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('users', $this->role_id, 'create',  $this->client_id) : true) { ?>
+				<button type="button" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="create btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo $this->lang->line('__common_create');?></button>
+			<?php } ?>
 		</div>
 	</div>
 </div>
@@ -41,6 +43,7 @@ the <section></section> and you can use wells or panels instead
 						<th><?php echo $this->lang->line('common_fullname');?></th>
 						<th><?php echo $this->lang->line('common_username').' / '.$this->lang->line('common_email');?></th>
 						<th><?php echo $this->lang->line('common_address');?></th>
+						<th>Role</th>
 						<th><?php echo $this->lang->line('common_contacts');?></th>
 						<th><?php echo $this->lang->line('common_created').' / '.$this->lang->line('common_last_login');?></th>
 						<th>&nbsp;</th>
@@ -67,7 +70,10 @@ the <section></section> and you can use wells or panels instead
 <!-- end widget grid -->
 
 <script type="text/javascript">
-	var BASE_URL = '<?php echo base_url();?>';
+
+	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('users', $this->role_id, 'view',   $this->client_id) : true; ?>';
+	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('users', $this->role_id, 'update',   $this->client_id) : true; ?>';
+	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('users', $this->role_id, 'delete',   $this->client_id) : true; ?>';
 	
 	$(".create").click(function (e) {
 		var title = $(this).attr('data-original-title');
@@ -321,7 +327,8 @@ the <section></section> and you can use wells or panels instead
 		            {mData: 'id'},   
 		            {mData: 'fullname'},         
 		            {mData: 'username'},
-		            {mData: 'email'},
+					{mData: 'email'},
+					{mData: 'role_name'},
 		            {mData: 'created'},
 		            {mData: 'avatar'},
 					{mData: 'birthday'},
@@ -334,7 +341,7 @@ the <section></section> and you can use wells or panels instead
 		        "aoColumnDefs": [
 					{'bSearchable': true, 'aTargets': [0, 1, 2, 3, 8, 9]},
 		            {
-		                "targets": [7,8,9,10,11],
+		                "targets": [8,9,10,11, 12],
 		                "visible": false,
 		                "searchable": false,
 		            },
@@ -366,7 +373,11 @@ the <section></section> and you can use wells or panels instead
 								bday = '--';
 							}
 
-		                    newData = '<a rel="tooltip" data-placement="top" data-original-title="<?php echo $this->lang->line('__common_details');?>" href="'+user_link+'/'+row['id']+'">'+ row['fullname'] + '</a>';
+							if(can_view){
+								newData += '<a rel="tooltip" data-placement="top" data-original-title="<?php echo $this->lang->line('__common_details');?>" href="'+user_link+'/'+row['id']+'">'+ row['fullname'] + '</a>';
+							}else{
+								newData += row['fullname']
+							}
 							newData += '<br>'+ row['birthday'];
 		                    
 		                    return newData;
@@ -407,6 +418,20 @@ the <section></section> and you can use wells or panels instead
 
 		                },
 		                "targets": 3
+					},
+					{
+		                // The `data` parameter refers to the data for the cell (defined by the
+		                // `data` option, which defaults to the column being worked with, in
+		                // this case `data: 1`.
+		                //row['statuses'] != 0
+		                "render": function (data, type, row) {
+		                    newData = "";
+		                   
+		                    newData  = row['role_name'];
+		                    return newData;
+
+		                },
+		                "targets": 4
 		            },
 		            {
 		                // The `data` parameter refers to the data for the cell (defined by the
@@ -427,7 +452,7 @@ the <section></section> and you can use wells or panels instead
 		                    return newData;
 
 		                },
-		                "targets": 4
+		                "targets": 5
 		            },
 		            {
 		                // The `data` parameter refers to the data for the cell (defined by the
@@ -446,7 +471,7 @@ the <section></section> and you can use wells or panels instead
 
 		                    return newData;
 		                },
-		                "targets": 5
+		                "targets": 6
 		            },
 		            {
 		                // The `data` parameter refers to the data for the cell (defined by the
@@ -454,15 +479,15 @@ the <section></section> and you can use wells or panels instead
 		                // this case `data: 4`.
 		                "render": function (data, type, row) {
 		                    newData = "";
-
-							newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'user/delete/'+row['id']+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
-					
-
-							newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'user/view/'+row['id']+'" class="bootbox"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
-								
+							if(can_delete){
+								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'user/delete/'+row['id']+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
+							}
+							if(can_update){		
+								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'user/view/'+row['id']+'" class="bootbox"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
+							}	
 							return newData;
 		                },
-		                "targets": 6
+		                "targets": 7
 		            },
 		        ],
 		        "createdRow": function (row, data, index)
