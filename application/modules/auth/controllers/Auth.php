@@ -7,7 +7,7 @@ class Auth extends MX_Controller
 		parent::__construct();
 		$this->load->model('auth/users');
 		// modules::run('login/is_logged_in');
-		$this->load->language('auth/tank_auth', 'english');
+		$this->load->language('auth/tank_auth');
 		$this->load->library('auth/tank_auth');
 	}
 
@@ -286,11 +286,17 @@ class Auth extends MX_Controller
 					exit();
 				}
 			}
-			$data['option'] = 'register';
-			$this->output->set_template('auth');
-			$this->output->set_common_meta('Send Again', 'description', 'keyword');
-			$this->load->section('auth', 'include/auth', $data);
-			$this->load->view('auth/send_again_form', $data);
+
+			$this->layout
+			->title('Login') //$article->title
+			->prepend_metadata('<script src="/js/jquery.js"></script>')
+			->append_metadata('<script src="/js/jquery.flot.js"></script>')
+			// application/views/some_folder/header
+			//->set_partial('header', 'includes/widgets') //third param optional $data
+			// application/views/some_folder/header
+			//->inject_partial('header', '<h1>Hello World!</h1>')  //third param optional $data
+			->set_layout('empty') // application/views/layouts/two_col.php
+			->build('send_again_form', $data); // views/welcome_message
 		}
 	}
 
