@@ -61,7 +61,6 @@
 <?php echo $pdf_html; ?>
 </div>
 <a href="javascript:;" id="printThis" class="btn btn-sm btn-primary"><i class="fa fa-print"></i> Print</a>  
-<a href="javascript:;" id="customize" class="hidden btn btn-sm btn-warning"><i class="fa fa-edit"></i> Customize </a>  
 <script type='text/javascript'>
 	
 	$(document).ready(function()
@@ -72,12 +71,14 @@
 			$('#printThis').click(function(){
 				
 				$("#printableArea").printThis({
-					   debug: false,               //* show the iframe for debugging
-					   importCSS: true,            //* import page CSS
-					   importStyle: true,         //* import style tags
-					   printContainer: true,       //* grab outer container as well as the contents of the selector
-					   pageTitle: "RX Pad",           //   * add title to print page
-					   removeInline: false,        //* remove all inline styles from print elements
+					   	debug: false,               //* show the iframe for debugging
+					   	importCSS: true,            //* import page CSS
+					   	importStyle: true,         //* import style tags
+					   	printContainer: true,       //* grab outer container as well as the contents of the selector
+					   	pageTitle: "",           //   * add title to print page
+					   	removeInline: false,        //* remove all inline styles from print elements
+					   	header: "",               // prefix to html
+  						footer: "",               // postfix to html
 				});		
 			});
 		}
