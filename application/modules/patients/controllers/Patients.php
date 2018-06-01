@@ -321,6 +321,8 @@ class Patients extends Secure
 			$data['records_asides'] = $this->Record->get_all('asides');
 			$data['records_tabs'] = $this->Record->get_all('tabs');
 
+			$data['custom_records_tabs'] = $this->Custom->get_all($this->client_id);
+
 			$vaccines = array();
 			foreach($this->Vaccine->get_all()->result_array() as $row)
 			{

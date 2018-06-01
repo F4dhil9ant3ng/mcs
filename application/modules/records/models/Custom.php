@@ -13,16 +13,16 @@
  */
 class Custom extends CI_Model
 {
-    private $table              = 'records';              
+    private $table              = 'custom_records';              
     private $pk                 = 'record_id';
     private $dOrder             = 'desc';      
     public $form_values              = array();
 
-    function get_all()
+    function get_all($client_id)
     {
 
-        $this->db->from($this->table); 
-		$this->db->where('access','private'); 
+		$this->db->from($this->table); 
+		$this->db->where('client_id', $client_id);
         $this->db->order_by('sort', 'asc');
         return $this->db->get();
     }
@@ -256,9 +256,11 @@ class Custom extends CI_Model
 	}
 
 	
-	function get_all_custom($type, $user_id, $maintainable = null)
+	function get_all_custom($type, $user_id, $client_id = null, $maintainable = null)
 	{
-		$this->db->from('records_'.$type); 
+		$table = ($client_id != null) ? 'records_'.$type.'_'.$client_id : 'records_'.$type;
+		$this->db->from($table); 
+
 		$this->db->order_by('id', 'desc');
 		$this->db->where('user_id', $user_id);
 		if($maintainable)

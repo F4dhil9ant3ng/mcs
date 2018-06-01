@@ -101,19 +101,20 @@ class Queings extends Secure
 		}
 	}
 	
-	function preview($id, $mainteinable = false)
+	function preview($id, $date, $mainteinable = false)
 	{
-		
+		//preview/4/2018-6-1/no
 		$this->load->library('location_lib');
 
 		$this->load->model('patients/Patient');
 		$this->load->model('records/Record');
 		$this->load->model('records/Custom');
 		$this->load->model('templates/Template');
+		$this->load->model('templates/Presets');
 
 		$info = $this->Patient->get_profile_info($id);
 		
-		$next_visit = $this->Custom->get_record('next_visit_'.$this->client_id, $info->id, false, date('Y-m-d'));
+		$next_visit = $this->Custom->get_record('next_visit', $info->id, false, $date);
 
 		$age = (date("md", date("U", mktime(0, 0, 0, $info->bMonth, $info->bDay, $info->bYear))) > date("md")
 				? ((date("Y") - $info->bYear) - 1)
@@ -130,7 +131,7 @@ class Queings extends Secure
 		$i = 1;
 		$prescriptions = '';
 	    $prescriptions.='<table id="rx-contents" width="100%"><tbody>';
-		foreach ($this->Custom->get_record('prescription', $id, false, date('Y-m-d')) as $row) {
+		foreach ($this->Custom->get_record('prescription', $id, false, $date) as $row) {
 			$prescriptions.="<tr>";
 			$prescriptions.='<td style="font-size: 20px; vertical-align: top; width:10%; padding-bottom: 5px;"><strong>'. $i .'</strong></td>';
 			$prescriptions.='<td style="font-size: 20px; vertical-align: top; width:75%; padding-bottom: 5px;"><strong>' .  $row['medicine'].' '.$row['preparation']. '</strong><br> ';
@@ -144,7 +145,7 @@ class Queings extends Secure
 		//get default rxpad template
 		//rx_template
 		
-		$tx_template = ($this->config->item('rx_template') != '') ? $this->Template->get_info($this->config->item('rx_template'))->temp_content : $this->Template->get_info(1)->temp_content;
+		$tx_template = ($this->config->item('rx_template') != '') ? $this->Template->get_info($this->config->item('rx_template'))->temp_content : $this->Presets->get_info(1)->temp_content;
 
 		//Replace variables from the Templates
         $html_ = str_replace(
@@ -190,9 +191,9 @@ class Queings extends Secure
 				$info->bYear. '-' .$info->bMonth. '-' .$info->bDay,
 				$age, 
 				($info->address) ? $info->address : '--',
-				($info->country) ? $this->location_lib->info('countries', $info->country)->name : '--',	// $this->location_lib->get_info($info->country)->name : '--',				
-				($info->city) ? $this->location_lib->info('cities', $info->city)->name : '--',	// $this->location_lib->get_info($info->city)->name : '--', 
-				($info->state) ? $this->location_lib->info('states', $info->state)->name : '--',	// $this->location_lib->get_info($info->state)->name : '--', 
+				($info->country) ? $this->location_lib->get_info($info->country)->name : '--',			
+				($info->city) ? $this->location_lib->get_info($info->city)->name : '--',
+				($info->state) ? $this->location_lib->get_info($info->state)->name : '--', 
 				($info->zip) ? $info->zip : '--',
 				($info->mobile) ? $info->mobile : '--',
 				//preserve details
@@ -220,7 +221,7 @@ class Queings extends Secure
         //End 
 
         $data['pdf_html'] = html_entity_decode(html_entity_decode($html_));
-		$this->load->view("ajax/rxpad", $data);
+		$this->load->view("rxpad", $data);
 
     }
 	
