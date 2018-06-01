@@ -62,7 +62,7 @@ class Tank_auth
 				
 						if ($user->activated == 0) {
 													// fail - not activated
-							$this->error = array('not_activated' => 'not activated');
+							$this->error = array('not_activated' => 'auth_message_not_activated');
 				
 						} else {												// success
 				
