@@ -8,9 +8,9 @@
 			<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
 				<?php 
 				if($user_info->avatar){
-					echo '<img src="'.base_url().'uploads/'.$this->client_id.'/profile-picture/'.$user_info->avatar.'" alt="me" class="online" />';
+					echo '<img src="'.base_url().'uploads/'.$this->client_id.'/profile-picture/'.$user_info->avatar.'" alt="'.$user_info->username.'" class="online" style="width:25px;" />';
 				}else{
-					echo '<img src="'.base_url().'img/avatars/blank.png" alt="me" class="online" />';
+					echo '<img src="' . $this->gravatar->get($user_info->email, 25) . '" alt="'.$user_info->username.'" class="online" />';
 				}?>
 				
 				<span>
@@ -80,9 +80,28 @@
 				<?php } ?>
 				<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('settings', $this->role_id, 'view',   $this->client_id) : true) { ?>
 				<li>
-					<a title="<?php echo $this->lang->line('__settings');?>" href="<?php echo site_url('settings'); ?>"><i class="fa fa-lg fa-fw fa-cogs"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__settings');?></span></a>
+					<a title="<?php echo $this->lang->line('__settings');?>" href="<?php echo site_url('settings/profile'); ?>"><i class="fa fa-lg fa-fw fa-cogs"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__settings');?></span></a>
 				</li>
 				<?php } ?>
+				<li class="">
+					<a href="#"><i class="fa fa-lg fa-fw fa-windows"></i> <span class="menu-item-parent">Help & Support</span><b class="collapse-sign"><em class="fa fa-plus-square-o"></em></b></a>
+					<ul style="display: none;">
+						
+						<li>
+							<a href="http://help.myclinicsoft.com/" target="_blank" >Help Center</a>
+						</li>
+						<li>
+							<a href="http://forum.myclinicsoft.com/" target="_blank"  >Whats new</a>
+						</li>
+						<li>
+							<a href="http://forum.myclinicsoft.com/" target="_blank" >Suggest Feature</a>
+						</li>
+						<li>
+							<a href="http://ticket.myclinicsoft.com/" target="_blank" >Submit Tickets</a>
+						</li>
+						
+					</ul>
+				</li>
 			</ul>
 		</nav>
 		

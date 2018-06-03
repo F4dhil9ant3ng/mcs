@@ -71,6 +71,20 @@
 			.dialog-80 > .modal-dialog {
 				width: 80% !important;
 			}
+			.table>tbody>tr>td, 
+			.table>tbody>tr>th, 
+			.table>tfoot>tr>td, 
+			.table>tfoot>tr>th, 
+			.table>thead>tr>td, 
+			.table>thead>tr>th {
+			    vertical-align: middle;
+			    font-size: 14px;
+			}
+			.table-forum tr td {
+			    border-top-style: dashed!important;
+			    padding-top: 6px!important;
+			    padding-bottom: 6px!important;
+			}
 		</style>
 
 		<script type="text/javascript">
@@ -78,6 +92,7 @@
 			var client_id = '<?php echo $this->client_id;?>';
 			var is_login = '<?php echo $this->is_login;?>';
 			var user_id = '<?php echo $this->user_id;?>';
+			var role_id = '<?php echo $this->role_id;?>';
 		</script>
 	</head>
 

@@ -129,9 +129,6 @@ class Patients extends Secure
 		$this->load->library('pass_secured');
 		$this->load->library('auth/tank_auth');
 		
-		$bod = explode('/', $this->input->post('bod'));
-		$clearpass = random_string('numeric',8);
-		
 		if ($id==-1) 
 		{
 			$user_data=array(
@@ -157,9 +154,9 @@ class Patients extends Secure
 			'firstname'		=>$this->input->post('first_name'),
 			'mi'			=>$this->input->post('mi'),
 			'lastname'		=>$this->input->post('last_name'),
-			'bMonth'		=>$bod[1],
-			'bDay'			=>$bod[0],
-			'bYear'			=>$bod[2],
+			'bMonth'		=>$this->input->post('month'),
+			'bDay'			=>$this->input->post('day'),
+			'bYear'			=>$this->input->post('year'),
 			'gender'		=>$this->input->post('gender'),
 			'mobile'		=>$this->input->post('mobile'),
 			'address'		=>$this->input->post('address'),

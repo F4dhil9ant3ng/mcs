@@ -41,10 +41,9 @@ the <section></section> and you can use wells or panels instead
 					<tr>
 						<th>&nbsp;</th>
 						<th><?php echo $this->lang->line('common_fullname');?></th>
-						<th><?php echo $this->lang->line('common_username').' / '.$this->lang->line('common_email');?></th>
+						<th>Birth Date</th>
 						<th><?php echo $this->lang->line('common_address');?></th>
 						<th><?php echo $this->lang->line('common_contacts');?></th>
-						<th><?php echo $this->lang->line('common_created').' / '.$this->lang->line('common_last_login');?></th>
 						<th>&nbsp;</th>
 						<th>&nbsp;</th>
 						<th>&nbsp;</th>
@@ -294,14 +293,13 @@ the <section></section> and you can use wells or panels instead
 					{mData: 'birthday'},
 					{mData: 'address'},
 					{mData: 'mobile'},
-					{mData: 'last_login'},
 					{mData: 'client_id'},
 					{mData: null},
 		        ],
 		        "aoColumnDefs": [
 		            {'bSearchable': true, 'aTargets': [0, 1, 2, 3, 8, 9]},
 		            {
-		                "targets": [7,8,9,10,11],
+		                "targets": [6,7,8,9,10],
 		                "visible": false,
 		                "searchable": false,
 		            },
@@ -313,7 +311,7 @@ the <section></section> and you can use wells or panels instead
 							if(row['avatar']){
 								newData =  '<img src="'+BASE_URL+'uploads/'+row['client_id']+'/profile-picture/'+row['avatar']+'" alt="'+row['username']+'" class="img-responsive" />';
 							}else{ 
-								newData =  '<img src="<?php echo $this->gravatar->get("'+row['email']+'", 50);?>" />';
+								newData =  '<img src="<?php echo $this->gravatar->get("'+row['email']+'", 25);?>" />';
 							}
 							return newData;
 		                },
@@ -326,19 +324,13 @@ the <section></section> and you can use wells or panels instead
 		                //row['statuses'] != 0
 		                "render": function (data, type, row) {
 		                    newData = "";
-							if(row['birthday']){
-								bday = row['birthday'];
-							}else{
-								bday = '--';
-							}
+							
 							if(can_view){
 								newData += '<a rel="tooltip" data-placement="top" data-original-title="<?php echo $this->lang->line('__common_details');?>" href="'+user_link+'/'+row['id']+'">'+ row['fullname'] + '</a>';
 							}else{
 								newData += row['fullname']
 							}
 		                   
-							newData += '<br>'+ row['birthday'];
-		                    
 		                    return newData;
 
 		                },
@@ -352,8 +344,11 @@ the <section></section> and you can use wells or panels instead
 		                "render": function (data, type, row) {
 		                    newData = "";
 		                   
-		                    newData  = row['username']+'<br>';
-							newData  += '<a href="mailto:'+row['email']+'">'+row['email']+'</a>';
+		                   if(row['birthday']){
+								newData = row['birthday'];
+							}else{
+								newData = '--';
+							}
 		                    return newData;
 
 		                },
@@ -399,26 +394,7 @@ the <section></section> and you can use wells or panels instead
 
 		                },
 		                "targets": 4
-		            },
-		            {
-		                // The `data` parameter refers to the data for the cell (defined by the
-		                // `data` option, which defaults to the column being worked with, in
-		                // this case `data: 4`.
-		                "render": function (data, type, row) {
-		                    newData = "";
-							if(row['last_login']){
-								ll = row['last_login'];
-							}else{
-								ll = '--';
-							}
-							
-		                    newData = row['created']+'<br>';
-							newData += '<span rel="tooltip" data-placement="left" data-original-title="<?php echo $this->lang->line('__last_login');?>">'+ll+'</span>';
-
-		                    return newData;
-		                },
-		                "targets": 5
-		            },
+		            }, 
 		            {
 		                // The `data` parameter refers to the data for the cell (defined by the
 		                // `data` option, which defaults to the column being worked with, in
@@ -435,7 +411,7 @@ the <section></section> and you can use wells or panels instead
 							newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_records');?>" href="'+BASE_URL+'patients/decoded/medications/'+row['id']+'/" class="move "><i class="fas fa-book fa-lg"></i></a>&nbsp;';
 		                    return newData;
 		                },
-		                "targets": 6
+		                "targets": 5
 		            },
 		        ],
 		        "createdRow": function (row, data, index)
