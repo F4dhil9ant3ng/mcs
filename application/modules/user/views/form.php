@@ -157,6 +157,15 @@
                 gender : {
                     required : true
                 },
+				year : {
+                    required : true
+                },
+				month : {
+                    required : true
+                },
+				day : {
+                    required : true
+                },
 				country : {
                     required : true
                 },
@@ -173,9 +182,6 @@
                 address : {
                     required : true,
                     maxlength : 250
-                },
-				bod : {
-                    required : true
                 }
             },
 
@@ -199,6 +205,15 @@
                 gender : {
                     required : '<i class="fa fa-times-circle"></i> Please select your state'
                 },
+				year : {
+                    required : '<i class="fa fa-exclamation-circle"></i> <?php echo sprintf($this->lang->line('__validate_required'), 'year');?>'
+                },
+				month : {
+                    required : '<i class="fa fa-exclamation-circle"></i> <?php echo sprintf($this->lang->line('__validate_required'), 'month');?>'
+                },
+				day : {
+                    required : '<i class="fa fa-exclamation-circle"></i> <?php echo sprintf($this->lang->line('__validate_required'), 'day');?>'
+                },
 				country : {
                     required : '<i class="fa fa-times-circle"></i> Please select a country'
                 },
@@ -215,9 +230,6 @@
                 address : {
                     required : '<i class="fa fa-times-circle"></i> Please add your address',
                     maxlength: '<i class="fa fa-times-circle"></i> The address can not exceed 250 characters in length.'
-                },
-				bod : {
-                    required : '<i class="fa fa-times-circle"></i> Please add birthdate'
                 },
             },
             highlight: function(element) {
@@ -247,26 +259,13 @@
                     {
                         if(response.success)
                         {
-                            $.smallBox({
-                                title : "Success",
-                                content : response.message,
-                                color : "#739E73",
-                                iconSmall : "fa fa-check",
-                                timeout : 3000
-                            });
-                            $('.bootbox-close-button').trigger('click');
+                            mcs.init_smallBox("Success", response.message);
+							bootbox-close-button').trigger('click');
                             checkURL();
                         }
                         else
                         {
-                            $.smallBox({
-                                title : "Error",
-                                content : response.message,
-                                color : "#C46A69",
-                                iconSmall : "fa fa-warning shake animated",
-                                timeout : 3000
-                            });
-                            
+                            mcs.init_smallBox("Error", response.message);
                         }                   
                         $('#submit').text('Submit');
                         $('#submit').removeAttr("disabled");

@@ -51,6 +51,8 @@ class Secure extends CI_Controller {
 		 //get subcription information
         $data['user_info'] 	    = $this->User_model->get_profile_info($this->user_id);
 
+        $data['client_info']      = $this->Setting->get_client_info($this->client_id);
+
 		if (!$this->is_login) 
 		{
 
@@ -60,6 +62,24 @@ class Secure extends CI_Controller {
 
 		$this->load->vars($data);
 		
+    }
+
+    public function _set_layout($data)
+    {
+
+        $this->layout
+            ->set_partial('header', 'include/header', $data) 
+            ->set_partial('sidebar', 'include/sidebar', $data) 
+            ->set_partial('ribbon', 'include/ribbon', $data) 
+            ->set_partial('footer', 'include/footer', $data) 
+            ->set_partial('shortcut', 'include/shortcut', $data) 
+            ->set_metadata('author', 'Randy Rebucas')
+            ->set_layout('full-column');
+    }
+
+    public function display_error_log($directory, $class_name, $method) {
+        $page = "'" . $directory . "\\" . $class_name . "\\" . $method . "' is not found";
+        show_404($page);
     }
 
 }

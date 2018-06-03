@@ -22,18 +22,16 @@ $lang['setting_delete_account']='Delete Account';
 
 //general configuration form
 $lang["setting_general_configuration"] = "General Configuration";
-$lang["setting_business_name"] = "Business name";
+$lang["setting_business_name"] = "Name";
 $lang["setting_business_name_required"] = "Business name is a required field";
-$lang["setting_business_owner"] = "Business Owner";
+$lang["setting_business_owner"] = "Owner";
 $lang["setting_business_owner_required"] = "Business owner is a required field";
-$lang["setting_business_address"] = "Business Address";
+$lang["setting_business_address"] = "Address";
 $lang["setting_business_address_required"] = "Business address is a required field";
-$lang["setting_business_logo"] = "Business Logo";
-$lang["setting_business_phone"] = "Business Phone";
+$lang["setting_business_logo"] = "Logo";
+$lang["setting_business_phone"] = "Contact Number";
 $lang["setting_business_phone_required"] = "Business phone is a required field";
-$lang["setting_business_email"] = "Business email";
 $lang["setting_business_email_required"] = "Business email is a required field";
-$lang["setting_business_fax"] = "Business fax";
 $lang["setting_managed"] = "Managed %s";
 $lang["setting_tag"] = "configure all default items";
 $lang["setting_language"] = "Language";

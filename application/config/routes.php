@@ -49,10 +49,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'welcome';
-$route['404_override'] = '';
-$route['translate_uri_dashes'] = FALSE;
 
-$route['users'] = 'user';
+if(!in_array($_SERVER['REMOTE_ADDR'], $this->config->item('maintenance_ips')) && $this->config->item('maintenance_mode')) {
+	
+    $route['default_controller'] = 'maintenance';
+    $route['(:any)'] = 'maintenance';
+	
+}else{
+    $route['default_controller'] = 'welcome';
+    $route['404_override'] = '';
+    $route['translate_uri_dashes'] = FALSE;
 
-$route['my-profile/(:any)'] 			= 'settings/my_profile/$1';
+    $route['users'] = 'user';
+
+    $route['details/(:any)'] 			= 'settings/my_profile/$1';
+    $route['settings'] 					= 'settings';
+    $route['settings/(:any)'] 			= 'settings/$1';
+    $route['account/upgrade']           = 'settings/upgrade';
+}

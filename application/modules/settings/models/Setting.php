@@ -94,4 +94,9 @@ class Setting extends CI_Model
 	{
 		return $this->db->empty_table('app_config'); 
 	}
+	/**/
+	function get_client_info($client_id) {
+
+		return $this->db->where('client_id', $client_id)->get('clients')->row();
+	}
 }

@@ -41,11 +41,10 @@ the <section></section> and you can use wells or panels instead
 					<tr>
 						<th>&nbsp;</th>
 						<th><?php echo $this->lang->line('common_fullname');?></th>
-						<th><?php echo $this->lang->line('common_username').' / '.$this->lang->line('common_email');?></th>
-						<th><?php echo $this->lang->line('common_address');?></th>
+						<th><?php echo $this->lang->line('common_username');?></th>
+						<th><?php echo $this->lang->line('common_email');?></th>
 						<th>Role</th>
 						<th><?php echo $this->lang->line('common_contacts');?></th>
-						<th><?php echo $this->lang->line('common_created').' / '.$this->lang->line('common_last_login');?></th>
 						<th>&nbsp;</th>
 						<th>&nbsp;</th>
 						<th>&nbsp;</th>
@@ -215,7 +214,7 @@ the <section></section> and you can use wells or panels instead
 				},
 				"drawCallback" : function(oSettings) {
 					responsiveHelper_dt_basic.respond();
-					$('#table-patients').find('td:first').css('width', '40px');
+					$('#table-patients').find('td:first').css('width', '10px');
 					$('#table-patients').css('width', '100%');
 					
 					$(".bootbox").click(function (e) {
@@ -332,16 +331,15 @@ the <section></section> and you can use wells or panels instead
 		            {mData: 'created'},
 		            {mData: 'avatar'},
 					{mData: 'birthday'},
-					{mData: 'address'},
 					{mData: 'mobile'},
-					{mData: 'last_login'},
 					{mData: 'lic'},
+					{mData: null},
 					{mData: null},
 		        ],
 		        "aoColumnDefs": [
 					{'bSearchable': true, 'aTargets': [0, 1, 2, 3, 8, 9]},
 		            {
-		                "targets": [8,9,10,11, 12],
+		                "targets": [7,8,9,10,11],
 		                "visible": false,
 		                "searchable": false,
 		            },
@@ -354,7 +352,7 @@ the <section></section> and you can use wells or panels instead
 							if(row['avatar']){
 								newData =  '<img src="'+BASE_URL+'uploads/'+row['lic']+'/profile-picture/'+row['avatar']+'" alt="'+row['username']+'" class="img-responsive" />';
 							}else{
-								newData =  '<img src="<?php echo $this->gravatar->get("'+row['email']+'", 50);?>" />';
+								newData =  '<img src="<?php echo $this->gravatar->get("'+row['email']+'", 25);?>" />';
 							}
 							return newData;
 		                },
@@ -367,19 +365,12 @@ the <section></section> and you can use wells or panels instead
 		                //row['statuses'] != 0
 		                "render": function (data, type, row) {
 		                    newData = "";
-							if(row['birthday']){
-								bday = row['birthday'];
-							}else{
-								bday = '--';
-							}
-
 							if(can_view){
 								newData += '<a rel="tooltip" data-placement="top" data-original-title="<?php echo $this->lang->line('__common_details');?>" href="'+user_link+'/'+row['id']+'">'+ row['fullname'] + '</a>';
 							}else{
 								newData += row['fullname']
 							}
-							newData += '<br>'+ row['birthday'];
-		                    
+							
 		                    return newData;
 
 		                },
@@ -393,8 +384,7 @@ the <section></section> and you can use wells or panels instead
 		                "render": function (data, type, row) {
 		                    newData = "";
 		                   
-		                    newData  = row['username']+'<br>';
-							newData  += '<a href="mailto:'+row['email']+'">'+row['email']+'</a>';
+		                    newData  = row['username'];
 		                    return newData;
 
 		                },
@@ -407,18 +397,13 @@ the <section></section> and you can use wells or panels instead
 		                //row['statuses'] != 0
 		                "render": function (data, type, row) {
 		                    newData = "";
-							if(row['address']){
-								address = row['address'];
-							}else{
-								address = '--';
-							}
-		                    newData  = address;
-							
+		                   
+							newData  = '<a href="mailto:'+row['email']+'">'+row['email']+'</a>';
 		                    return newData;
 
 		                },
 		                "targets": 3
-					},
+		            },
 					{
 		                // The `data` parameter refers to the data for the cell (defined by the
 		                // `data` option, which defaults to the column being worked with, in
@@ -460,25 +445,6 @@ the <section></section> and you can use wells or panels instead
 		                // this case `data: 4`.
 		                "render": function (data, type, row) {
 		                    newData = "";
-							if(row['last_login']){
-								ll = row['last_login'];
-							}else{
-								ll = '--';
-							}
-							
-		                    newData = row['created']+'<br>';
-							newData += '<span rel="tooltip" data-placement="left" data-original-title="<?php echo $this->lang->line('__last_login');?>">'+ll+'</span>';
-
-		                    return newData;
-		                },
-		                "targets": 6
-		            },
-		            {
-		                // The `data` parameter refers to the data for the cell (defined by the
-		                // `data` option, which defaults to the column being worked with, in
-		                // this case `data: 4`.
-		                "render": function (data, type, row) {
-		                    newData = "";
 							if(can_delete){
 								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'user/delete/'+row['id']+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
 							}
@@ -487,7 +453,7 @@ the <section></section> and you can use wells or panels instead
 							}	
 							return newData;
 		                },
-		                "targets": 7
+		                "targets": 6
 		            },
 		        ],
 		        "createdRow": function (row, data, index)
