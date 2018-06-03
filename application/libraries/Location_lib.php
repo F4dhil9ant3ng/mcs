@@ -107,8 +107,8 @@ class Location_lib {
 }
 
 // ------------------------------------------------------------------------
-// End of Dynamic_menu Library Class.
+// End of Location_lib Library Class.
 
 // ------------------------------------------------------------------------
-/* End of file Dynamic_menu.php */
-/* Location: ../application/libraries/Dynamic_menu.php */ 
+/* End of file Location_lib.php */
+/* Location: ../application/libraries/Location_lib.php */ 

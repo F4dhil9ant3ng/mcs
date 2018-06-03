@@ -37,39 +37,247 @@ class Settings extends Secure
         $this->display_error_log($directory,$class_name,$method);
     }
 
-    private function _init($data)
-	{
-
-		$this->layout
-			->title(get_class($this)) 
-			->set_partial('header', 'include/header') 
-			->set_partial('sidebar', 'include/sidebar') 
-			->set_partial('ribbon', 'include/ribbon', $data) 
-			->set_partial('footer', 'include/footer') 
-			->set_partial('shortcut', 'include/shortcut') 
-			->set_metadata('author', 'Randy Rebucas')
-			->set_layout('full-column') 
-			->build('manage', $data); 
-		
-	}
-
 	function index()
 	{
-		$this->load->model('templates/Template');
+		
+		redirect('settings/profile');
+	}
 
-		$data['module'] = get_class($this); 
+	function profile() {
+
+		$this->layout->title('Profile');
+		
+		$data['module'] = 'Profile'; 
 		
 		if ($this->input->is_ajax_request()) 
 		{
-			$this->load->view('manage', $data);
+			$this->load->view('profile', $data);
         } 
 		else
 		{
-			$this->_init($data);
+			$this->_set_layout($data);
+			$this->layout->build('billing', $data);
 		}
 	}
 
-	function general_update(){
+	function doUpdateProfile() {
+
+		$this->load->model('user/User_model');
+
+		$profile_data=array(
+			'firstname'		=>$this->input->post('firstname'),
+			'mi'			=>$this->input->post('mi'),
+			'lastname'		=>$this->input->post('lastname'),
+			'gender'		=>$this->input->post('gender'),
+			'bYear'			=>$this->input->post('year'),
+			'bMonth'		=>$this->input->post('month'),
+			'bDay'			=>$this->input->post('day'),
+			'work_phone'	=>$this->input->post('work_phone'),
+			'mobile'		=>$this->input->post('mobile')
+		);
+
+		$error = array();
+		$user_data = array(
+			'avatar'		=>$this->input->post('avatar'),
+			'token'			=>$this->input->post('token')
+		);
+
+		if (isset($_FILES)) {
+
+			$config['upload_path'] = FCPATH . '/uploads/'.$this->client_id.'/profile-picture/';
+			$config['allowed_types'] = 'gif|jpg|png';
+			$config['max_size'] = '9999';
+			$config['max_width'] = '9999';
+			$config['max_height'] = '9999';
+			$config['encrypt_name'] = TRUE;
+					
+			$this->load->library('upload', $config);
+			
+			//check directory if exists
+			if(!is_dir($config['upload_path']))
+			{
+				//create if not
+				mkdir($config['upload_path'], 0755, TRUE);
+			}
+
+			if ($this->upload->do_upload('profile_pic'))
+			{
+				
+				$upload_data = $this->upload->data();
+				
+				if (!empty($upload_data['orig_name']))
+				{
+
+					if (file_exists($config['upload_path'].''.$user_data['avatar'])) {
+					   unlink($config['upload_path'].''.$user_data['avatar']);
+					}
+					$user_data['avatar'] = $upload_data['raw_name'] . $upload_data['file_ext'];
+					
+				}
+			
+			}else{
+
+				$error = array('error' => $this->upload->display_errors());
+			}
+		}
+
+		if($this->User_model->save_profile($user_data, $profile_data, $this->user_id)){
+
+			echo json_encode(array('success'=>true,'message'=>'Profile successfully updated'));
+
+		}else{
+
+			echo json_encode(array('success'=>false,'message'=>$error));
+		}
+	}
+
+	function account() {
+		$this->layout->title('Account');
+		
+		$data['module'] = 'Account'; 
+		
+		if ($this->input->is_ajax_request()) 
+		{
+			$this->load->view('account', $data);
+        } 
+		else
+		{
+			$this->_set_layout($data);
+			$this->layout->build('billing', $data);
+		}
+	}
+
+	function doUpdatePassword(){
+
+		$this->form_validation->set_rules('old_password', 'Old Password', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('new_password', 'New Password', 'trim|required|xss_clean|min_length['.$this->config->item('password_min_length', 'tank_auth').']|max_length['.$this->config->item('password_max_length', 'tank_auth').']|alpha_dash');
+		$this->form_validation->set_rules('confirm_password', 'Confirm new Password', 'trim|required|xss_clean|matches[new_password]');
+
+		if ($this->form_validation->run()) {	
+									// validation ok
+			if ($this->tank_auth->change_password(
+					$this->form_validation->set_value('old_password'),
+					$this->form_validation->set_value('new_password'))) {	// success
+				
+				echo json_encode(array('success' => true, 'message' => 'Your password successfully changed!'));
+				
+			} else {
+																	// fail
+				$data['error'] = array();  
+				$errors = $this->tank_auth->get_error_message();
+				                                                   // fail
+				foreach ($errors as $k => $v) {
+					$data['error'][$k] = $this->lang->line($v);
+				}
+			
+				echo json_encode(array('success' => false, 'message' => 'Changing password encounter an error!'));
+
+			}
+			
+		}else{
+			echo json_encode(array('success' => false, 'message' => validation_errors()));
+		}
+		
+	}
+
+	function emails() {
+		$this->layout->title('Emails');
+		
+		$data['module'] = 'Emails'; 
+		
+		if ($this->input->is_ajax_request()) 
+		{
+			$this->load->view('emails', $data);
+        } 
+		else
+		{
+			$this->_set_layout($data);
+			$this->layout->build('billing', $data);
+		}
+	}
+
+	function doUpdateEmailPref(){
+
+		$batch_save_data=array(
+			'email_pref' => $this->input->post('email_pref'),
+		);
+
+		if($this->Setting->batch_save($batch_save_data )){
+
+			echo json_encode(array('success'=>true,'message'=>'Email preferences succesfully updated!'));
+
+		}else{
+
+			echo json_encode(array('success'=>false,'message'=>'Oooppps, updating email preferences encounter error!'));
+		}
+	}
+
+	function notifications() {
+		$this->layout->title('Notifications');
+		
+		$data['module'] = 'Notifications'; 
+		
+		if ($this->input->is_ajax_request()) 
+		{
+			$this->load->view('notifications', $data);
+        } 
+		else
+		{
+			$this->_set_layout($data);
+			$this->layout->build('notifications', $data);
+		}
+	}
+
+	function doUpdateNotification(){
+
+		$batch_save_data=array(
+			'appointments' 	=> $this->input->post('appointments'),
+			'updates' 		=> $this->input->post('updates')
+		);
+
+		if($this->Setting->batch_save($batch_save_data )){
+
+			echo json_encode(array('success'=>true,'message'=>'notifications succesfully updated!'));
+
+		}else{
+
+			echo json_encode(array('success'=>false,'message'=>'Oooppps, updating notifications encounter error!'));
+		}
+	}
+
+	function billing() {
+		$this->layout->title('Billing Overview');
+		
+		$data['module'] = 'Billing'; 
+		
+		if ($this->input->is_ajax_request()) 
+		{
+			$this->load->view('billing', $data);
+        } 
+		else
+		{
+			$this->_set_layout($data);
+			$this->layout->build('billing', $data);
+		}
+	} 
+
+	function configurations() {
+		$this->layout->title('Configurations');
+	
+		$data['module'] = 'Configurations'; 
+		
+		if ($this->input->is_ajax_request()) 
+		{
+			$this->load->view('configuration', $data);
+        } 
+		else
+		{
+			$this->_set_layout($data);
+			$this->layout->build('configuration', $data);
+		}
+	} 
+
+	function doUpdateConfigurations(){
 
 		$batch_save_data=array(
 			'business_name'=>$this->input->post('business_name'),
@@ -93,46 +301,69 @@ class Settings extends Secure
 			'week_end_open_time'=>$this->input->post('week_end_open_time'),
 			'week_end_close_time'=>$this->input->post('week_end_close_time')
 		);
+		$error = array();
+		if (isset($_FILES)) {
 
-		$config['upload_path'] = FCPATH . '/uploads/'.$this->client_id.'/';
-		$config['allowed_types'] = 'gif|jpg|png';
-		$config['max_size'] = '9999';
-		$config['max_width'] = '9999';
-		$config['max_height'] = '9999';
-		$config['encrypt_name'] = TRUE;
-				
-		$this->load->library('upload', $config);
-		
-		//check directory if exists
-		if(!is_dir($config['upload_path']))
-		{
-			//create if not
-			mkdir($config['upload_path'], 0755, TRUE);
-		}
+			$config['upload_path'] = FCPATH . '/uploads/'.$this->client_id.'/logo/';
+			$config['allowed_types'] = 'gif|jpg|png';
+			$config['max_size'] = '9999';
+			$config['max_width'] = '9999';
+			$config['max_height'] = '9999';
+			$config['encrypt_name'] = TRUE;
+					
+			$this->load->library('upload', $config);
+			
+			//check directory if exists
+			if(!is_dir($config['upload_path']))
+			{
+				//create if not
+				mkdir($config['upload_path'], 0755, TRUE);
+			}
 
-		if ($this->upload->do_upload('logo'))
-		{
-			
-			$upload_data = $this->upload->data();
-			
-			if (!empty($upload_data['orig_name']))
+			if ($this->upload->do_upload('logo'))
 			{
 				
-				$batch_save_data['company_logo'] = $upload_data['raw_name'] . $upload_data['file_ext'];
+				$upload_data = $this->upload->data();
 				
+				if (!empty($upload_data['orig_name']))
+				{
+					if (file_exists($config['upload_path'].''.$this->config->item('company_logo'))) {
+					   unlink($config['upload_path'].''.$this->config->item('company_logo'));
+					} 
+					$batch_save_data['company_logo'] = $upload_data['raw_name'] . $upload_data['file_ext'];
+					
+				}
+			
+			}else{
+				$error = array('error' => $this->upload->display_errors());
 			}
-		
 		}
-		
+
 		if($this->Setting->batch_save($batch_save_data )){
 
 			echo json_encode(array('success'=>true,'message'=>$this->lang->line('setting_saved_successfully')));
 
 		}else{
 
-			echo json_encode(array('success'=>false,'message'=>'error'));
+			echo json_encode(array('success'=>false,'message'=>$error));
 		}
 
+	}
+
+	function upgrade(){
+		$this->layout->title('Upgrade your plan');
+		
+		$data['module'] = 'Upgrade your plan'; 
+		
+		if ($this->input->is_ajax_request()) 
+		{
+			$this->load->view('upgrade', $data);
+        } 
+		else
+		{
+			$this->_set_layout($data);
+			$this->layout->build('upgrade', $data);
+		}
 	}
 
 	function my_profile($enc_id)
@@ -144,6 +375,7 @@ class Settings extends Secure
 
 		if ($this->input->is_ajax_request()) 
 		{
+			$this->load->library('location_lib');
 			$this->load->model('user/User_model');
 			
 			$data['info'] = $this->User_model->get_profile_info($id);
@@ -158,7 +390,7 @@ class Settings extends Secure
 	function encryptID($user_id)
 	{
 
-		redirect('my-profile/'.url_base64_encode($user_id));
+		redirect('details/'.url_base64_encode($user_id));
 
 	}
 }

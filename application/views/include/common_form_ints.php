@@ -1,4 +1,11 @@
-
+<style type="text/css">
+	section#bod .select {
+		margin-right: 1.6887em;
+	}
+	section#bod .row {
+		padding-left: 1.3em;
+	}
+</style>
 	
 
 <fieldset>
@@ -30,7 +37,7 @@
 		</section>
 	</div>
 	<div class="row">
-		<section class="col col-4">
+		<section class="col col-3">
 			<label for="state"><?php echo $this->lang->line('common_mobile');?></label>
 			<label class="input">
 			
@@ -39,8 +46,8 @@
 				
 			</label>
 		</section>
-		<section class="col col-4">
-			<label for="gender"><?php echo $this->lang->line('__gender');?></label>
+		<section class="col col-3">
+			<label for="gender">Gender</label>
 			<label class="select">
 				
 				<?php $gender = array(
@@ -53,14 +60,58 @@
 
 			</label>
 		</section>
-		<section class="col col-4">
-			<label for="gender"><?php echo $this->lang->line('__birthdate');?></label>
-			<label class="input"> 
-				
-				<i class="icon-append fa fa-calendar"></i>
-					<input type="text" name="bod" id="bod" placeholder="<?php echo $this->lang->line('__birthdate');?>" tabindex="19" class="datepicker" value="<?php echo set_value('bod', $info->bDay.'/'.$info->bMonth.'/'.$info->bYear);?>" data-dateformat="dd/mm/yy" aria-invalid="false">
-			
-			</label>
+
+		<section class="col col-6"  id="bod">
+			<label for="bod"><?php echo $this->lang->line('__birthdate');?></label>
+			<div class="row">	
+				<label class="select col-md-3">
+					<?php 
+						$cutoff = 1910;
+
+					// current year
+					$now = date('Y');
+					// build years menu
+					echo '<select name="year" id="year">' . PHP_EOL;
+					echo '  <option value="">select</option>' . PHP_EOL;
+					for ($y=$now; $y>=$cutoff; $y--) {
+						$selected = ($y == $info->bYear) ? 'selected="selected"' : '';
+						echo '  <option value="' . $y . '" '.$selected.'>' . $y . '</option>' . PHP_EOL;
+					}
+					echo '</select>' . PHP_EOL;
+					?>
+					<i></i>
+
+				</label>
+				<label class="select col-md-3">
+					
+				<?php 
+					// build months menu
+					echo '<select name="month" id="month">' . PHP_EOL;
+					echo '  <option value="">select</option>' . PHP_EOL;
+					for ($m=1; $m<=12; $m++) {
+						$selected = ($m == $info->bMonth) ? 'selected="selected"' : '';
+						echo '  <option value="' . $m . '" '.$selected.'>' . date('M', mktime(0,0,0,$m)) . '</option>' . PHP_EOL;
+					}
+					echo '</select>' . PHP_EOL;
+					?>
+					<i></i>
+				</label>
+				<label class="select col-md-3">
+					
+				<?php 
+					// build days menu
+					echo '<select name="day" id="day">' . PHP_EOL;
+					echo '  <option value="">select</option>' . PHP_EOL;
+					for ($d=1; $d<=31; $d++) {
+						$selected = ($d == $info->bDay) ? 'selected="selected"' : '';
+						echo '  <option value="' . $d . '" '.$selected.'>' . str_pad($d, 2, "0", STR_PAD_LEFT) . '</option>' . PHP_EOL;
+					}
+					echo '</select>' . PHP_EOL;
+					?>
+					<i></i>
+				</label>
+			</div>
+
 		</section>
 	</div>
 	<div class="row">
