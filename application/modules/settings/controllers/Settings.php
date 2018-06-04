@@ -19,10 +19,16 @@ class Settings extends Secure
 	{
         parent::__construct();
 
-        $this->load->library('location_lib');
+		$this->load->library('location_lib');
+		$this->load->library('ci_mailer');
 
         $this->load->language('setting', 'english');
-        $this->load->language('common/common', 'english');
+		$this->load->language('common/common', 'english');
+		
+		$this->load->config('auth/tank_auth', TRUE);
+		$this->load->language('auth/tank_auth');
+		$this->load->library('auth/tank_auth');
+		// $this->load->module('auth');
     }
 
     function _remap($method, $params = array()) 
@@ -107,9 +113,10 @@ class Settings extends Secure
 				
 				if (!empty($upload_data['orig_name']))
 				{
-
-					if (file_exists($config['upload_path'].''.$user_data['avatar'])) {
-					   unlink($config['upload_path'].''.$user_data['avatar']);
+					if($user_data['avatar'] != '') {
+						if (file_exists($config['upload_path'].''.$user_data['avatar'])) {
+							unlink($config['upload_path'].''.$user_data['avatar']);
+						 }
 					}
 					$user_data['avatar'] = $upload_data['raw_name'] . $upload_data['file_ext'];
 					
@@ -176,6 +183,93 @@ class Settings extends Secure
 			
 		}else{
 			echo json_encode(array('success' => false, 'message' => validation_errors()));
+		}
+		
+	}
+
+	function doUpdateEmail() {
+
+		$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email');
+
+		if ($this->form_validation->run()) {								// validation ok
+
+			if (!is_null($data = $this->tank_auth->set_new_email(
+					$this->form_validation->set_value('email'),
+					$this->form_validation->set_value('password')))) {			// success
+
+				$data['site_name'] = $this->config->item('website_name', 'tank_auth');
+
+				// Send email with new email address and its activation link
+				$this->ci_mailer->send_email('change_email', $data['new_email'], $data);
+
+				echo json_encode(array('success' => true, 'message' => sprintf($this->lang->line('auth_message_new_email_sent'), $data['new_email'])));		
+				
+			} else {
+				$data['error'] = array();
+				$errors = $this->tank_auth->get_error_message();
+
+				foreach ($errors as $k => $v) {
+					$data['error'][$k] = $this->lang->line($v);
+				}
+
+				echo json_encode(array('success' => false, 'message' => 'Changing email encounter an error!'));
+			}
+		}
+	}
+
+	function doUpdateUsername() {
+
+		$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean');
+
+		if ($this->form_validation->run()) {								// validation ok
+
+			if (!is_null($data = $this->tank_auth->set_new_username(
+					$this->form_validation->set_value('username'),
+					$this->form_validation->set_value('password')))) {			// success
+
+				$data['site_name'] = $this->config->item('website_name', 'tank_auth');
+
+				echo json_encode(array('success' => true, 'message' => 'New user set '.$data['username']));		
+				
+			} else {
+				$data['error'] = array();
+				$errors = $this->tank_auth->get_error_message();
+
+				foreach ($errors as $k => $v) {
+					$data['error'][$k] = $this->lang->line($v);
+				}
+
+				echo json_encode(array('success' => false, 'message' => 'Changing username encounter an error!'));
+			}
+		}
+	}
+
+	/**
+	 * Delete user from the site (only when user is logged in)
+	 *
+	 * @param	string
+	 * @return	bool
+	 */
+	function doDeleteMe()
+	{
+		$recent_pass = $this->input->post('recent_pass');				//get confirmation password
+
+		if ($this->tank_auth->delete_user($recent_pass)) {			// success
+
+			$this->load->helper("file"); // load codeigniter file helper
+
+			$path = FCPATH . '/uploads/'.$this->client_id;
+			
+			if(delete_files($path, TRUE)){
+
+				echo json_encode(array('success' => true, 'message' => $this->lang->line('auth_message_unregistered')));
+			}
+		} 
+		else 
+		{														// fail
+			echo json_encode(array('success' => false, 'message' => 'Sorry!We cannot delete your account.'));
 		}
 		
 	}
@@ -327,9 +421,11 @@ class Settings extends Secure
 				
 				if (!empty($upload_data['orig_name']))
 				{
-					if (file_exists($config['upload_path'].''.$this->config->item('company_logo'))) {
-					   unlink($config['upload_path'].''.$this->config->item('company_logo'));
-					} 
+					if($this->config->item('company_logo') != '' || $this->config->item('company_logo') != null) {
+						if (file_exists($config['upload_path'].''.$this->config->item('company_logo'))) {
+						unlink($config['upload_path'].''.$this->config->item('company_logo'));
+						} 
+					}
 					$batch_save_data['company_logo'] = $upload_data['raw_name'] . $upload_data['file_ext'];
 					
 				}
