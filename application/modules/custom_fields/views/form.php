@@ -8,7 +8,7 @@ td input.form-control {
 </style>
 <?php echo form_open('custom_fields/doSave/'.$info->custom_field_id,'class="smart-form" id="custom_fields-form"');?>
    
-    <fieldset> 
+   
         <section>
             
             <?php if(isset($tbl)) { ?>
@@ -154,7 +154,7 @@ td input.form-control {
         
 
         <button type="submit" id="submit" class="btn btn-primary btn-sm">Submit</button>
-    </fieldset>
+ 
 </form>
   
 <script type="text/javascript">

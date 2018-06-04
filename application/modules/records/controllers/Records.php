@@ -111,8 +111,8 @@ class Records extends Secure
 		{
 			$this->load->model('custom_fields/Custom_field');
 
-			$table = ($client_id != null) ? 'custom_records' : 'records';
-			$data['info'] = $this->Record->get_info_by_id($id, $table);
+			// $table = ($client_id != null) ? 'custom_records' : 'records';
+			$data['info'] = $this->Record->get_info_by_id($id, 'custom_records');
 
 			if ($client_id != null) {
 				$data['fields'] = $this->Custom_field->get_custom('records_'.$data['info']->slug.'_'.$this->client_id);
@@ -138,9 +138,9 @@ class Records extends Secure
 			'description'	=>$this->input->post('description'),
 			'slug'			=>$slug,
 			'status'		=>$this->input->post('status') ? 1 : 0,
-			'client_id'     => $this->client_id
+			'client_id'		=>$this->client_id
 		);
-		
+
 		if($this->Record->save_table($record_data, $this->client_id, $id))
 		{
 			if($id==-1)
@@ -185,10 +185,9 @@ class Records extends Secure
 	    }
     }
 	
-    function delete_record($id, $client_id = null)
+    function delete_record($id)
     {
-    	$table = ($client_id != null) ? 'custom_records' : 'records';
-    	if ($res = $this->Record->delete_record($id, $table)) 
+    	if ($res = $this->Record->delete_record($id, 'custom_records')) 
     	{
 
 			echo json_encode(array('success' => true, 'message' => 'Record successfully deleted!'));

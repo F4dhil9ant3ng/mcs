@@ -122,7 +122,10 @@ li.list-group-item label.sig{
 	width: 31%;
 	margin: 0px !important;
 }
-.table>tbody>tr>td:last-child, .table>tbody>tr>th:last-child, .table>thead>tr>td:last-child, .table>thead>tr>th:last-child {
+.dataTable>tbody>tr>td:last-child, 
+.dataTable>tbody>tr>th:last-child, 
+.dataTable>thead>tr>td:last-child, 
+.dataTable>thead>tr>th:last-child {
 	text-align: right;
 }
 #table-patients>thead tr th, #table-role>thead tr th, #table-appointment>thead tr th, #table-templates>thead tr th{

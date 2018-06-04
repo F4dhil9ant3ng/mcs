@@ -112,7 +112,7 @@ class Role extends CI_Model
 		{
 			foreach($module_data as $module)
 			{
-				$arr = explode('_', $module);
+				$arr = explode('-', $module);
 				$success =  $this->db->insert('roles_permissions', array('role_id' => $id, 'section' => $arr[0], 'action' => $arr[1], 'client_id' => $client_id));
 			}
         }
