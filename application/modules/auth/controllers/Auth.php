@@ -169,45 +169,6 @@ class Auth extends MX_Controller
 
 	}
 
-	/**
-	 * Delete user from the site (only when user is logged in)
-	 *
-	 * @return void
-	 */
-	function delete()
-	{
-		if (!$this->tank_auth->is_logged_in()) 
-		{								// not logged in or not activated
-			redirect('/auth/login/');
-
-		} 
-		else 
-		{
-
-			$confirm_password = $this->input->post('confirm_pass');				//get confirmation password
-			$recent_password = $this->input->post('recent_pass');				//get recent password
-
-			if ($this->tank_auth->check_password($confirm_password, $recent_password)) //check if password is coorect
-			{
-				if ($this->tank_auth->delete_user($confirm_password)) {			// success
-					echo json_encode(array('success' => true, 'message' => $this->lang->line('auth_message_unregistered')));
-					exit();
-				} 
-				else 
-				{														// fail
-					echo json_encode(array('success' => false, 'message' => 'Sorry!We cannot delete your account.'));
-					exit();
-				}
-			} 
-			else 
-			{
-				echo json_encode(array('success' => false, 'message' => 'Password is incorrect'));
-				exit();
-			}
-
-		}
-	}
-
 	function checkexistemail() {
 
         $email = $this->input->post('email');
@@ -412,80 +373,6 @@ class Auth extends MX_Controller
 	}
 
 	/**
-	 * Change user password
-	 *
-	 * @return void
-	 */
-	function change_password()
-	{
-		if (!$this->tank_auth->is_logged_in()) {								// not logged in or not activated
-			redirect('/auth/login/');
-
-		} else {
-			$this->form_validation->set_rules('old_password', 'Old Password', 'trim|required|xss_clean');
-			$this->form_validation->set_rules('new_password', 'New Password', 'trim|required|xss_clean|min_length['.$this->config->item('password_min_length', 'tank_auth').']|max_length['.$this->config->item('password_max_length', 'tank_auth').']|alpha_dash');
-			$this->form_validation->set_rules('confirm_new_password', 'Confirm new Password', 'trim|required|xss_clean|matches[new_password]');
-
-			$data['errors'] = array();
-
-			if ($this->form_validation->run()) {								// validation ok
-				if ($this->tank_auth->change_password(
-						$this->form_validation->set_value('old_password'),
-						$this->form_validation->set_value('new_password'))) {	// success
-					
-					echo json_encode(array('success' => true, 'message' => $this->lang->line('auth_message_password_changed')));
-					exit();
-				} else {														// fail
-					$errors = $this->tank_auth->get_error_message();
-					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
-					echo json_encode(array('success' => false, 'message' => 'Sorry!We cannot change your password.'));
-					exit();
-				}
-				
-			}
-			$this->load->view('auth/change_password_form', $data);
-			
-		}
-	}
-
-	/**
-	 * Change user email
-	 *
-	 * @return void
-	 */
-	function change_email()
-	{
-		if (!$this->tank_auth->is_logged_in()) {								// not logged in or not activated
-			redirect('/auth/login/');
-
-		} else {
-			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
-			$this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email');
-
-			$data['errors'] = array();
-
-			if ($this->form_validation->run()) {								// validation ok
-				if (!is_null($data = $this->tank_auth->set_new_email(
-						$this->form_validation->set_value('email'),
-						$this->form_validation->set_value('password')))) {			// success
-
-					$data['site_name'] = $this->config->item('website_name', 'tank_auth');
-
-					// Send email with new email address and its activation link
-					$this->_send_email('change_email', $data['new_email'], $data);
-
-					$this->_show_message(sprintf($this->lang->line('auth_message_new_email_sent'), $data['new_email']));
-
-				} else {
-					$errors = $this->tank_auth->get_error_message();
-					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
-				}
-			}
-			$this->load->view('auth/change_email_form', $data);
-		}
-	}
-
-	/**
 	 * Replace user email with a new one.
 	 * User is verified by user_id and authentication code in the URL.
 	 * Can be called by clicking on link in mail.
@@ -508,35 +395,6 @@ class Auth extends MX_Controller
 	}
 
 	/**
-	 * Delete user from the site (only when user is logged in)
-	 *
-	 * @return void
-	 */
-	function unregister()
-	{
-		if (!$this->tank_auth->is_logged_in()) {								// not logged in or not activated
-			redirect('/auth/login/');
-
-		} else {
-			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
-
-			$data['errors'] = array();
-
-			if ($this->form_validation->run()) {								// validation ok
-				if ($this->tank_auth->delete_user(
-						$this->form_validation->set_value('password'))) {		// success
-					$this->_show_message($this->lang->line('auth_message_unregistered'));
-
-				} else {														// fail
-					$errors = $this->tank_auth->get_error_message();
-					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
-				}
-			}
-			$this->load->view('auth/unregister_form', $data);
-		}
-	}
-
-	/**
 	 * Show info message
 	 *
 	 * @param	string
@@ -548,30 +406,6 @@ class Auth extends MX_Controller
 		redirect('/auth/');
 	}
 	
-	function send_queries(){
-
-		$quries = array(
-			'fullname'	=>$this->input->post('name'),
-			'email'		=>$this->input->post('email'),
-			'subject'	=>$this->input->post('subject'),
-			'message'	=>$this->input->post('message'),
-			'subscribed'=> 1
-		);
-
-		if($this->tank_auth->save_queries($quries))
-		{
-			
-			$data['site_name'] = $this->config->item('website_name', 'tank_auth');
-			$this->_send_email('send_queries', $quries['email'], $data);
-			
-			echo json_encode(array('success' => true, 'message' => 'Thanks for sending your query!'));
-			exit();
-		} else {														// fail
-			echo json_encode(array('success' => false, 'message' => 'Sorry! We encounter error while sending your queries.'));
-			exit();
-		}
-				
-	}
 	/**
 	 * Send email message of given type (activate, forgot_password, etc.)
 	 *
@@ -687,89 +521,11 @@ class Auth extends MX_Controller
 		}
 		return TRUE;
 	}
-	
-	function update_type(){
 
-		$type = $this->input->post('profile_visibility');
-		if(!$this->tank_auth->update_types($this->tank_auth->get_user_id(), $type)){
-			echo json_encode(array('success' => true, 'message' => 'Profile updated!'));
-				exit();
-		}else{
-			echo json_encode(array('success' => false, 'message' => 'Error in updating your profile.'));
-				exit();	
-		}
-	}
-	
-	function notification_update(){
-
-		$notification_data = $this->input->post('notifications') != NULL ? $this->input->post('notifications') : array();
-
-		if($this->tank_auth->update_notifications($this->tank_auth->get_user_id(), $notification_data)){
-			echo json_encode(array('success' => true, 'message' => 'Notifications updated!'));
-				exit();
-		}else{
-			echo json_encode(array('success' => false, 'message' => 'Error in updating your notifications.'));
-				exit();	
-		}
-
-	}
-	
-	
-	
-	function upload_picture($id){
-		if ($this->input->is_ajax_request()) 
-		{
-	        $this->load->view("ajax/profile_upload");
-	    }else{
-	    	$this->session->set_flashdata('alert_error', 'Sorry! Page cannot open by new tab');
-            redirect('');
-	    }
-	}
-	
-	function upload_profile($id){
-		
-		$pic = '';
-		
-		$config['upload_path'] = getcwd() . '/uploads/'.$this->tank_auth->get_license_key().'/profile-picture/';
-		$config['allowed_types'] = 'gif|jpg|png';
-		//$config['max_size'] = '1024';
-		//$config['max_width'] = '800';
-		//$config['max_height'] = '680';
-		$config['encrypt_name'] = TRUE;
-		
-		$this->load->library('upload', $config);
-
-		if(!is_dir($config['upload_path']))
-		{
-			mkdir($config['upload_path'], 0755, TRUE);
-		}
-
-		if (!$this->upload->do_upload('profile_picture'))
-		{
-			echo json_encode(array('success'=>false,'message'=>$this->upload->display_errors()));
-
-		}else{
-			
-			$upload_data = $this->upload->data();
-					
-			if (!empty($upload_data['orig_name']))
-			{
-				
-				$pic = $upload_data['raw_name'] . $upload_data['file_ext'];
-				
-			}
-			
-			$this->Person->save_picture($pic, $id);
-
-			echo json_encode(array('success'=>true,'message'=>$this->lang->line('config_saved_successfully')));
-		}
-
-	}
-	
 	function get_switch_advance(){
 		
         if (!$this->session->userdata('option'))
-            $this->set_seach(1);
+            $this->switch_advance(1);
 
         return $this->session->userdata('option');
         

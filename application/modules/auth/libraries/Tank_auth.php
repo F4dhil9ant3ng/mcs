@@ -555,6 +555,49 @@ class Tank_auth
 	}
 
 	/**
+	 * Change user username (only when user is logged in) and return some data about user:
+	 * user_id, username, new_email, new_email_key.
+	 * The new username cannot be used for login or notification before it is activated.
+	 *
+	 * @param	string
+	 * @param	string
+	 * @return	array
+	 */
+	function set_new_username($new_username, $password)
+	{
+		$user_id = $this->ci->session->userdata('user_id');
+
+		if (!is_null($user = $this->ci->users->get_user_by_id($user_id, TRUE))) {
+
+			// Check if password correct
+			$hasher = new PasswordHash(
+					$this->ci->config->item('phpass_hash_strength', 'tank_auth'),
+					$this->ci->config->item('phpass_hash_portable', 'tank_auth'));
+			if ($hasher->CheckPassword($password, $user->password)) {			// success
+
+				$data = array(
+					'user_id'	=> $user_id,
+					'username'	=> $user->username,
+				);
+
+				if ($user->username == $new_username) {
+					$this->error = array('email' => 'auth_current_email');
+
+				} elseif ($this->ci->users->is_username_available($new_username)) {
+
+					$this->ci->users->set_new_username($user_id, $new_username);
+					return $data;
+
+				} else {
+					$this->error = array('username' => 'auth_username_in_use');
+				}
+			} else {															// fail
+				$this->error = array('password' => 'auth_incorrect_password');
+			}
+		}
+		return NULL;
+	}
+	/**
 	 * Activate new email, if email activation key is valid.
 	 *
 	 * @param	string
@@ -579,6 +622,7 @@ class Tank_auth
 	 */
 	function delete_user($password)
 	{
+		$client_id = $this->ci->session->userdata('client_id');
 		$user_id = $this->ci->session->userdata('user_id');
 
 		if (!is_null($user = $this->ci->users->get_user_by_id($user_id, TRUE))) {
@@ -589,7 +633,8 @@ class Tank_auth
 					$this->ci->config->item('phpass_hash_portable', 'tank_auth'));
 			if ($hasher->CheckPassword($password, $user->password)) {			// success
 
-				$this->ci->users->delete_user($user_id);
+				$this->ci->users->delete_user($client_id);
+
 				$this->logout();
 				return TRUE;
 

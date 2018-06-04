@@ -189,6 +189,8 @@ the <section></section> and you can use wells or panels instead
 													</label>
 												</section>
 											</div>
+
+											<button type="submit" id="submit" class="btn btn-primary btn-sm">Update configurations</button>
 										</div>
 										<div class="col-md-3 text-center">
 											<?php if($this->config->item('company_logo')) { 
@@ -197,7 +199,7 @@ the <section></section> and you can use wells or panels instead
 										</div>
 									</div>
 								</fieldset>
-								<fieldset>
+								<fieldset class="hidden">
 									<div class="row">
 										<div class="col-md-9">
 											<legend><?php echo $this->lang->line('setting_locale_configuration'); ?></legend>
@@ -316,7 +318,7 @@ the <section></section> and you can use wells or panels instead
 												</section>
 											</div>
 										
-											<button type="submit" id="submit" class="btn btn-primary btn-sm"><?php echo $this->lang->line('common_update');?></button>
+											
 											
 										</div>
 										<div class="col-md-3">

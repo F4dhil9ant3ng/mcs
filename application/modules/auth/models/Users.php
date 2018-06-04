@@ -37,7 +37,7 @@ class Users extends CI_Model
 	function get_user_by_id($user_id, $activated)
 	{
 		$this->db->where('id', $user_id);
-		$this->db->where('activated', $activated ? 1 : 0);
+		//$this->db->where('activated', $activated ? 1 : 0);
 
 		$query = $this->db->get($this->table_name);
 		if ($query->num_rows() == 1) return $query->row();
@@ -278,13 +278,16 @@ class Users extends CI_Model
 	 * @param	int
 	 * @return	bool
 	 */
-	function delete_user($user_id)
+	function delete_user($client_id)
 	{
-		$this->db->where('id', $user_id);
+		$this->db->where('client_id', $client_id);
 		$this->db->delete($this->table_name);
 		if ($this->db->affected_rows() > 0) {
-			$this->delete_profile($user_id);
-			return TRUE;
+			
+			$this->db->where('client_id', $client_id);
+			if($this->db->delete('clients')){
+				return TRUE;
+			}
 		}
 		return FALSE;
 	}
@@ -386,6 +389,25 @@ class Users extends CI_Model
 	}
 
 	/**
+	 * Set new username for user (may be activated or not).
+	 * The new username cannot be used for login or notification before it is activated.
+	 *
+	 * @param	int
+	 * @param	string
+	 * @param	string
+	 * @param	bool
+	 * @return	bool
+	 */
+	function set_new_username($user_id, $new_username)
+	{
+		$this->db->set('username', $new_username);
+		$this->db->where('id', $user_id);
+		
+		$this->db->update($this->table_name);
+		return $this->db->affected_rows() > 0;
+	}
+
+	/**
 	 * Activate new email (replace old email with new one) if activation key is valid.
 	 *
 	 * @param	int
@@ -467,19 +489,6 @@ class Users extends CI_Model
 	{
 		$this->db->set('user_id', $user_id);
 		return $this->db->insert($this->profile_table_name);
-	}
-
-	/**
-	 * Delete user profile
-	 *
-	 * @param	int
-	 * @return	void
-	 */
-	private function delete_profile($user_id)
-	{
-		$this->db->where('user_id', $user_id);
-		return $this->db->delete($this->profile_table_name);
-		
 	}
 
 	function update_visibility($id, $state)

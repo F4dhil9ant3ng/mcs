@@ -90,14 +90,26 @@ the <section></section> and you can use wells or panels instead
 									<section>
 										<p>When someone set or cancel an apointments.</p>
 										<label class="checkbox">
-											<input type="checkbox" name="appointments" id="appointments" value="1" <?php echo ($this->config->item('appointments') == 1) ? 'checked="checked"' : '';?>>
+											<input type="checkbox" name="appointments" id="appointments" value="1" <?php 
+											if ($this->config->item('appointments') != '' || $this->config->item('appointments') != null) {
+												echo ($this->config->item('appointments') == 1) ? 'checked="checked"' : '';
+											} else {
+												echo 'checked="checked"';
+											}
+											?>>
 											<i></i>Appointments
 										</label>
 									</section>
 									<section>
 										<p>When new updates available.</p>
 										<label class="checkbox">
-											<input type="checkbox" name="updates" id="updates" value="1" <?php echo ($this->config->item('updates') == 1) ? 'checked="checked"' : '';?>>
+											<input type="checkbox" name="updates" id="updates" value="1" <?php
+											if ($this->config->item('updates') != '' || $this->config->item('updates') != null) { 
+												echo ($this->config->item('updates') == 1) ? 'checked="checked"' : '';
+											}else{
+												echo 'checked="checked"';
+											}
+											?>>
 											<i></i>System updates
 										</label>
 									</section>

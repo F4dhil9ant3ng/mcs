@@ -125,15 +125,61 @@ the <section></section> and you can use wells or panels instead
 								<fieldset>
 									
 									<p>Changing your username can have unintended side effects.</p>
-									
-									<a href="" class="btn btn-default btn-sm">Change username</a>
+									<?php echo form_open('settings/doUpdateUsername/',array('id'=>'username-form','class'=>'smart-form', 'role'=>'form'));?>
+										
+										<fieldset>	
+											<div class="row">
+												<div class="col-md-4">
+
+													<section>
+														<label class="label">New Username</label>
+														<label class="input">
+															<input type="text" name="username" id="username" value="" class=""/>
+														</label>
+													</section>
+													<section>
+														<label class="label">Password</label>
+														<label class="input">
+															<input type="password" name="password" id="password" value="" class=""/>
+														</label>
+													</section>
+													
+													<button type="submit" id="username-submit" class="btn btn-default btn-sm">Update username</button>
+												</div>
+												<div class="col-md-3 text-center">
+
+												</div>
+											</div>
+											
+										</fieldset>
+									</form>
 									
 								</fieldset>
 								<legend>Delete Account</legend>
 								<fieldset>
 									<p>Once you delete your account, there is no going back. Please be certain.</p>
 									
-									<a href="" class="btn btn-danger btn-sm">Delete your account</a>	
+									<?php echo form_open('settings/doDeleteMe/',array('id'=>'delete-form','class'=>'smart-form', 'role'=>'form'));?>
+									
+										<fieldset>	
+											<div class="row">
+												<div class="col-md-4">
+													<section>
+														<label class="label">Recent password</label>
+														<label class="input">
+															<input type="password" name="recent_pass" id="recent_pass" value="" class=""/>
+														</label>
+													</section>
+													
+													<button type="submit" id="delete-submit" class="btn btn-danger btn-sm">Delete your account</button>
+												</div>
+												<div class="col-md-3 text-center">
+
+												</div>
+											</div>
+											
+										</fieldset>
+									</form>	
 								</fieldset>
 							
 							</div>
@@ -280,6 +326,144 @@ the <section></section> and you can use wells or panels instead
 						}                   
 						$(form).find('#submit').text('<?php echo $this->lang->line('__common_update');?>');
 						$(form).find('#submit').removeAttr("disabled");
+					},
+					dataType:'json'
+				});
+			}
+		});
+
+		$("#username-form").validate({
+			rules : {
+                username : {
+					required : true,
+					maxlength: 50,
+					remote: {
+						url: BASE_URL+'auth/checkexistusername',
+						type: "post",
+						data: {
+							username: function(){ 
+								return $("#username").val();
+							}
+						}
+					}
+				},
+                password : {
+                    required : true,
+                    maxlength: 10,
+                    minlength: 6
+                }
+            },
+            // Messages for form validation
+            messages : {
+                username : {
+					required : '<i class="fa fa-exclamation-circle"></i> <?php echo sprintf($this->lang->line('__validate_required'), 'username');?>',
+					maxlength: '<i class="fa fa-exclamation-circle"></i> <?php echo sprintf($this->lang->line('__validate_maxlength'), 50);?>',
+					remote: '<i class="fa fa-exclamation-circle"></i> <?php echo sprintf($this->lang->line('__validate_remote_exist'), 'username');?>'
+				},
+                password : {
+                    required : '<i class="fa fa-exclamation-circle"></i> <?php echo sprintf($this->lang->line('__validate_required'), 'password');?>',
+                    maxlength: '<i class="fa fa-exclamation-circle"></i> <?php echo sprintf($this->lang->line('__validate_maxlength'), 10);?></span>',
+                    minlength: '<i class="fa fa-exclamation-circle"></i> <?php echo sprintf($this->lang->line('__validate_minlength'), 6);?></span>'
+                }
+            },
+            highlight: function(element) {
+                $(element).closest('section').addClass('has-error');
+            },
+            unhighlight: function(element) {
+                $(element).closest('section').removeClass('has-error');
+            },
+            errorElement: 'div',
+            errorClass: 'note',
+            errorPlacement: function(error, element) {
+                if(element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }else{
+                    error.insertAfter(element);
+                }
+            },
+			// Ajax form submition
+			submitHandler : function(form) {
+				
+				$(form).ajaxSubmit({
+					beforeSend: function () {
+						$(form).find('#username-submit').html('<?php echo $this->lang->line('__common_please_wait');?>');
+						$(form).find('#username-submit').attr("disabled", "disabled");
+					},
+					success:function(response)
+					{
+
+						if(response.success)
+						{
+							mcs.init_smallBox("Success", response.message);
+							location.reload();  
+						}
+						else
+						{
+							mcs.init_smallBox("Error", response.message);
+							
+						}                   
+						$(form).find('#username-submit').text('<?php echo $this->lang->line('__common_update');?>');
+						$(form).find('#username-submit').removeAttr("disabled");
+					},
+					dataType:'json'
+				});
+			}
+		});
+
+		$("#delete-form").validate({
+			rules : {
+				recent_pass : {
+                    required : true,
+                    maxlength: 10,
+                    minlength: 6
+                }
+            },
+            // Messages for form validation
+            messages : {
+                recent_pass : {
+                    required : '<i class="fa fa-exclamation-circle"></i> <?php echo sprintf($this->lang->line('__validate_required'), 'confirm password');?>',
+                    maxlength: '<i class="fa fa-exclamation-circle"></i> <?php echo sprintf($this->lang->line('__validate_maxlength'), 10);?></span>',
+                    minlength: '<i class="fa fa-exclamation-circle"></i> <?php echo sprintf($this->lang->line('__validate_minlength'), 6);?></span>'
+                }
+            },
+            highlight: function(element) {
+                $(element).closest('section').addClass('has-error');
+            },
+            unhighlight: function(element) {
+                $(element).closest('section').removeClass('has-error');
+            },
+            errorElement: 'div',
+            errorClass: 'note',
+            errorPlacement: function(error, element) {
+                if(element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }else{
+                    error.insertAfter(element);
+                }
+            },
+			// Ajax form submition
+			submitHandler : function(form) {
+				
+				$(form).ajaxSubmit({
+					beforeSend: function () {
+						$(form).find('#delete-submit').html('<?php echo $this->lang->line('__common_please_wait');?>');
+						$(form).find('#delete-submit').attr("disabled", "disabled");
+					},
+					success:function(response)
+					{
+
+						if(response.success)
+						{
+							mcs.init_smallBox("Success", response.message);
+							location.reload();  
+						}
+						else
+						{
+							mcs.init_smallBox("Error", response.message);
+							
+						}                   
+						$(form).find('#delete-submit').text('<?php echo $this->lang->line('__common_update');?>');
+						$(form).find('#delete-submit').removeAttr("disabled");
 					},
 					dataType:'json'
 				});
