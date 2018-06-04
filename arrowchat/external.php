@@ -297,7 +297,7 @@
 					else
 					{
 						$link = get_link($chat['link'], $chat['userid']);
-						//$license = get_license($chat['userid']); 
+						//$license = get_client_id($chat['userid']); 
 						$avatar = get_avatar($chat['avatar'], $chat['license']);
 					}
 				}
@@ -323,7 +323,7 @@
 		{
 			$user_is_guest = 0;
 			$user_username = get_username($userid);
-			//$license = get_license($userid);
+			//$license = get_client_id($userid);
 			
 			$sql = get_user_details($userid);
 			$result = $db->execute($sql);
