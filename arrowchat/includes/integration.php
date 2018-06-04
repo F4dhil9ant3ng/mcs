@@ -123,7 +123,7 @@
 		global $db;
 		
 		$sql = ("
-			SELECT " . TABLE_PREFIX . DB_USERTABLE . "." . DB_USERTABLE_USERID . " userid, " . TABLE_PREFIX . DB_USERTABLE . "." . DB_USERTABLE_NAME . " username, arrowchat_status.session_time lastactivity,  " . TABLE_PREFIX . DB_USERTABLE . "." . DB_USERTABLE_USERID . " link,  " . TABLE_PREFIX . DB_USERTABLE . "." . DB_USERTABLE_AVATAR . " avatar,  " . TABLE_PREFIX . DB_USERTABLE . ".license_key license, arrowchat_status.is_admin, arrowchat_status.status 
+			SELECT " . TABLE_PREFIX . DB_USERTABLE . "." . DB_USERTABLE_USERID . " userid, " . TABLE_PREFIX . DB_USERTABLE . "." . DB_USERTABLE_NAME . " username, arrowchat_status.session_time lastactivity,  " . TABLE_PREFIX . DB_USERTABLE . "." . DB_USERTABLE_USERID . " link,  " . TABLE_PREFIX . DB_USERTABLE . "." . DB_USERTABLE_AVATAR . " avatar,  " . TABLE_PREFIX . DB_USERTABLE . ".client_id license, arrowchat_status.is_admin, arrowchat_status.status 
 			FROM " . TABLE_PREFIX . DB_USERTABLE . " 
 			LEFT JOIN arrowchat_status 
 				ON " . TABLE_PREFIX . DB_USERTABLE . "." . DB_USERTABLE_USERID . " = arrowchat_status.userid 
@@ -154,14 +154,14 @@
 	 * in from the avatar row in the buddylist and get user details functions.
 	 * @return the link of the user ID's profile
 	 */
-	function get_avatar($image, $license) 
+	function get_avatar($image, $client_id) 
 	{
 		global $base_url;
 		
 		if (!empty($image)) 
 		{
 			//return $base_url . '../images/' . $image . '.gif';
-			return '/uploads/'.$license.'/profile-picture/'.$image;
+			return '/uploads/'.$client_id.'/profile-picture/'.$image;
 		} 
 		else 
 		{
@@ -216,14 +216,14 @@
 	 * @param userid the user ID of the user
 	 * @return the name of the user
 	 */
-	function get_license($userid) 
+	function get_client_id($userid) 
 	{ 
 		global $db;
 		
 		$license = NULL;
 		
 		$result = $db->execute("
-			SELECT license_key 
+			SELECT client_id
 			FROM " . TABLE_PREFIX . DB_USERTABLE . " 
 			WHERE " . DB_USERTABLE_USERID . " = '" . $db->escape_string($userid) . "'
 		");  
@@ -231,10 +231,10 @@
 		if ($result AND $db->count_select() > 0)  
 		{
 			$row = $db->fetch_array($result); 
-			$license = $row['license_key']; 
+			$client_id = $row['client_id']; 
 		}
 
-		return $license;
+		return $client_id;
 	} 	
 	
 	

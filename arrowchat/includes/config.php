@@ -22,7 +22,7 @@
 	*/
 	define('DB_SERVER','localhost'); 
 	define('DB_USERNAME','myclinicsoft_U'); 
-	define('DB_PASSWORD','Ul?21rHmx$Pi'); 
+	define('DB_PASSWORD','J)bxX[f3N]xX'); 
 	define('DB_NAME','myclinicsoft_main');	
 		
 	/**
