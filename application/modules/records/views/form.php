@@ -4,10 +4,6 @@
 }
 </style>
 <?php echo form_open('records/doSave/'.$info->record_id,'class="smart-form" id="records-form"');?>
-   
-	<fieldset>
-		<legend>Information</legend>
-
 
 		<section>
 			<label for="name">Name of Record</label>
@@ -32,10 +28,10 @@
 		</section>
 
 		
-	</fieldset>
+
     <?php if($info->record_id) { ?>
-    <fieldset id="custom-field-section">
-        <legend>Custom Fields</legend>
+   
+        <legend id="custom-field-section">Custom Fields</legend>
             <?php
             if($fields->num_rows() > 0) {
                 echo '<table class="table" id="custom_fields">
@@ -53,11 +49,11 @@
                 }
                 echo '</tbody></table>';
             }  ?>
-    </fieldset>
+    
     <?php } ?>
-    <fieldset>
+    
         <button type="submit" id="submit" class="btn btn-primary btn-sm">Submit</button>
-    </fieldset>
+    
 </form>
   
 <script type="text/javascript">
@@ -109,7 +105,7 @@
             $('#submit').attr('disabled', false);
         }
         if (n === 0) {
-            $('<div class="alert alert-info empty-custom">No Custom Field Found! Click Add Fields to start.</div>').insertAfter('#custom-field-section legend');
+            $('<div class="alert alert-info empty-custom">No Custom Field Found! Click Add Fields to start.</div>').insertAfter('legend#custom-field-section');
             $('#custom_fields').hide().remove();
         }
     }

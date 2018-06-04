@@ -14,7 +14,7 @@
 			<button type="button" class="btn btn-primary">Delete</button>
 			<button type="button" class="btn btn-primary">Update</button>
 			-->
-			<button type="button" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="create btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo $this->lang->line('__common_create');?></button>
+			<a href="<?php echo site_url('records/view/-1/'.$this->client_id);?>" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="create btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo $this->lang->line('__common_create');?></a>
 		</div>
 	</div>
 </div>
@@ -83,9 +83,10 @@ the <section></section> and you can use wells or panels instead
 
 	$(".create").click(function (e) {
 		var title = $(this).attr('data-original-title');
+		var link = $(this).attr('href');
 		e.preventDefault();
 			$.ajax({
-				url: BASE_URL+'records/view/-1',
+				url: link,
 				onError: function () {
 					bootbox.alert('<?php echo $this->lang->line('__bootbox_error');?>');
 				},
@@ -426,19 +427,19 @@ the <section></section> and you can use wells or panels instead
 
 		                    if(_type == 'custom-record'){
 								if(can_delete){
-									newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'records/delete_record/'+row['record_id']+'/'+row['client_id']+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
+									newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'records/delete_record/'+row['record_id']+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
 								}
 								if(can_update){
 									newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'records/view/'+row['record_id']+'/'+row['client_id']+'" class="bootbox"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
 								}
 									newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_add_fields');?>"  href="'+BASE_URL+'custom_fields/view/-1/records_'+row['slug']+'_'+row['client_id']+'" class="bootbox"><i class="fas fa-book fa-lg"></i></a>';
-		                    }else{
+		                    }//else{
 		                    	// newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'records/delete_record/'+row['record_id']+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
-								if(can_update){
-									newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'records/view/'+row['record_id']+'" class="bootbox"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
-								}
-									newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_add_fields');?>"  href="'+BASE_URL+'custom_fields/view/-1/records_'+row['slug']+'" class="bootbox"><i class="fas fa-book fa-lg"></i></a>';
-		                    }
+								// if(can_update){
+								// 	newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'records/view/'+row['record_id']+'" class="bootbox"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
+								// }
+								// 	newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_add_fields');?>"  href="'+BASE_URL+'custom_fields/view/-1/records_'+row['slug']+'" class="bootbox"><i class="fas fa-book fa-lg"></i></a>';
+		                    //}
 
 							return newData;
 		                },

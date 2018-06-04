@@ -211,7 +211,7 @@ class Record extends CI_Model
         $this->create_table($record_data['slug'], $client_id, $id);
 
         $this->db->where('record_id', $id);
-        return $this->db->update('records', $record_data);
+        return $this->db->update('custom_records', $record_data);
 
     }
 
@@ -275,7 +275,7 @@ class Record extends CI_Model
 	function delete_record($id, $table)
     {
     	
-        $this->db->where('record_id', $id); //lab_test_results
+        $this->db->where('record_id', $id); 
         return $this->db->delete($table);
     }
 

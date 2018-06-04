@@ -95,6 +95,8 @@ class Roles extends Secure
 
         if ($this->input->is_ajax_request()) 
 		{
+			$this->load->model('records/Custom');
+			$this->load->model('records/Record');
 
 			$data['info'] = $this->Role->get_info($id);
 			
