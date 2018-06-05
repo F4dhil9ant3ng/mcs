@@ -194,7 +194,7 @@ the <section></section> and you can use wells or panels instead
 										</div>
 										<div class="col-md-3 text-center">
 											<?php if($this->config->item('company_logo')) { 
-											echo '<img src="'. base_url().'uploads/'.$this->client_id.'/logo/'.$this->config->item('company_logo').'" style="width:130px;"/>';
+											echo '<img src="'. base_url().'uploads/'.$this->client_id.'/logo/sizes/250/'.$this->config->item('company_logo').'"/>';
 											} ?>
 										</div>
 									</div>

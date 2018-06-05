@@ -111,6 +111,8 @@ class Settings extends Secure
 				
 				$upload_data = $this->upload->data();
 				
+				$this->imageResize($config['upload_path'], $upload_data);
+
 				if (!empty($upload_data['orig_name']))
 				{
 					if($user_data['avatar'] != '') {
@@ -135,6 +137,36 @@ class Settings extends Secure
 		}else{
 
 			echo json_encode(array('success'=>false,'message'=>$error));
+		}
+	}
+
+	function imageResize($path, $upload_data){
+		$sizes = array(250, 150, 100, 50, 25);
+		$this->load->library('image_lib');
+		foreach($sizes as $size)
+    	{ 
+			// Configuration
+			$config['image_library'] = 'gd2';
+			$config['source_image'] = $path . $upload_data['raw_name'] . $upload_data['file_ext'];
+			$config['new_image'] = $path .'/sizes/'.$size.'/'. $upload_data['raw_name'] . $upload_data['file_ext'];
+			$config['create_thumb'] = FALSE;
+			$config['maintain_ratio'] = TRUE;
+			$config['width'] = $size;
+			$config['height'] = $size;
+		
+			// Load the Library
+			$this->load->library('image_lib', $config);
+
+			//check directory if exists
+			if(!is_dir($path .'/sizes/'.$size))
+			{
+				//create if not
+				mkdir($path .'/sizes/'.$size, 0755, TRUE);
+			}
+
+			$this->image_lib->clear();
+			$this->image_lib->initialize($config);
+			$this->image_lib->resize();
 		}
 	}
 
@@ -418,7 +450,9 @@ class Settings extends Secure
 			{
 				
 				$upload_data = $this->upload->data();
-				
+
+				$this->imageResize($config['upload_path'], $upload_data);
+
 				if (!empty($upload_data['orig_name']))
 				{
 					if($this->config->item('company_logo') != '' || $this->config->item('company_logo') != null) {
