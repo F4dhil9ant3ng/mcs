@@ -33,15 +33,15 @@ the <section></section> and you can use wells or panels instead
 	<div class="row">
 	
 		<div class="col-sm-12 col-lg-12">
-			<ul id="recordTab" class="nav nav-tabs bordered">
-				<li class="active" id="main-record">
+			<ul id="recordsTab" class="nav nav-tabs bordered">
+				<li class="" id="default">
 					<a href="#" data-toggle="tab" aria-expanded="true">Default <!-- <span class="badge bg-color-blue txt-color-white">12</span> --></a>
 				</li>
-				<li class="" id="custom-record">
+				<li class="active" id="custom">
 					<a href="#" data-toggle="tab" aria-expanded="false">Custom</a>
 				</li>
 			</ul>
-			<div id="recordTabContent" class="tab-content padding-10">
+			<div id="recordsTabContent" class="tab-content padding-10">
 				<div class="tab-pane fade active in" id="#">
 					<table class="table table-striped" id="table-records">
 						<thead>
@@ -106,6 +106,21 @@ the <section></section> and you can use wells or panels instead
 		return false;
 	});
 	
+    $('#recordsTab li a').on('click', function(e) {
+		var _self = $(this);
+		var val = _self.parent('li').attr('id');
+		var title = _self.text();
+
+		var url = '<?php echo site_url();?>records/'+val;
+		history.pushState(null, null, url);
+		checkURL();
+		// change page title from global var
+		document.title = (title || document.title);
+		
+		e.preventDefault();
+		
+	});
+
 	pageSetUp();
 
 	var pagedestroy = function() {
@@ -145,15 +160,10 @@ the <section></section> and you can use wells or panels instead
 			
 			Also see: http://legacy.datatables.net/usage/features
 		*/	
-		var _type = $('#recordTab li.active').attr('id');
-		load_datatable_ajax(_type);
-		
-		$('#recordTab li a').click(function (e) {
-			var _type = $(this).parent('li').attr('id');
-			load_datatable_ajax(_type)
-		});
 
-		function load_datatable_ajax(_type){
+		load_datatable_ajax();
+		
+		function load_datatable_ajax(){
 		/* BASIC ;*/
 			var responsiveHelper_dt_basic = undefined;
 			var responsiveHelper_datatable_fixed_column = undefined;
@@ -178,7 +188,7 @@ the <section></section> and you can use wells or panels instead
 		        "ajax": {
 		            url: BASE_URL + 'records/load_ajax/',
 		            type: 'POST',
-		            data: {type : _type}
+                    data: {type : 'custom'}
 		        },
 				"oLanguage": {
 					"sSearch": '<span class="input-group-addon"><i class="fa fa-search"></i></span>',
@@ -344,15 +354,11 @@ the <section></section> and you can use wells or panels instead
 		                // this case `data: 1`.
 		                //row['statuses'] != 0
 		                "render": function (data, type, row) {
-							if(_type == 'custom-record'){
-								if(can_view){
-		                    		newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_details');?>" href="'+BASE_URL+'records/details/'+row['record_id']+'/'+row['client_id']+'" class="bootbox link">'+row['name']+'</a>';
-								}
-							}else{
-								if(can_view){
-									newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_details');?>" href="'+BASE_URL+'records/details/'+row['record_id']+'" class="bootbox link">'+row['name']+'</a>';
-								}
-							}
+		
+                            if(can_view){
+                                newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_details');?>" href="'+BASE_URL+'records/details/'+row['record_id']+'/'+row['client_id']+'" class="bootbox link">'+row['name']+'</a>';
+                            }
+							
 							return newData;
 
 		                },
@@ -425,22 +431,14 @@ the <section></section> and you can use wells or panels instead
 		                "render": function (data, type, row) {
 		                    newData = "";
 
-		                    if(_type == 'custom-record'){
-								if(can_delete){
-									newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'records/delete_record/'+row['record_id']+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
-								}
-								if(can_update){
-									newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'records/view/'+row['record_id']+'/'+row['client_id']+'" class="bootbox"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
-								}
-									newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_add_fields');?>"  href="'+BASE_URL+'custom_fields/view/-1/records_'+row['slug']+'_'+row['client_id']+'" class="bootbox"><i class="fas fa-book fa-lg"></i></a>';
-		                    }//else{
-		                    	// newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'records/delete_record/'+row['record_id']+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
-								// if(can_update){
-								// 	newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'records/view/'+row['record_id']+'" class="bootbox"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
-								// }
-								// 	newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_add_fields');?>"  href="'+BASE_URL+'custom_fields/view/-1/records_'+row['slug']+'" class="bootbox"><i class="fas fa-book fa-lg"></i></a>';
-		                    //}
-
+                            if(can_delete){
+                                newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'records/delete_record/'+row['record_id']+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
+                            }
+                            if(can_update){
+                                newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'records/view/'+row['record_id']+'/'+row['client_id']+'" class="bootbox"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
+                            }
+                                newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_add_fields');?>"  href="'+BASE_URL+'custom_fields/view/-1/records_'+row['slug']+'_'+row['client_id']+'" class="bootbox"><i class="fas fa-book fa-lg"></i></a>';
+                        
 							return newData;
 		                },
 		                "targets": 6

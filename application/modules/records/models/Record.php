@@ -302,5 +302,11 @@ class Record extends CI_Model
 		return $this->db->get();
 
 	}
-	
+    
+    function switch_status($status, $type, $id) {
+        $table = ($type == 'default') ? 'records' : 'custom_records' ;
+        $this->db->set('status', $status);
+        $this->db->where('record_id', $id);
+        return $this->db->update($table);
+    }
 }

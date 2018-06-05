@@ -20,7 +20,7 @@ class Reports extends Secure {
 
 	function __construct() {
         parent::__construct();
-       
+		$this->load->model('Report');
     }
 
     function _remap($method, $params = array()) {
@@ -34,27 +34,11 @@ class Reports extends Secure {
         $this->display_error_log($directory,$class_name,$method);
     }
 
-    private function _init($data)
-	{
-		
-		$this->layout
-			->title(get_class($this))
-			->set_partial('header', 'include/header')
-			->set_partial('sidebar', 'include/sidebar') 
-			->set_partial('ribbon', 'include/ribbon', $data)
-			->set_partial('footer', 'include/footer') 
-			->set_partial('shortcut', 'include/shortcut') 
-			->set_metadata('author', 'Randy Rebucas')
-			->set_layout('full-column') 
-			->build('manage', $data);
-		
-	}
-
 	function index()
 	{
-		$this->load->model('Report');
-		
-		$data['module'] = get_class();
+		$this->layout->title('Reports');
+
+		$data['module'] = 'Reports';
 		if ($this->input->is_ajax_request()) 
 		{
 			
@@ -62,7 +46,8 @@ class Reports extends Secure {
         } 
 		else
 		{
-			$this->_init($data);
+			$this->_set_layout($data);
+			$this->layout->build('manage', $data);
 		}
 	}
 	

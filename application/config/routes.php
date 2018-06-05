@@ -66,4 +66,7 @@ if(!in_array($_SERVER['REMOTE_ADDR'], $this->config->item('maintenance_ips')) &&
     $route['settings'] 					= 'settings';
     $route['settings/(:any)'] 			= 'settings/$1';
     $route['account/upgrade']           = 'settings/upgrade';
+
+    $route['records/default'] 			= 'records/default_records';
+    $route['records/custom'] 			= 'records/custom_records';
 }
