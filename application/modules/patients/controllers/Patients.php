@@ -36,26 +36,11 @@ class Patients extends Secure
         }
 
         $this->display_error_log(getcwd(), get_class($this), $method);
-    }
-
-    private function _init($data)
-	{
-		
-		$this->layout
-			->title(get_class($this))
-			->set_partial('header', 'include/header') 
-			->set_partial('sidebar', 'include/sidebar') 
-			->set_partial('ribbon', 'include/ribbon', $data) 
-			->set_partial('footer', 'include/footer')
-			->set_partial('shortcut', 'include/shortcut') 
-			->set_metadata('author', 'Randy Rebucas')
-			->set_layout('full-column') 
-			->build('manage', $data);
-		
 	}
-
+	
 	function index()
 	{
+		$this->layout->title('Patients');
 		$data['module'] = get_class();
 
 		if ($this->input->is_ajax_request()) 
@@ -64,7 +49,8 @@ class Patients extends Secure
         } 
 		else
 		{
-			$this->_init($data);
+			$this->_set_layout($data);
+			$this->layout->build('manage', $data);
 		}
 	}
 
@@ -301,6 +287,7 @@ class Patients extends Secure
 		$this->load->model('records/Custom');
 		$this->load->model('records/Record');
 
+		$this->layout->title('Patient Records');
 		$data['module'] = 'Patient Records';
 		
 		if ($this->input->is_ajax_request()) 
@@ -338,7 +325,8 @@ class Patients extends Secure
         } 
 		else
 		{
-			$this->_init($data);
+			$this->_set_layout($data);
+			$this->layout->build('manage', $data);
 		}
 	}
 	

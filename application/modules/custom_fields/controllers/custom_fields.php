@@ -33,25 +33,10 @@ class Custom_Fields extends Secure {
         $this->display_error_log(getcwd(), get_class($this), $method);
     }
 
-    private function _init($data)
-	{
-		
-		$this->layout
-			->title(get_class($this))
-			->set_partial('header', 'include/header') 
-			->set_partial('sidebar', 'include/sidebar') 
-			->set_partial('ribbon', 'include/ribbon', $data)
-			->set_partial('footer', 'include/footer')
-			->set_partial('shortcut', 'include/shortcut') 
-			->set_metadata('author', 'Randy Rebucas')
-			->set_layout('full-column') 
-			->build('manage', $data);
-		
-	}
-
 	function index()
 	{
-		$data['module'] = get_class($this);
+		$this->layout->title('Custom Fields');
+		$data['module'] = 'Custom Fields';
 
 		if ($this->is_ajax) 
 		{
@@ -60,7 +45,8 @@ class Custom_Fields extends Secure {
         } 
 		else
 		{
-			$this->_init($data);
+			$this->_set_layout($data);
+			$this->layout->build('manage', $data);
 			
 		}
 	}
