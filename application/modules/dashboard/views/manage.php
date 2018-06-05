@@ -46,7 +46,7 @@ the <section></section> and you can use wells or panels instead
 
 			<div class="alert alert-info fade in">
 				
-				<strong id="result-count">0 </strong><?php echo $this->lang->line('__added_today');?>
+				<strong id="result-count">0 </strong>
 				<i class="fa-fw fa fa-info-circle pull-right"></i>
 			</div>
 
@@ -127,9 +127,9 @@ the <section></section> and you can use wells or panels instead
 				$.each(response.data, function(index, val) {
 					
 					if(val.avatar){
-						picture =  '<img src="'+BASE_URL+'uploads/'+client_id+'/profile-picture/'+val.avatar+'" alt="'+val.username+'" class="online" />';
+						picture =  '<img src="'+BASE_URL+'uploads/'+client_id+'/profile-picture/'+val.avatar+'" alt="'+val.username+'" style="width:50px;" />';
 					}else{
-						picture =  '<img src="'+BASE_URL+'img/avatars/blank.png" alt="'+val.username+'" class="online" />';
+						picture =  '<img src="<?php echo $this->gravatar->get("'+row['email']+'", 50);?>" />';
 					}
 						
 					item =	'<div class="user" title="'+val.email+'">'+
@@ -140,7 +140,7 @@ the <section></section> and you can use wells or panels instead
 					items.push(item);
 				});
 
-				$('#result-count').html(response.recordsTotal +' new patients ');
+				$('#result-count').html(response.recordsTotal +' encounter as of today!');
 				$('#result').append(items);
 
 			}

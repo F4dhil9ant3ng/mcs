@@ -42,35 +42,60 @@ class Records extends Secure
         
     }
 
-    private function _init($data)
-	{
-		
-		$this->layout
-			->title(get_class($this)) 
-			->set_partial('header', 'include/header') 
-			->set_partial('sidebar', 'include/sidebar') 
-			->set_partial('ribbon', 'include/ribbon', $data) 
-			->set_partial('footer', 'include/footer')
-			->set_partial('shortcut', 'include/shortcut') 
-			->set_metadata('author', 'Randy Rebucas')
-			->set_layout('full-column') 
-			->build('manage', $data); 
-		
-	}
-
 	function index()
 	{
-		$data['module'] = get_class();
+		redirect('records/default');
+	}
 
+	function default_records() 
+	{
+
+		$this->layout->title('Default');
+		
+		$data['module'] = 'Default'; 
+		
 		if ($this->input->is_ajax_request()) 
 		{
-			
-			$this->load->view('manage', $data);
-
+			$this->load->view('default', $data);
         } 
 		else
 		{
-			$this->_init($data);
+			$this->_set_layout($data);
+			$this->layout->build('default', $data);
+		}
+	}
+
+	function custom_records() 
+	{
+
+		$this->layout->title('Custom');
+		
+		$data['module'] = 'Custom'; 
+		
+		if ($this->input->is_ajax_request()) 
+		{
+			$this->load->view('custom', $data);
+        } 
+		else
+		{
+			$this->_set_layout($data);
+			$this->layout->build('custom', $data);
+		}
+	}
+
+	function switch_status() {
+
+		$status = $this->input->post('status');
+		$type = $this->input->post('type');
+		$id = $this->input->post('id');
+
+		if($this->Record->switch_status($status, $type, $id))
+		{
+			echo json_encode(array('success'=>true));
+		}
+		else 
+		{
+			echo json_encode(array('success'=>false));
 		}
 	}
 
@@ -81,7 +106,7 @@ class Records extends Secure
 		{	
 			$this->load->library('datatables');
 			$type = $this->input->post('type');
-	       	if($type == 'main-record'){ //type
+	       	if($type == 'default'){ //type
 
 	       		$this->datatables->select("record_id, name, description, status, created, slug, type", false);
 	        
@@ -111,8 +136,8 @@ class Records extends Secure
 		{
 			$this->load->model('custom_fields/Custom_field');
 
-			// $table = ($client_id != null) ? 'custom_records' : 'records';
-			$data['info'] = $this->Record->get_info_by_id($id, 'custom_records');
+			$table = ($client_id != null) ? 'custom_records' : 'records';
+			$data['info'] = $this->Record->get_info_by_id($id, $table);
 
 			if ($client_id != null) {
 				$data['fields'] = $this->Custom_field->get_custom('records_'.$data['info']->slug.'_'.$this->client_id);

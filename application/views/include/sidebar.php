@@ -8,7 +8,7 @@
 			<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
 				<?php 
 				if($user_info->avatar){
-					echo '<img src="'.base_url().'uploads/'.$this->client_id.'/profile-picture/'.$user_info->avatar.'" alt="'.$user_info->username.'" class="online" style="width:25px;" />';
+					echo '<img src="'.base_url().'uploads/'.$this->client_id.'/profile-picture/'.$user_info->avatar.'" alt="'.$user_info->username.'" class="online" style="width:25px;height:25px;" />';
 				}else{
 					echo '<img src="' . $this->gravatar->get($user_info->email, 25) . '" alt="'.$user_info->username.'" class="online" />';
 				}?>
@@ -37,12 +37,9 @@
 			-->
 			
 			<ul>
-
-				<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('dashboard', $this->role_id, 'view',   $this->client_id) : true) { ?>
 				<li>
 					<a title="<?php echo $this->lang->line('__dashboard');?>" href="<?php echo site_url('dashboard'); ?>"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__dashboard');?></span></a>
 				</li>
-				<?php } ?>
 				<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'view',   $this->client_id) : true) { ?>
 				<li>
 					<a title="<?php echo $this->lang->line('__patients');?>" href="<?php echo site_url('patients'); ?>"><i class="fa fa-lg fa-fw fa-users"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__patients');?></span></a>
@@ -65,7 +62,7 @@
 				<?php } ?>
 				<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('records', $this->role_id, 'view',   $this->client_id) : true) { ?>
 				<li>
-					<a title="<?php echo $this->lang->line('__records');?>" href="<?php echo site_url('records'); ?>"><i class="fa fa-lg fa-fw fa-address-book"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__records');?></span></a>
+					<a title="<?php echo $this->lang->line('__records');?>" href="<?php echo site_url('records/default'); ?>"><i class="fa fa-lg fa-fw fa-address-book"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__records');?></span></a>
 				</li>
 				<?php } ?>
 				<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('reports', $this->role_id, 'view',   $this->client_id) : true) { ?>
