@@ -158,4 +158,16 @@ class Role extends CI_Model
         return $this->db->get();
     }
 
+    /**
+	 * Get Role Id by Name 
+	 *
+	 * @param	string
+	 * @return	int
+	 */
+	function get_by_role_slug($role_slug, $client_id)
+    {
+		$this->db->where('role_slug', $role_slug);
+		$this->db->where('client_id', $client_id);
+        return $this->db->get('roles')->row()->role_id;
+	}
 }

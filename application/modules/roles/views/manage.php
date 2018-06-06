@@ -342,7 +342,7 @@ the <section></section> and you can use wells or panels instead
 		                // this case `data: 1`.
 		                //row['statuses'] != 0
 		                "render": function (data, type, row) {
-		                    newData  = '<div class="text-center" ><span id="count-'+row['role_id']+'"></span></div>';
+		                    newData  = '<div class="text-center" ><a href="'+BASE_URL+'users/'+row['role_slug']+'"><span id="count-'+row['role_id']+'"></span></a></div>';
 							$.ajax({
 								url: BASE_URL+'/roles/count',
 								type: 'post', 

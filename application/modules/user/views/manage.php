@@ -187,7 +187,8 @@ the <section></section> and you can use wells or panels instead
 		            url: BASE_URL + 'user/load_ajax/',
 		            type: 'POST',
 		            data: {
-		                filter: 0
+		                filter: 0,
+		                role: '<?php echo $this->uri->segment(2);?>'
 		            }
 		        },
 				"oLanguage": {
