@@ -41,6 +41,7 @@ the <section></section> and you can use wells or panels instead
 					<tr>
 						<th>&nbsp;</th>
 						<th>Name</th>
+						<th class="text-center">Counts</th>
 						<th>Description</th>
 						<th>&nbsp;</th>
 						<th>&nbsp;</th>
@@ -275,8 +276,8 @@ the <section></section> and you can use wells or panels instead
 					$("[rel=tooltip]").tooltip();
 				},
 		        //run on first time when datatable create
-		        "initComplete": function () {
-
+		        "initComplete": function (row) {
+					
 		        },
 		        //End
 		        // Internationalisation. For more info refer to http://datatables.net/manual/i18n
@@ -293,7 +294,8 @@ the <section></section> and you can use wells or panels instead
 		        //{"id":"2","username":"Randy","email":"rebucasrandy1986@gmail.com","rolename":"Administrator","created":"February 08, 2017","fullname":"Randy, Rebucas"}
 		        aoColumns: [
 		            {mData: 'role_id'},   
-		            {mData: 'role_name'},         
+		            {mData: 'role_name'},
+					{mData: null},         
 		            {mData: 'role_desc'},
 		            {mData: 'role_status'},
 		            {mData: 'role_created'},
@@ -304,7 +306,7 @@ the <section></section> and you can use wells or panels instead
 		            {'bSearchable': false, 'aTargets': [0]},
 					{'bSearchable': true, 'aTargets': [1]},
 		            {
-		                "targets": [0, 4, 6],
+		                "targets": [0, 7],
 		                "visible": false,
 		                "searchable": false,
 		            },
@@ -334,7 +336,32 @@ the <section></section> and you can use wells or panels instead
 		                },
 		                "targets": 1
 		            },
-		            {
+					{
+		                // The `data` parameter refers to the data for the cell (defined by the
+		                // `data` option, which defaults to the column being worked with, in
+		                // this case `data: 1`.
+		                //row['statuses'] != 0
+		                "render": function (data, type, row) {
+		                    newData  = '<div class="text-center" ><span id="count-'+row['role_id']+'"></span></div>';
+							$.ajax({
+								url: BASE_URL+'/roles/count',
+								type: 'post', 
+								data: {
+									id: row['role_id']
+								},               
+								dataType: 'json',
+								success: function (res)
+								{
+									$('#count-'+row['role_id']).html(res.count);
+									console.log(res);
+								}
+							});
+		                    return newData;
+
+		                },
+		                "targets": 2
+		            },
+					{
 		                // The `data` parameter refers to the data for the cell (defined by the
 		                // `data` option, which defaults to the column being worked with, in
 		                // this case `data: 1`.
@@ -345,7 +372,7 @@ the <section></section> and you can use wells or panels instead
 		                    return newData;
 
 		                },
-		                "targets": 2
+		                "targets": 3
 		            },
 		            {
 		                // The `data` parameter refers to the data for the cell (defined by the
@@ -365,7 +392,7 @@ the <section></section> and you can use wells or panels instead
 		                    return newData;
 
 		                },
-		                "targets": 3
+		                "targets": 4
 		            },
 		            {
 		                // The `data` parameter refers to the data for the cell (defined by the
@@ -379,7 +406,7 @@ the <section></section> and you can use wells or panels instead
 		                    return newData;
 
 		                },
-		                "targets": 4
+		                "targets": 5
 		            },
 		           {
 		                // The `data` parameter refers to the data for the cell (defined by the
@@ -399,7 +426,7 @@ the <section></section> and you can use wells or panels instead
 							}
 							return newData;
 		                },
-		                "targets": 5
+		                "targets": 6
 		            },
 		        ],
 		        "createdRow": function (row, data, index)

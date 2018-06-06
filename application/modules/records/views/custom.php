@@ -280,28 +280,42 @@ the <section></section> and you can use wells or panels instead
 		        //run on first time when datatable create
 		        "initComplete": function () {
 		        	
-		    //     	this.api().columns().every( function () {
-		    //             var column = this;
-		    //             var select = $('<select><option value=""></option></select>')
-		    //                 .appendTo( $(column.footer()).empty() )
-		    //                 .on( 'change', function () {
-		    //                     var val = $.fn.dataTable.util.escapeRegex(
-		    //                         $(this).val()
-		    //                     );
-		 
-		    //                     column
-		    //                         .search( val ? '^'+val+'$' : '', true, false )
-		    //                         .draw();
-		    //                 } );
-		 
-		    //            column.data().unique().sort().each( function ( d, j ) {
-						//     if(column.search() === '^'+d+'$'){
-						//         select.append( '<option value="'+d+'" selected="selected">'+d+'</option>' )
-						//     } else {
-						//         select.append( '<option value="'+d+'">'+d+'</option>' )
-						//     }
-						// } );
-		    //         } );
+					$('.btn-status').on('click', function () {
+						var _self = $(this);
+						var _val = _self.attr('data-value');
+						var _type = _self.attr('data-type');
+						var _id = _self.attr('data-id');
+
+						$.ajax({
+			                url: BASE_URL+'/records/switch_status',
+							type: 'post', 
+							data: {
+								status: _val,
+								type: _type,
+								id: _id
+							},               
+							dataType: 'json',
+			                success: function (response)
+			                {
+			                    if(response)
+								{
+									if(_self.hasClass('btn-default') ){
+										_self.text('Enabled');
+										_self.attr('data-value', 1);
+										_self.removeClass('btn-default').addClass('btn-primary');
+									} else {
+										_self.text('Disabled');
+										_self.attr('data-value', 0);
+										_self.removeClass('btn-primary').addClass('btn-default');
+									}
+								}
+								else
+								{
+									mcs.init_smallBox("Error", 'Oooppps, something went wrong!');
+								} 
+			                }
+			            });
+					});
 		        },
 		        //End
 		        // Internationalisation. For more info refer to http://datatables.net/manual/i18n
@@ -410,15 +424,13 @@ the <section></section> and you can use wells or panels instead
 		                // this case `data: 1`.
 		                //row['statuses'] != 0
 		                "render": function (data, type, row) {
-		                    newData = "";
-							if(row['status'] == 1){
-								s = '<span class="label label-success"><?php echo $this->lang->line('__common_enabled');?></span>';
-							}else{
-								s = '<span class="label label-danger"><?php echo $this->lang->line('__common_disabled');?></span>';
-							}
-							
-		                    newData  = s;
-							
+							newData = "";
+							var isActive = (row['status'] == 1) ? 'btn-primary active' :'btn-default';
+							var hasValue = (row['status'] == 1) ? 0 : 1;
+							var statusLabel = (row['status'] == 1) ? '<?php echo $this->lang->line('__common_enabled');?>' : '<?php echo $this->lang->line('__common_disabled');?>';
+
+							newData = '<button class="btn btn-xs btn-status '+isActive+'" data-value="'+hasValue+'" data-type="default" data-id="'+row['record_id']+'" >'+ statusLabel +'</button>';
+		                    
 		                    return newData;
 
 		                },
