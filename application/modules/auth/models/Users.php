@@ -146,18 +146,7 @@ class Users extends CI_Model
         $this->db->from($this->table_name);
         return $this->db->count_all_results();
     }
-	/**
-	 * Get default role
-	 * @return	int
-	 */
-	function get_default_role()
-	{
-		$this->db->where('isdefault', 1);
-		
-		$query = $this->db->get('role');
-		if ($query->num_rows() == 1) return $query->row();
-		return NULL;
-	}
+
 	/**
 	 * Create new user record
 	 *
@@ -178,17 +167,20 @@ class Users extends CI_Model
 			//create role;
 			$role_data = array(
 				array(
-				   'role_name' => 'Administrator' ,
+				   'role_name' => 'Administrator',
+				   'role_slug'	=> 'administrator',
 				   'role_desc' => 'Allowed all modules and actions' ,
 				   'client_id' => $data['client_id']
 				),
 				array(
-					'role_name' => 'Patient' ,
+					'role_name' => 'Patient',
+					'role_slug'	=> 'patient',
 					'role_desc' => 'Access personal record' ,
 					'client_id' => $data['client_id']
 				),
 				array(
-					'role_name' => 'Information Desk' ,
+					'role_name' => 'Information Desk',
+					'role_slug'	=> 'information-desk',
 					'role_desc' => 'Can access Patient module' ,
 					'client_id' => $data['client_id']
 				)
@@ -196,8 +188,8 @@ class Users extends CI_Model
 			 
 			if($this->db->insert_batch('roles', $role_data))
 			{
-
-				$data['role_id'] = $this->get_by_role_name('Administrator', $data['client_id']);
+				$this->load->model('roles/Role');
+				$data['role_id'] = $this->Role->get_by_role_slug('administrator', $data['client_id']);
 				
 				if ($this->db->insert($this->table_name, $data)) 
 				{
@@ -213,18 +205,7 @@ class Users extends CI_Model
 		return NULL;
 	}
 
-	/**
-	 * Get Role Id by Name 
-	 *
-	 * @param	string
-	 * @return	int
-	 */
-	function get_by_role_name($role_name, $client_id)
-    {
-		$this->db->where('role_name', $role_name);
-		$this->db->where('client_id', $client_id);
-        return $this->db->get('roles')->row()->role_id;
-	}
+	
 	
 	/**
 	 * Activate user if activation key is valid.

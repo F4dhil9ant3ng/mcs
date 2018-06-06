@@ -35,227 +35,52 @@
 				<thead>
 					<tr>
 						<th colspan="5">
-							Modules
+							Sections
 						</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td style="width:40%">Patients</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="patients-view" <?php if($this->Role->has_permission('patients', $info->role_id, 'view', $this->client_id)) echo 'checked';?>>
-								<i></i>View
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="patients-create" <?php if($this->Role->has_permission('patients', $info->role_id, 'create', $this->client_id)) echo 'checked';?>>
-								<i></i>Create
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="patients-delete" <?php if($this->Role->has_permission('patients', $info->role_id, 'delete', $this->client_id)) echo 'checked';?>>
-								<i></i>Delete
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="patients-update" <?php if($this->Role->has_permission('patients', $info->role_id, 'update', $this->client_id)) echo 'checked';?>>
-								<i></i>Update
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td style="width:40%">Users</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="users-view" <?php if($this->Role->has_permission('users', $info->role_id, 'view', $this->client_id)) echo 'checked';?>>
-								<i></i>View
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="users-create" <?php if($this->Role->has_permission('users', $info->role_id, 'create', $this->client_id)) echo 'checked';?>>
-								<i></i>Create
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="users-delete" <?php if($this->Role->has_permission('users', $info->role_id, 'delete', $this->client_id)) echo 'checked';?>>
-								<i></i>Delete
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="users-update" <?php if($this->Role->has_permission('users', $info->role_id, 'update', $this->client_id)) echo 'checked';?>>
-								<i></i>Update
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td style="width:40%">Roles</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="roles-view" <?php if($this->Role->has_permission('roles', $info->role_id, 'view', $this->client_id)) echo 'checked';?>>
-								<i></i>View
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="roles-create" <?php if($this->Role->has_permission('roles', $info->role_id, 'create', $this->client_id)) echo 'checked';?>>
-								<i></i>Create
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="roles-delete" <?php if($this->Role->has_permission('roles', $info->role_id, 'delete', $this->client_id)) echo 'checked';?>>
-								<i></i>Delete
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="roles-update" <?php if($this->Role->has_permission('roles', $info->role_id, 'update', $this->client_id)) echo 'checked';?>>
-								<i></i>Update
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td style="width:40%">Templates</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="templates-view" <?php if($this->Role->has_permission('templates', $info->role_id, 'view', $this->client_id)) echo 'checked';?>>
-								<i></i>View
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="templates-create" <?php if($this->Role->has_permission('templates', $info->role_id, 'create', $this->client_id)) echo 'checked';?>>
-								<i></i>Create
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="templates-delete" <?php if($this->Role->has_permission('templates', $info->role_id, 'delete', $this->client_id)) echo 'checked';?>>
-								<i></i>Delete
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="templates-update" <?php if($this->Role->has_permission('templates', $info->role_id, 'update', $this->client_id)) echo 'checked';?>>
-								<i></i>Update
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td style="width:40%">Records</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="records-view" <?php if($this->Role->has_permission('records', $info->role_id, 'view', $this->client_id)) echo 'checked';?>>
-								<i></i>View
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="records-create" <?php if($this->Role->has_permission('records', $info->role_id, 'create', $this->client_id)) echo 'checked';?>>
-								<i></i>Create
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="records-delete" <?php if($this->Role->has_permission('records', $info->role_id, 'delete', $this->client_id)) echo 'checked';?>>
-								<i></i>Delete
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="records-update" <?php if($this->Role->has_permission('records', $info->role_id, 'update', $this->client_id)) echo 'checked';?>>
-								<i></i>Update
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td style="width:40%">Reports</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="reports-view" <?php if($this->Role->has_permission('reports', $info->role_id, 'view', $this->client_id)) echo 'checked';?>>
-								<i></i>View
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="reports-create" <?php if($this->Role->has_permission('reports', $info->role_id, 'create', $this->client_id)) echo 'checked';?>>
-								<i></i>Create
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="reports-delete" <?php if($this->Role->has_permission('reports', $info->role_id, 'delete', $this->client_id)) echo 'checked';?>>
-								<i></i>Delete
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="reports-update" <?php if($this->Role->has_permission('reports', $info->role_id, 'update', $this->client_id)) echo 'checked';?>>
-								<i></i>Update
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td style="width:40%">Appointments</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="appointments-view" <?php if($this->Role->has_permission('appointments', $info->role_id, 'view', $this->client_id)) echo 'checked';?>>
-								<i></i>View
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="appointments-create" <?php if($this->Role->has_permission('appointments', $info->role_id, 'create', $this->client_id)) echo 'checked';?>>
-								<i></i>Create
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="appointments-delete" <?php if($this->Role->has_permission('appointments', $info->role_id, 'delete', $this->client_id)) echo 'checked';?>>
-								<i></i>Delete
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="appointments-update" <?php if($this->Role->has_permission('appointments', $info->role_id, 'update', $this->client_id)) echo 'checked';?>>
-								<i></i>Update
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td style="width:40%">Settings</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="settings-view" <?php if($this->Role->has_permission('settings', $info->role_id, 'view', $this->client_id)) echo 'checked';?>>
-								<i></i>View
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="settings-create" <?php if($this->Role->has_permission('settings', $info->role_id, 'create', $this->client_id)) echo 'checked';?>>
-								<i></i>Create
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="settings-delete" <?php if($this->Role->has_permission('settings', $info->role_id, 'delete', $this->client_id)) echo 'checked';?>>
-								<i></i>Delete
-							</label>
-						</td>
-						<td style="width:15%">
-							<label class="checkbox">
-								<input type="checkbox" name="module[]" value="settings-update" <?php if($this->Role->has_permission('settings', $info->role_id, 'update', $this->client_id)) echo 'checked';?>>
-								<i></i>Update
-							</label>
-						</td>
-					</tr>
+				<?php
+					$array = array(
+						'patients'		=>'Patients',
+						'users'			=>'Users',
+						'roles'			=>'Roles',
+						'templates'		=>'Templates',
+						'records'		=>'Records',
+						'reports'		=>'Reports',
+						'appointments'	=>'Appointments',
+						'settings'		=>'Settings'
+					);
+					foreach($array as $val => $label) { ?>
+						<tr>
+							<td style="width:40%"><?php echo $label;?></td>
+							<td style="width:15%">
+								<label class="checkbox">
+									<input type="checkbox" name="module[]" value="<?php echo $val;?>-view" <?php if($this->Role->has_permission($val, $info->role_id, 'view', $this->client_id)) echo 'checked';?>>
+									<i></i>View
+								</label>
+							</td>
+							<td style="width:15%">
+								<label class="checkbox">
+									<input type="checkbox" name="module[]" value="<?php echo $val;?>-create" <?php if($this->Role->has_permission($val, $info->role_id, 'create', $this->client_id)) echo 'checked';?>>
+									<i></i>Create
+								</label>
+							</td>
+							<td style="width:15%">
+								<label class="checkbox">
+									<input type="checkbox" name="module[]" value="<?php echo $val;?>-delete" <?php if($this->Role->has_permission($val, $info->role_id, 'delete', $this->client_id)) echo 'checked';?>>
+									<i></i>Delete
+								</label>
+							</td>
+							<td style="width:15%">
+								<label class="checkbox">
+									<input type="checkbox" name="module[]" value="<?php echo $val;?>-update" <?php if($this->Role->has_permission($val, $info->role_id, 'update', $this->client_id)) echo 'checked';?>>
+									<i></i>Update
+								</label>
+							</td>
+						</tr>
+					<?php } ?>
+					
 				</tbody>
 			</table>
 		</section>

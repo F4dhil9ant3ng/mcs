@@ -35,7 +35,7 @@ class User extends Secure
         $this->display_error_log($directory,$class_name,$method);
     }
 
-	function index()
+	function index($slug = FALSE)
 	{
 		$this->layout->title('Users');
 		$data['module'] = get_class();
@@ -57,12 +57,18 @@ class User extends Secure
 		if ($this->input->is_ajax_request()) 
 		{	
 			$this->load->library('datatables');
-	        $isfiltered = $this->input->post('filter');
+			$this->load->model('roles/Role');
+			$role_id = (strlen($this->input->post('role'))>0) ? $this->Role->get_by_role_slug($this->input->post('role'), $this->client_id) : null;
 
+			$isfiltered = $this->input->post('filter');
+			
 	        $this->datatables->select("users.id as id, CONCAT(IF(up.lastname != '', up.lastname, ''),',',IF(up.firstname != '', up.firstname, '')) as fullname, username, role_name, email, DATE_FORMAT(users.created, '%M %d, %Y') as created, avatar, DATE_FORMAT(CONCAT(IF(up.bYear != '', up.bYear, ''),'-',IF(up.bMonth != '', up.bMonth, ''),'-',IF(up.bDay != '', up.bDay, '')), '%M %d, %Y') as birthday, address, mobile, DATE_FORMAT(users.last_login, '%M %d, %Y') as last_login, users.client_id as lic", false);
 	        
 			$this->datatables->where('users.deleted', 0);
 			$this->datatables->where('users.client_id', $this->client_id);
+			if($role_id){
+				$this->datatables->where('users.role_id', $role_id);
+			}
 			if($isfiltered > 0){
 				$this->datatables->where('DATE(created) BETWEEN ' . $this->db->escape($isfiltered) . ' AND ' . $this->db->escape($isfiltered));
 			}
