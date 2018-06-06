@@ -169,4 +169,13 @@ class Roles extends Secure
 
     }
 
+	function count() {
+		$this->load->model('user/User_model');
+		echo json_encode(
+			array(
+				'count'=> $this->User_model->count($this->input->post('id'))
+			)
+		);
+	}
+
 }

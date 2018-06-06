@@ -232,4 +232,10 @@ class User_model extends CI_Model
 		$this->db->where($id, $pk);
 		return $this->db->update($table, $data);
 	}
+
+	function count($role_id) {
+		$this->db->where('role_id', $role_id);
+		$this->db->from('users');
+		return  $this->db->count_all_results();
+	}
 }

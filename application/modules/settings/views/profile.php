@@ -215,9 +215,9 @@ the <section></section> and you can use wells or panels instead
 											<div class="col-md-3 text-center">
 												
 												<?php if($user_info->avatar){
-													echo '<img src="'. base_url().'/uploads/'.$this->client_id.'/profile-picture/'.$user_info->avatar.'" style="width:130px;"/>';
+													echo '<img src="'. base_url().'/uploads/'.$this->client_id.'/profile-picture/sizes/150/'.$user_info->avatar.'"/>';
 												}else{
-													echo '<img src="' . $this->gravatar->get($user_info->email, 130) . '" />';
+													echo '<img src="' . $this->gravatar->get($user_info->email, 150) . '" />';
 												}?>
 												
 											</div>
