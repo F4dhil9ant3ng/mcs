@@ -37,7 +37,7 @@ class Secure extends CI_Controller {
         $this->load->model('modules/Module');
         $this->load->model('common/Common');
 
-        $this->load->model('auth/Users');
+        $this->load->model('roles/Role');
 
         $this->client_id 	    = $this->tank_auth->get_client_id();
         $this->role_id 	        = $this->tank_auth->get_role_id();
@@ -46,8 +46,8 @@ class Secure extends CI_Controller {
         $this->is_ajax 		    = $this->input->is_ajax_request();
        	//add this on config
 
-        $this->admin_role_id    = $this->Users->get_by_role_name('Administrator', $this->client_id);
-        $this->patient_role_id  = $this->Users->get_by_role_name('Patient', $this->client_id);
+        $this->admin_role_id    = $this->Role->get_by_role_slug('administrator', $this->client_id);
+        $this->patient_role_id  = $this->Role->get_by_role_slug('patient', $this->client_id);
 		 //get subcription information
         $data['user_info'] 	    = $this->User_model->get_profile_info($this->user_id);
 

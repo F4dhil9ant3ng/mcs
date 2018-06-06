@@ -59,7 +59,7 @@ class Roles extends Secure
 		{	
 			$this->load->library('datatables');
 	       
-	        $this->datatables->select("role_id, role_name, role_desc, role_status, role_created, client_id", false);
+	        $this->datatables->select("role_id, role_name, role_slug, role_desc, role_status, role_created, client_id", false);
 	        
 	        $this->datatables->where('client_id', $this->client_id);
 			
@@ -109,6 +109,7 @@ class Roles extends Secure
 		
 		$role_data = array(
 			'role_name'	=>$this->input->post('role_name'),
+			'role_slug'	=> url_title($this->input->post('role_name'), 'dash', TRUE),
 			'role_desc'		=>$this->input->post('role_desc'),
 			'role_status'		=>$this->input->post('role_status') ? 1 : 0,
 			'client_id'		=>$this->client_id
@@ -138,6 +139,9 @@ class Roles extends Secure
 	{
     	if ($this->input->is_ajax_request()) 
 		{
+			$this->load->model('records/Custom');
+			$this->load->model('records/Record');
+			
 	    	$data['info'] = $this->Role->get_info($id);
 	        $this->load->view("detail", $data);
 
