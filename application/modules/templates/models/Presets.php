@@ -27,9 +27,16 @@ class Presets extends Template
 		return ($query->num_rows()==1);
 	}
 
+	function get_all_presets()
+	{
+		$this->db->from($this->table);		
+		$this->db->order_by($this->order_field, $this->order_position);
+		return $this->db->get();
+			
+	}
 
-	
-	function load($id) {
+	function load($id) 
+	{
         $this->db->from($this->table); 
         $this->db->where($this->id, $id);
         $query = $this->db->get();

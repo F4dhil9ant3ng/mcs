@@ -15,7 +15,7 @@
 			<button type="button" class="btn btn-primary">Update</button>
 			-->
 			<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('templates', $this->role_id, 'create',   $this->license_id) : true) { ?>
-			<button type="button" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="create btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo $this->lang->line('__common_create');?></button>
+			<a href="<?php echo site_url('templates/view/-1');?>" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="new btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo $this->lang->line('__common_create');?></a>
 			<?php } ?>
 		</div>
 	</div>
@@ -69,48 +69,31 @@ the <section></section> and you can use wells or panels instead
 	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('templates', $this->role_id, 'update',   $this->client_id) : true; ?>';
 	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('templates', $this->role_id, 'delete',   $this->client_id) : true; ?>';
 
-	$(".create").click(function (e) {
-		var title = $(this).attr('data-original-title');
-		e.preventDefault();
-			$.ajax({
-				url: BASE_URL+'templates/view/-1',
-				onError: function () {
-					bootbox.alert('<?php echo $this->lang->line('__bootbox_error');?>');
-				},
-				success: function (response)
-				{
-					var dialog = bootbox.dialog({
-						title: title,
-						className: "dialog-60",
-						message: '<p class="text-center"><img src="'+BASE_URL+'img/ajax-loader.gif"/></p>'
-					});
-					dialog.init(function(){
-						setTimeout(function(){
-							dialog.find('.bootbox-body').html(response);
-						}, 3000);
-					});
-				}
-			});
-		return false;
+	$('.new').on('click', function(e) {
+		var _self = $(this);
+		var _link = _self.attr('href');
+		var title = _self.text();
+
+		var url = _link;
+		ajax_load(url, title);
 	});
-	
 
 	pageSetUp();
 	$('input[type=radio]').on('change', function(e) {
 		var val = $("input[name='option']:checked").val();
 		var url = '<?php echo site_url();?>course/'+val;
+		var title = $("input[name='option']:checked").parent().text();
+		ajax_load(url, title);
+	});
+	
+	function ajax_load(url, title) {
 		history.pushState(null, null, url);
 		checkURL();
-
-		var title = $("input[name='option']:checked").parent().text();
-
 		// change page title from global var
 		document.title = (title || document.title);
 		
 		e.preventDefault();
-		
-	});
-	
+	}
 	// pagefunction
 
 	var pagefunction = function() {
@@ -395,7 +378,7 @@ the <section></section> and you can use wells or panels instead
 								newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'templates/delete/'+row['id']+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
 							}
 							if(can_update){
-								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'templates/view/'+row['id']+'/" class="bootbox"><i class="far fa-edit fa-lg"></i></a>';
+								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'templates/view/'+row['id']+'/" class=""><i class="far fa-edit fa-lg"></i></a>';
 							}
 							
 							return newData;

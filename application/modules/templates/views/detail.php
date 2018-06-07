@@ -7,7 +7,7 @@
 <div class="row">	
 	<div class="col-md-12">	
 
-		<?php echo ($info->tcontent) ? $info->tcontent : '--';?>
+		<?php echo ($info->temp_content) ? $info->temp_content : '--';?>
 	</div>
 	
 </div>
