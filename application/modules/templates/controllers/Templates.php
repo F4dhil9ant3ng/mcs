@@ -75,36 +75,55 @@ class Templates extends Secure
 	
 	function view($id = -1)
 	{
+		$this->layout->title('New Templates');
+		$this->load->model('templates/Presets');
+		$data['module'] = 'New Templates';
 
-        if ($this->is_ajax) 
+		$data['info'] = $this->Template->get_info($id);
+		
+		$templates = array('' => 'Select');
+		
+		foreach ($this->Presets->get_all_presets()->result_array() as $row) 
+		{
+			$templates[$row['temp_id']] = $row['temp_name'];
+		}
+
+		$data['templates'] = $templates;
+
+		if ($this->is_ajax) 
 		{
 			
-			$data['info'] = $this->Template->get_info($id);
+			$this->load->view('form', $data);
+        } 
+		else
+		{
+			$this->_set_layout($data);
+			$this->layout->build('form', $data);
 			
-			$templates = array('' => 'Select');
-			
-			foreach ($this->Template->get_all($this->client_id)->result_array() as $row) 
-			{
-				$templates[$row['temp_id']] = $row['temp_name'];
-			}
-
-			$data['templates'] = $templates;
-			
-	        $this->load->view("form", $data);
+		}
+		
+    }
+	
+	function variables()
+	{
+    	if ($this->is_ajax) 
+		{
+	    	$data['info'] = '';
+	        $this->load->view("variables", $data);
 	    }
 	    else
 	    {
 	    	$this->session->set_flashdata('alert_error', 'Sorry! Page cannot open by new tab');
             redirect('');
 	    }
-    }
+	}
 	
 	function preset($id = 0)
 	{
 		if ($id) 
 		{
-
-            $preset = $this->Template->load($id);
+			$this->load->model('templates/Presets');
+            $preset = $this->Presets->load($id);
 
             echo html_entity_decode(html_entity_decode($preset->temp_content));
         } 
