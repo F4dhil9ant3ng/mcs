@@ -115,58 +115,56 @@ var mcs = (function() {
 		});
 	}
 
-	that.init_action = function (action, class_width) {
-		//crud
-		switch (action) { 
-			case 'direct': 
-				$('.direct').click(function (e) {
-					e.preventDefault();
-					$.ajax({
-						url: $(this).attr('href'),
-						success: function (response)
-						{
-							if(response)
-							{
-								that.init_smallBox("Success", response.message);
-							}
-							else
-							{
-								that.init_smallBox("Error", response.message);
-							} 
-						}
-					});
-				});
-				break;		
-			default: // create / update / view
-				$('.preview').click(function (e) {
-					var title = $(this).attr('data-original-title');
-					var link = $(this).attr('href');
-					e.preventDefault();
-						$.ajax({
-							url: link,
-							onError: function () {
-								bootbox.alert("<?php echo $this->lang->line('__bootbox_error');?>");
-							},
-							success: function (response)
-							{
-								var dialog = bootbox.dialog({
-									title: title,
-									className: class_width,
-									message: '<p class="text-center"><img src="'+BASE_URL+'img/ajax-loader.gif"/></p>'
-								});
-								dialog.init(function(){
-									setTimeout(function(){
-										dialog.find('.bootbox-body').html(response);
-									}, 3000);
-								});
-							}
-						});
-					return false;
-				});
-		}
-		
+	that.init_dialog = function () {
 
-		
+		$('.preview').click(function (e) {
+			var title = $(this).attr('data-original-title');
+			var link = $(this).attr('href');
+			var link = $(this).attr('href');
+			e.preventDefault();
+				$.ajax({
+					url: link,
+					onError: function () {
+						bootbox.alert("<?php echo $this->lang->line('__bootbox_error');?>");
+					},
+					success: function (response)
+					{
+						var dialog = bootbox.dialog({
+							title: title,
+							message: '<p class="text-center"><img src="'+BASE_URL+'img/ajax-loader.gif"/></p>'
+						});
+						dialog.init(function(){
+							setTimeout(function(){
+								dialog.find('.bootbox-body').html(response);
+							}, 3000);
+						});
+					}
+				});
+			return false;
+		});
+	}
+
+	that.init_action = function (action, class_width) {
+
+		$('.direct').click(function (e) {
+			e.preventDefault();
+			$.ajax({
+				url: $(this).attr('href'),
+				success: function (response)
+				{
+					if(response)
+					{
+						that.init_smallBox("Success", response.message);
+						checkURL();
+					}
+					else
+					{
+						that.init_smallBox("Error", response.message);
+					} 
+				}
+			});
+		});
+			
 	}
 
 	that.init_location = function (country, city, state) {
@@ -320,8 +318,6 @@ var mcs = (function() {
 			        // another rule, etc.
 			    });
 			});
-
-			
 
 		}
 		loadScript(BASE_URL+"js/plugin/jquery-validate/jquery.validate.min.js", function(){
