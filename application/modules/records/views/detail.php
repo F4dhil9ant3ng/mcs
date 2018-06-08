@@ -36,6 +36,8 @@
                     echo '</tr>';
                 }
                 echo '</tbody></table>';
+            }else{
+                echo '<p class="alert alert-info">No custom fields set!.</p>';
             }  ?>
     </fieldset>
     <?php } ?>
