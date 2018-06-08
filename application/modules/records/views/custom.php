@@ -14,7 +14,7 @@
 			<button type="button" class="btn btn-primary">Delete</button>
 			<button type="button" class="btn btn-primary">Update</button>
 			-->
-			<a href="<?php echo site_url('records/view/-1/'.$this->client_id);?>" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="create btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo $this->lang->line('__common_create');?></a>
+			<a href="<?php echo site_url('records/view/-1/'.$this->client_id);?>" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="preview btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo $this->lang->line('__common_create');?></a>
 		</div>
 	</div>
 </div>
@@ -81,37 +81,12 @@ the <section></section> and you can use wells or panels instead
 	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('records', $this->role_id, 'update',   $this->client_id) : true; ?>';
 	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('records', $this->role_id, 'delete',   $this->client_id) : true; ?>';
 
-	$(".create").click(function (e) {
-		var title = $(this).attr('data-original-title');
-		var link = $(this).attr('href');
-		e.preventDefault();
-			$.ajax({
-				url: link,
-				onError: function () {
-					bootbox.alert('<?php echo $this->lang->line('__bootbox_error');?>');
-				},
-				success: function (response)
-				{
-					var dialog = bootbox.dialog({
-						title: title,
-						message: '<p class="text-center"><img src="'+BASE_URL+'img/ajax-loader.gif"/></p>'
-					});
-					dialog.init(function(){
-						setTimeout(function(){
-							dialog.find('.bootbox-body').html(response);
-						}, 3000);
-					});
-				}
-			});
-		return false;
-	});
-	
-    $('#recordsTab li a').on('click', function(e) {
+	 $('#recordsTab li a').on('click', function(e) {
 		var _self = $(this);
 		var val = _self.parent('li').attr('id');
 		var title = _self.text();
 
-		var url = '<?php echo site_url();?>records/'+val;
+		var url = BASE_URL+'records/'+val;
 		history.pushState(null, null, url);
 		checkURL();
 		// change page title from global var
@@ -218,63 +193,8 @@ the <section></section> and you can use wells or panels instead
 					$('#table-records').find('td:last').css('width', '10%');
 					$('#table-records').css('width', '100%');
 					//$('<p>Test</p>').appendTo('.dt-toolbar > div:first-child');
-
-					$(".bootbox").click(function (e) {
-						var title = $(this).attr('data-original-title');
-					   	e.preventDefault();
-					   	$.ajax({
-			                url: $(this).attr('href'),
-			                onError: function () {
-			                    bootbox.alert('<?php echo $this->lang->line('__bootbox_error');?>');
-			                },
-			                success: function (response)
-			                {
-			                    var dialog = bootbox.dialog({
-								    title: title,
-								    message: '<p class="text-center"><img src="'+BASE_URL+'img/ajax-loader.gif"/></p>'
-								});
-								dialog.init(function(){
-								    setTimeout(function(){
-								        dialog.find('.bootbox-body').html(response);
-								    }, 3000);
-								});
-			                }
-			            });
-			            return false;  
-					});
-
-					$(".delete").click(function (e) {
-					   	e.preventDefault();
-					   	$.ajax({
-			                url: $(this).attr('href'),
-			                success: function (response)
-			                {
-			                    if(response)
-								{
-									$.smallBox({
-										title : "Success",
-										content : response.message,
-										color : "#739E73",
-										iconSmall : "fa fa-check",
-										timeout : 3000
-									});
-									
-									checkURL();
-								}
-								else
-								{
-									$.smallBox({
-										title : "Error",
-										content : response.message,
-										color : "#C46A69",
-										iconSmall : "fa fa-warning shake animated",
-										timeout : 3000
-									});
-								} 
-			                }
-			            });
-					});
-
+					mcs.init_dialog();
+					mcs.init_action();
 					$("[rel=tooltip]").tooltip();
 				},
 		        //run on first time when datatable create
@@ -370,7 +290,7 @@ the <section></section> and you can use wells or panels instead
 		                "render": function (data, type, row) {
 		
                             if(can_view){
-                                newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_details');?>" href="'+BASE_URL+'records/details/'+row['record_id']+'/'+row['client_id']+'" class="bootbox link">'+row['name']+'</a>';
+                                newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_details');?>" href="'+BASE_URL+'records/details/'+row['record_id']+'/'+row['client_id']+'" class="preview link">'+row['name']+'</a>';
                             }
 							
 							return newData;
@@ -444,12 +364,12 @@ the <section></section> and you can use wells or panels instead
 		                    newData = "";
 
                             if(can_delete){
-                                newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'records/delete_record/'+row['record_id']+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
+                                newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'records/delete_record/'+row['record_id']+'" class="direct"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
                             }
                             if(can_update){
-                                newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'records/view/'+row['record_id']+'/'+row['client_id']+'" class="bootbox"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
+                                newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'records/view/'+row['record_id']+'/'+row['client_id']+'" class="preview"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
                             }
-                                newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_add_fields');?>"  href="'+BASE_URL+'custom_fields/view/-1/records_'+row['slug']+'_'+row['client_id']+'" class="bootbox"><i class="fas fa-book fa-lg"></i></a>';
+                                newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_add_fields');?>"  href="'+BASE_URL+'custom_fields/view/-1/records_'+row['slug']+'_'+row['client_id']+'" class="preview"><i class="fas fa-book fa-lg"></i></a>';
                         
 							return newData;
 		                },

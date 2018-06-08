@@ -501,8 +501,10 @@ class Settings extends Secure
 		
 		$id = url_base64_decode($enc_id);
 
+		$this->layout->title('Profile');
+		
 		$data['module'] = $this->lang->line('common_my_profile');
-
+		
 		if ($this->input->is_ajax_request()) 
 		{
 			$this->load->library('location_lib');
@@ -513,14 +515,13 @@ class Settings extends Secure
         } 
 		else
 		{
-			$this->_init($data);
+			$this->_set_layout($data);
+			$this->layout->build('user/profile', $data);
 		}
 	}
 	
 	function encryptID($user_id)
 	{
-
 		redirect('details/'.url_base64_encode($user_id));
-
 	}
 }
