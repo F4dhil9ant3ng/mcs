@@ -15,7 +15,7 @@
 			<button type="button" class="btn btn-primary">Update</button>
 			-->
 			<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('roles', $this->role_id, 'create',  $this->client_id) : true) { ?>
-				<button type="button" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="create btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo $this->lang->line('__common_create');?></button>
+				<a href="<?php echo site_url('roles/view/-1/');?>" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="preview btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo $this->lang->line('__common_create');?></a>
 			<?php } ?>
 		</div>
 	</div>
@@ -73,51 +73,9 @@ the <section></section> and you can use wells or panels instead
 	var admin_role_id = '<?php echo $this->admin_role_id;?>';
 	var patient_role_id = '<?php echo $this->patient_role_id;?>';
 
-	console.log(admin_role_id);
-	console.log(patient_role_id);
-
-	$(".create").click(function (e) {
-		var title = $(this).attr('data-original-title');
-		e.preventDefault();
-			$.ajax({
-				url: BASE_URL+'roles/view/-1',
-				onError: function () {
-					bootbox.alert('<?php echo $this->lang->line('__bootbox_error');?>');
-				},
-				success: function (response)
-				{
-					var dialog = bootbox.dialog({
-						title: title,
-						className: "dialog-60",
-						message: '<p class="text-center"><img src="'+BASE_URL+'img/ajax-loader.gif"/></p>'
-					});
-					dialog.init(function(){
-						setTimeout(function(){
-							dialog.find('.bootbox-body').html(response);
-						}, 3000);
-					});
-				}
-			});
-		return false;
-	});
 	
 	pageSetUp();
 
-	$('input[type=radio]').on('change', function(e) {
-		var val = $("input[name='option']:checked").val();
-		var url = '<?php echo site_url();?>course/'+val;
-		history.pushState(null, null, url);
-		checkURL();
-
-		var title = $("input[name='option']:checked").parent().text();
-
-		// change page title from global var
-		document.title = (title || document.title);
-		
-		e.preventDefault();
-		
-	});
-	
 	// pagefunction
 
 	var pagefunction = function() {
@@ -216,62 +174,8 @@ the <section></section> and you can use wells or panels instead
 					$('#table-role').find('td:first').css('width', '40px');
 					$('#table-role').css('width', '100%');
 					
-					$(".bootbox").click(function (e) {
-						var title = $(this).attr('data-original-title');
-					   	e.preventDefault();
-					   	$.ajax({
-			                url: $(this).attr('href'),
-			                onError: function () {
-			                    bootbox.alert('<?php echo $this->lang->line('__bootbox_error');?>');
-			                },
-			                success: function (response)
-			                {
-			                    var dialog = bootbox.dialog({
-								    title: title,
-									className: "dialog-60",
-								    message: '<p class="text-center"><img src="'+BASE_URL+'img/ajax-loader.gif"/></p>'
-								});
-								dialog.init(function(){
-								    setTimeout(function(){
-								        dialog.find('.bootbox-body').html(response);
-								    }, 3000);
-								});
-			                }
-			            });
-			            return false;  
-					});
-
-					$(".delete").click(function (e) {
-					   	e.preventDefault();
-					   	$.ajax({
-			                url: $(this).attr('href'),
-			                success: function (response)
-			                {
-			                    if(response)
-								{
-									$.smallBox({
-										title : "Success",
-										content : response.message,
-										color : "#739E73",
-										iconSmall : "fa fa-check",
-										timeout : 3000
-									});
-									
-									checkURL();
-								}
-								else
-								{
-									$.smallBox({
-										title : "Error",
-										content : response.message,
-										color : "#C46A69",
-										iconSmall : "fa fa-warning shake animated",
-										timeout : 3000
-									});
-								} 
-			                }
-			            });
-					});
+					mcs.init_dialog();
+					mcs.init_action();
 
 					$("[rel=tooltip]").tooltip();
 				},
@@ -330,7 +234,7 @@ the <section></section> and you can use wells or panels instead
 		                //row['statuses'] != 0
 		                "render": function (data, type, row) {
 
-		                    newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_details');?>" href="'+BASE_URL+'roles/details/'+row['role_id']+'" class="bootbox link">'+row['role_name']+'</a>';
+		                    newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_details');?>" href="'+BASE_URL+'roles/details/'+row['role_id']+'" class="preview link">'+row['role_name']+'</a>';
 		                    return newData;
 
 		                },
@@ -416,10 +320,10 @@ the <section></section> and you can use wells or panels instead
 		                    newData = "";
 		                    if(row['role_id'] != admin_role_id && row['role_id'] != patient_role_id){
 								if(can_delete){
-									newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'roles/delete/'+row['role_id']+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
+									newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'roles/delete/'+row['role_id']+'" class="direct"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
 								}
 								if(can_update){
-									newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'roles/view/'+row['role_id']+'/" class="bootbox"><i class="far fa-edit fa-lg"></i></a>';
+									newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'roles/view/'+row['role_id']+'/" class="preview"><i class="far fa-edit fa-lg"></i></a>';
 								}
 							}else{
 								newData +='<span class="badge badge-default"><?php echo $this->lang->line('__common_default');?></span>';
