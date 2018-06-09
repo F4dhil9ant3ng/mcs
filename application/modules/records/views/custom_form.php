@@ -93,7 +93,7 @@ echo form_open('records/save_custom_record/-1/'.$type,array('id'=>'record_form',
 	echo 'No Custom Field Set!';
 } ?>				
 <script type='text/javascript'>
-	var lec = '<?php echo $this->license_id;?>';	
+	
 	$(document).ready(function()
 	{
 		runAllForms();
@@ -127,15 +127,9 @@ echo form_open('records/save_custom_record/-1/'.$type,array('id'=>'record_form',
 						{
 							if(response.success)
 							{
-								$('.close').trigger('click');
-
 								mcs.init_smallBox("Success", response.message);
 								
-								$.each( response.records, function( key, value ) {
-								  	// console.log(key + ": " + value);
-								});
-								// console.log(response.records); //records_height_kjfh2rehs5_height
-								// console.log(response.type) //height_KjFh2rEHs5
+								$('.close').trigger('click');
 								checkURL(); 
 							}
 							else

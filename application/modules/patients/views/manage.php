@@ -15,7 +15,8 @@
 			<button type="button" class="btn btn-primary">Update</button>
 			-->
 			<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'create',  $this->client_id) : true) { ?>
-				<button type="button" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="create btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo $this->lang->line('__common_create');?></button>
+				<a href="<?php echo site_url('patients/view/-1/');?>" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="preview btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo $this->lang->line('__common_create');?></a>
+				
 			<?php } ?>
 		</div>
 	</div>
@@ -72,34 +73,6 @@ the <section></section> and you can use wells or panels instead
 	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'update',   $this->client_id) : true; ?>';
 	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'delete',   $this->client_id) : true; ?>';
 
-	$(".create").click(function (e) {
-		var title = $(this).attr('data-original-title');
-		e.preventDefault();
-			$.ajax({
-				url: BASE_URL+'patients/view/-1',
-				onError: function () {
-					bootbox.alert('<?php echo $this->lang->line('__bootbox_error');?>');
-				},
-				success: function (response)
-				{
-					var dialog = bootbox.dialog({
-						title: title,
-						message: '<p class="text-center"><img src="'+BASE_URL+'img/ajax-loader.gif"/></p>'
-					});
-					dialog.init(function(){
-						setTimeout(function(){
-							dialog.find('.bootbox-body').html(response);
-						}, 3000);
-					});
-				}
-			});
-
-		$(this).attr('disabled', true);
-		return false;
-	});
-	
-	pageSetUp();
-	
 	$('input[type=radio]').on('change', function(e) {
 		var val = $("input[name='option']:checked").val();
 		var url = '<?php echo site_url();?>course/'+val;
@@ -115,6 +88,7 @@ the <section></section> and you can use wells or panels instead
 		
 	});
 	
+	pageSetUp();
 
 	var pagedestroy = function() {
 
@@ -209,61 +183,8 @@ the <section></section> and you can use wells or panels instead
 					$('#table-patients').find('td:first').css('width', '40px');
 					$('#table-patients').css('width', '100%');
 					
-					$(".bootbox").click(function (e) {
-						var title = $(this).attr('data-original-title');
-					   	e.preventDefault();
-					   	$.ajax({
-			                url: $(this).attr('href'),
-			                onError: function () {
-			                    bootbox.alert('<?php echo $this->lang->line('__bootbox_error');?>');
-			                },
-			                success: function (response)
-			                {
-			                    var dialog = bootbox.dialog({
-								    title: title,
-								    message: '<p class="text-center"><img src="'+BASE_URL+'img/ajax-loader.gif"/></p>'
-								});
-								dialog.init(function(){
-								    setTimeout(function(){
-								        dialog.find('.bootbox-body').html(response);
-								    }, 3000);
-								});
-			                }
-			            });
-			            return false;  
-					});
-
-					$(".delete").click(function (e) {
-					   	e.preventDefault();
-					   	$.ajax({
-			                url: $(this).attr('href'),
-			                success: function (response)
-			                {
-			                    if(response)
-								{
-									$.smallBox({
-										title : "Success",
-										content : response.message,
-										color : "#739E73",
-										iconSmall : "fa fa-check",
-										timeout : 3000
-									});
-									
-									checkURL();
-								}
-								else
-								{
-									$.smallBox({
-										title : "Error",
-										content : response.message,
-										color : "#C46A69",
-										iconSmall : "fa fa-warning shake animated",
-										timeout : 3000
-									});
-								} 
-			                }
-			            });
-					});
+					mcs.init_dialog();
+					mcs.init_action();
 
 					$("[rel=tooltip]").tooltip();
 				},
@@ -309,7 +230,7 @@ the <section></section> and you can use wells or panels instead
 		                // this case `data: 0`.
 		                "render": function (data, type, row) {
 							if(row['avatar']){
-								newData =  '<img src="'+BASE_URL+'uploads/'+row['client_id']+'/profile-picture/'+row['avatar']+'" alt="'+row['username']+'" class="img-responsive" />';
+								newData =  '<img src="'+BASE_URL+'uploads/'+row['client_id']+'/profile-picture/'+row['avatar']+'" alt="'+row['username']+'" style="width:25px; height:25px;" />';
 							}else{ 
 								newData =  '<img src="<?php echo $this->gravatar->get("'+row['email']+'", 25);?>" />';
 							}
@@ -403,12 +324,12 @@ the <section></section> and you can use wells or panels instead
 		                    newData = "";
 		                    
 							if(can_delete){
-								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'patients/delete/'+row['id']+'/" class="delete"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
+								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'patients/delete/'+row['id']+'/" class="direct"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
 							}
 							if(can_update){
-								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'patients/view/'+row['id']+'/" class="bootbox"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
+								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'patients/view/'+row['id']+'/" class="preview"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
 							}
-							newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_records');?>" href="'+BASE_URL+'patients/decoded/medications/'+row['id']+'/" class="move "><i class="fas fa-book fa-lg"></i></a>&nbsp;';
+							newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_records');?>" href="'+BASE_URL+'patients/decoded/medications/'+row['id']+'/" class="move"><i class="fas fa-book fa-lg"></i></a>&nbsp;';
 		                    return newData;
 		                },
 		                "targets": 5
@@ -429,9 +350,9 @@ the <section></section> and you can use wells or panels instead
 	loadScript(BASE_URL+"js/bootbox.min.js", function(){
 		loadScript(BASE_URL+"js/plugin/datatables/jquery.dataTables.min.js", function(){
 
-					loadScript(BASE_URL+"js/plugin/datatables/dataTables.bootstrap.min.js", function(){
-						loadScript(BASE_URL+"js/plugin/datatable-responsive/datatables.responsive.min.js", pagefunction)
-					});
+			loadScript(BASE_URL+"js/plugin/datatables/dataTables.bootstrap.min.js", function(){
+				loadScript(BASE_URL+"js/plugin/datatable-responsive/datatables.responsive.min.js", pagefunction)
+			});
 				
 		});
 	});
