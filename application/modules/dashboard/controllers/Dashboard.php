@@ -52,4 +52,20 @@ class Dashboard extends Secure {
 		
 	}
 
+	function tojson() {
+
+		$fields = array(
+			'firstname' => array (
+				'required' => true,
+				'maxlength'=> 50
+			),
+			'lastname' => array (
+				'required' => true,
+				'maxlength'=> 50
+			)
+		);
+		
+		echo json_encode($fields);
+
+	}
 }

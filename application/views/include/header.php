@@ -52,7 +52,7 @@
 	<div class="project-context hidden-xs">
 
 		
-		<span class="label" id="que-counts"></span>
+		<label>Que : <span class="label" id="que-counts">-</span></label>
 		<span class="project-selector dropdown-toggle" data-toggle="dropdown">
 			<?php echo $this->lang->line('__waiting_lists');?> <i class="fa fa-angle-down"></i>
 		</span>

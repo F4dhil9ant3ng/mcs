@@ -30,7 +30,7 @@ class Patients extends Secure
 
     function _remap($method, $params = array()) 
     {
- 
+    	
         if (method_exists($this, $method)) {
             return call_user_func_array(array($this, $method), $params);
         }
@@ -41,6 +41,7 @@ class Patients extends Secure
 	function index()
 	{
 		$this->layout->title('Patients');
+
 		$data['module'] = get_class();
 
 		if ($this->input->is_ajax_request()) 
@@ -263,26 +264,38 @@ class Patients extends Secure
 	    }
     }
 	
-	function encode($type, $id)
+	function que($id) {
+		if ($this->input->is_ajax_request()) 
+		{
+			
+	    	$data['info'] = $this->Patient->get_profile_info($id);
+
+	        $this->load->view("que", $data);
+	    }else{
+	    	$this->session->set_flashdata('alert_error', 'Sorry! Page cannot open by new tab');
+            redirect(strtolower(get_class()));
+	    }
+	}
+
+	function encode($id)
 	{
 	
-		redirect('patients/records/'.$type.'/'.url_base64_encode($id));
+		redirect('patients/records/'.url_base64_encode($id));
 	}
 	
-	function decoded($type, $id)
+	function decoded($id)
 	{
 
-		redirect('patients/records/'.$type.'/'.url_base64_encode($id));
+		redirect('patients/records/'.url_base64_encode($id));
 		
 	}
-	
-	function records($type = 'summary', $id)
+
+	function records($id, $page = null)
 	{
 		
-		if($id == ''){
-			redirect('patients/decoded/summary/'.$id);
-		}
+		$this->load->library('pagination');
 
+		$this->load->library('cart');
 		$this->load->model('queings/Queing');
 		$this->load->model('records/Custom');
 		$this->load->model('records/Record');
@@ -290,43 +303,55 @@ class Patients extends Secure
 		$this->layout->title('Patient Records');
 		$data['module'] = 'Patient Records';
 		
+		$this->load->model('custom_fields/Custom_field');
+		$this->load->model('vaccines/Vaccine');
+		$this->load->model('doses/Dose');
+
+
+		$rowId = url_base64_decode($id);
+		$data['que_info'] = $this->cart->get_item($rowId);
+
+		$paginates = array();
+		$num = 1;
+		foreach ($this->cart->contents() as $items){
+			$paginates[site_url('patients/records/'.url_base64_encode($items['rowid']))] = $items['options']['patient_id'].'-'.$num;
+			$num ++;
+		} 
+
+		$data['paginates'] = $paginates;
+
+		$data['info'] = $this->Patient->get_profile_info($data['que_info']['options']['patient_id']);
+		$data['custom_fields'] = $this->Custom_field->get_custom('users_custom')->result();
+
+		$data['records_blocks'] = $this->Record->get_all('blocks');
+		$data['records_asides'] = $this->Record->get_all('asides');
+		$data['records_tabs'] = $this->Record->get_all('tabs');
+
+		$data['custom_records_tabs'] = $this->Custom->get_all($this->client_id);
+
+		$vaccines = array();
+		foreach($this->Vaccine->get_all()->result_array() as $row)
+		{
+			$vaccines[$row['vaccine_name']] = $row['vaccine_name'];
+		}
+		$data['vaccines']=$vaccines;
+			
+		$doses = array();
+		foreach($this->Dose->get_all()->result_array() as $row)
+		{
+			$doses[$row['dose_name']] = $row['dose_name'];
+		}
+		$data['doses']=$doses;
+
 		if ($this->input->is_ajax_request()) 
 		{
-			$patient_id = url_base64_decode($id);
-			$this->load->model('custom_fields/Custom_field');
-			$this->load->model('vaccines/Vaccine');
-			$this->load->model('doses/Dose');
-
-			$data['type'] = $type; 
-			$data['info'] = $this->Patient->get_profile_info($patient_id);
-			$data['custom_fields'] = $this->Custom_field->get_custom('users_custom')->result();
-
-			$data['records_blocks'] = $this->Record->get_all('blocks');
-			$data['records_asides'] = $this->Record->get_all('asides');
-			$data['records_tabs'] = $this->Record->get_all('tabs');
-
-			$data['custom_records_tabs'] = $this->Custom->get_all($this->client_id);
-
-			$vaccines = array();
-			foreach($this->Vaccine->get_all()->result_array() as $row)
-			{
-				$vaccines[$row['vaccine_name']] = $row['vaccine_name'];
-			}
-			$data['vaccines']=$vaccines;
-				
-			$doses = array();
-			foreach($this->Dose->get_all()->result_array() as $row)
-			{
-				$doses[$row['dose_name']] = $row['dose_name'];
-			}
-			$data['doses']=$doses;
 
 			$this->load->view('record', $data);
         } 
 		else
 		{
 			$this->_set_layout($data);
-			$this->layout->build('manage', $data);
+			$this->layout->build('record', $data);
 		}
 	}
 	

@@ -30,21 +30,18 @@
 				<h2>Serving</h2>
 
 				<div id="clock-large"></div>
-	   
-				<?php if($this->Queing->get_all($this->client_id)->num_rows() > 0) { ?>
-					<?php $i = 1; ?>
-					<?php foreach ($this->Queing->get_all($this->client_id)->result_array() as $items){ ?>
-						<?php if($i <= 3) { ?>
-						<div class="que-number" id="counts-<?php echo $i;?>">
-							<?php if($i == 1) echo ''; ?><?php echo $items['que_id'];?> <!--<span id="name"><?php //if($i == 1) echo $items['que_name']; ?></span>-->
-						</div>
-						<?php $i++; ?>
-					<?php } } ?>
+	   			<?php if($this->cart->contents()) {  $i = 1;?>
+					<?php foreach ($this->cart->contents() as $items){ ?>
+					<div class="que-number" id="counts-<?php echo $i;?>">
+						<?php if($i == 1) echo ''; ?><?php echo $items['id'];?> <!--<span id="name"><?php //if($i == 1) echo $items['que_name']; ?></span>-->
+					</div>
+					<?php $i++; } ?>
 				<?php }else{ ?>
-						<div class="que-number" id="counts-1">
-							000
-						</div>
+					<div class="que-number" id="counts-1">
+						000
+					</div>
 				<?php } ?>
+
 				
 			</div>
 			<div class="col-md-8 col-sm-12">
