@@ -1,3 +1,9 @@
+<style type="text/css">
+	
+	.widget-body {
+			    border-top: 1px solid #ccc;
+			}
+</style>
 <!-- Bread crumb is created dynamically -->
 <!-- row -->
 <div class="row">
@@ -6,67 +12,123 @@
 	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4"> 
 		<h1 class="page-title txt-color-blueDark"><!-- PAGE HEADER --><?php echo $module ;?> <small><?php //echo $this->lang->line('module_patients_desc');?></small></h1>
 	</div>
+
 	<!-- end col -->
-	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8 text-right">
+<!-- 	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8 text-right">
 		<div class="btn-group">
-			<!--
+			
 			<button type="button" class="btn btn-primary">Record</button>
 			<button type="button" class="btn btn-primary">Delete</button>
 			<button type="button" class="btn btn-primary">Update</button>
-			-->
-			<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'create',  $this->client_id) : true) { ?>
-				<a href="<?php echo site_url('patients/view/-1/');?>" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="preview btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo $this->lang->line('__common_create');?></a>
-				
-			<?php } ?>
-		</div>
-	</div>
-</div>
-<!-- end row -->
-
-<!--
-The ID "widget-grid" will start to initialize all widgets below
-You do not need to use widgets if you dont want to. Simply remove
-the <section></section> and you can use wells or panels instead
--->
-
-<!-- widget grid -->
-<section id="widget-grid" class="">
-	
-
-	<div class="row">
-	
-		<div class="col-sm-12 col-lg-12">
-
-			<table class="table table-striped table-forum" id="table-patients">
-				<thead>
-					<tr>
-						<th>&nbsp;</th>
-						<th><?php echo $this->lang->line('common_fullname');?></th>
-						<th>Birth Date</th>
-						<th><?php echo $this->lang->line('common_address');?></th>
-						<th><?php echo $this->lang->line('common_contacts');?></th>
-						<th>&nbsp;</th>
-						<th>&nbsp;</th>
-						<th>&nbsp;</th>
-						<th>&nbsp;</th>
-						<th>&nbsp;</th>
-						<th>&nbsp;</th>
-					</tr>
-				</thead>
-				<tbody>
-					
-				</tbody>
-			</table>
-		
+			
 			
 		</div>
+	</div> -->
+	<!-- right side of the page with the sparkline graphs -->
+	<!-- col -->
+	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
 		
 	</div>
+	<!-- end col -->
+</div>
+<!-- end row -->
+<!-- NEW WIDGET START -->
+<article class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
+	<!-- Widget ID (each widget will need unique ID)-->
+	<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-colorbutton="true" data-widget-editbutton="false">
+		<!-- widget options:
+			usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+			
+			data-widget-colorbutton="false"	
+			data-widget-editbutton="false"
+			data-widget-togglebutton="false"
+			data-widget-deletebutton="false"
+			data-widget-fullscreenbutton="false"
+			data-widget-custombutton="false"
+			data-widget-collapsed="true" 
+			data-widget-sortable="false"
+			
+		-->
+	<!-- 	<header>
+			<h2><strong>Fixed</strong> <i>Height</i></h2>				
+			
+		</header> -->
 
-	<!-- end row -->
+		<!-- widget div-->
+		<div>
+			
+			<!-- widget edit box -->
+			<div class="jarviswidget-editbox">
+				<!-- This area used as dropdown edit box -->
+				<input class="form-control" type="text">
+				<span class="note"><i class="fa fa-check text-success"></i> Change title to update and save instantly!</span>
+				
+			</div>
+			<!-- end widget edit box -->
+			
+			<!-- widget content -->
+			<div class="widget-body no-padding">
+				<div class="widget-body-toolbar">
+					
+					<div class="row">
+						
+						<div class="col-xs-9 col-sm-5 col-md-5 col-lg-5">
+							<!-- <div class="input-group">
+								<span class="input-group-addon"><i class="fa fa-search"></i></span>
+								<input class="form-control" id="prepend" placeholder="Filter" type="text">
+							</div> -->
+						</div>
+						<div class="col-xs-3 col-sm-7 col-md-7 col-lg-7 text-right">
 
-</section>
-<!-- end widget grid -->
+							<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'create',  $this->client_id) : true) { ?>
+								<a href="<?php echo site_url('patients/view/-1/');?>" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="preview btn btn-success btn-sm"><i class="fa fa-plus"><span class="hidden-mobile">&nbsp;<?php echo $this->lang->line('__common_create');?></i> </a>
+								
+							<?php } ?>
+						</div>
+						
+					</div>
+					
+						
+
+				</div>
+				
+				<div class="custom-scroll table-responsive" style="overflow-y: scroll;">
+
+					<table class="table table-striped table-forum" id="table-patients">
+						<thead>
+							<tr>
+								<th>&nbsp;</th>
+								<th><?php echo $this->lang->line('common_fullname');?></th>
+								<th>Birth Date</th>
+								<th><?php echo $this->lang->line('common_address');?></th>
+								<th><?php echo $this->lang->line('common_contacts');?></th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody>
+							
+						</tbody>
+					</table>
+				
+					
+				</div>	
+					
+			</div>
+			<!-- end widget content -->
+			
+		</div>
+		<!-- end widget div -->
+		
+	</div>
+	<!-- end widget -->
+
+</article>
+<!-- WIDGET END -->
 
 <script type="text/javascript">
 	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'view',   $this->client_id) : true; ?>';
@@ -185,7 +247,7 @@ the <section></section> and you can use wells or panels instead
 					
 					mcs.init_dialog();
 					mcs.init_action();
-
+					
 					$("[rel=tooltip]").tooltip();
 				},
 		        //run on first time when datatable create
@@ -322,14 +384,14 @@ the <section></section> and you can use wells or panels instead
 		                // this case `data: 4`.
 		                "render": function (data, type, row) {
 		                    newData = "";
-		                    
+
 							if(can_delete){
 								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'patients/delete/'+row['id']+'/" class="direct"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
 							}
 							if(can_update){
 								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'patients/view/'+row['id']+'/" class="preview"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
 							}
-							newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_records');?>" href="'+BASE_URL+'patients/decoded/medications/'+row['id']+'/" class="move"><i class="fas fa-book fa-lg"></i></a>&nbsp;';
+							newData += '<a rel="tooltip" data-placement="bottom" data-original-title="Que" href="'+BASE_URL+'patients/patients/que/'+row['id']+'" class="preview"><i class="fas fa-book fa-lg"></i></a>&nbsp;';
 		                    return newData;
 		                },
 		                "targets": 5

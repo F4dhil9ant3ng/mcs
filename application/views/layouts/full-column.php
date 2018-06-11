@@ -85,6 +85,22 @@
 			    padding-top: 6px!important;
 			    padding-bottom: 6px!important;
 			}
+
+			article {
+			    padding: 0 !important;
+			}
+			
+			ul#sparks {
+			    margin-right: 4em;
+			}
+			/**/
+			.project-context label {
+			    margin-bottom: 0;
+			    color: #7d7c7c !important;
+			}
+			span#que-counts {
+			    color: inherit;
+			}
 		</style>
 
 		<script type="text/javascript">

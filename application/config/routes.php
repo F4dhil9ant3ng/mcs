@@ -71,4 +71,5 @@ if(!in_array($_SERVER['REMOTE_ADDR'], $this->config->item('maintenance_ips')) &&
     $route['records/custom'] 			= 'records/custom_records';
 
     $route['users/(:any)'] 			= 'user/index/$1';
+
 }

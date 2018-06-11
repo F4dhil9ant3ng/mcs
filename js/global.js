@@ -7,16 +7,9 @@ var mcs = (function() {
 		setInterval(function(){
 			
 			var counts = $('span#que-counts').html();
-			var xcounts = $('span#running-que-counts').html();
-			
-			$.ajax({
-				url: BASE_URL+'queings/get_counts',
-				type: 'post',   
-				dataType: 'json',
-				success: function (res) {
-					$('#running-que-counts').html(res.counts);
-				}
-			});
+			var xcounts = 0;
+			xcounts = $.getValues(BASE_URL+'queings/get_counts');
+			console.log(xcounts);
 
 			if(counts != xcounts){
 				que_get();
@@ -25,6 +18,22 @@ var mcs = (function() {
 			
 		},3000);
 		
+		jQuery.extend({
+		    getValues: function(url) {
+		        var result = null;
+		        $.ajax({
+		            url: url,
+		            type: 'post',
+		            dataType: 'json',
+		            async: false,
+		            success: function(res) {
+		                result = res.counts;
+		            }
+		        });
+		       return result;
+		    }
+		});
+
 		que_counts();
 		
 		function que_counts(){
@@ -53,34 +62,6 @@ var mcs = (function() {
 				}
 			});
 		}
-
-		//if(ROLE_ID == 1){
-	
-			/* var setup = function (){
-				$.ajax({
-					url: BASE_URL+'secure/setup',
-					onError: function () {
-						bootbox.alert('Some network problem try again later.');
-					},
-					success: function (response)
-					{
-						var dialog = bootbox.dialog({
-							title: 'Initial Setup',
-							className: "modal70",
-							message: '<p class="text-center"><img src="'+BASE_URL+'img/ajax-loader.gif"/></p>'
-						});
-						dialog.init(function(){
-							setTimeout(function(){
-								dialog.find('.bootbox-body').html(response);
-							}, 3000);
-						});
-					}
-				}); 
-			}
-			
-			loadScript(BASE_URL+"js/bootbox.min.js", setup); */
-		//}
-		
 	}
 
 	that.init_smallBox = function (_type, _content, _timeout = 3000) {
@@ -269,9 +250,25 @@ var mcs = (function() {
 	that.init_ajax_form = function (validate_form) {
 
 		var validatefunction = function() {
-
-			$(validate_form).validate({
 			
+			$('#'+validate_form).validate({
+				// rules : fields_rules,
+	            // messages : fields_msg,
+	            highlight: function(element) {
+	                $(element).closest('.form-group').addClass('has-error');
+	            },
+	            unhighlight: function(element) {
+	                $(element).closest('.form-group').removeClass('has-error');
+	            },
+	            errorElement: 'span',
+	            errorClass: 'text-danger',
+	            errorPlacement: function(error, element) {
+	                if(element.parent('.input-group').length) {
+	                    error.insertAfter(element.parent());
+	                }else{
+	                    error.insertAfter(element);
+	                }
+	            },
 				// Ajax form submition
 				submitHandler : function(form) {
 					
@@ -284,11 +281,12 @@ var mcs = (function() {
 						{
 							if(response.success)
 							{
-								that.init_smallBox("Success", response.message);
+								that.init_smallBox("success", response.message);
+								$('.bootbox-close-button').trigger('click');
 							}
 							else
 							{
-								that.init_smallBox("Error", response.message);	
+								that.init_smallBox("error", response.message);	
 							}                   
 							$(form).find('#submit').text("<?php echo $this->lang->line('__common_update');?>");
 							$(form).find('#submit').removeAttr("disabled");

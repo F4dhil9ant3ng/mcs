@@ -1,13 +1,11 @@
 <!-- Suggestion: populate this list with fetch and push technique -->
 
 <ul class="dropdown-menu">
-	<?php if($this->Queing->get_all($this->client_id)->num_rows() > 0) { ?>
-		<?php $i = 1; ?>
-		<?php foreach ($this->Queing->get_all($this->client_id)->result_array() as $items){ ?>
+	<?php if($this->cart->contents()) { ?>
+		<?php foreach ($this->cart->contents() as $items){ ?>
 		<li> 
-			<a href="<?php echo site_url('patients/encode/medications/'.$items['que_patient_id']);?>"><strong><?php echo $items['que_id'];?>.</strong> &nbsp; <?php echo $items['que_name']; ?></a> 
+			<a href="<?php echo site_url('patients/records/'.url_base64_encode($items['rowid']));?>"><strong><?php echo $items['id'];?> </strong> &nbsp; <?php echo $items['name']; ?></a> 
 		</li>
-		<?php $i++; ?>
 		<?php } ?>
 		
 		<li class="divider"></li>
@@ -20,29 +18,22 @@
 </ul>
 <!-- end dropdown-menu-->
 <script type="text/javascript">
-
 	$('.clear-all').click(function(e) { 
-
 		$.ajax({
 			url: $(this).attr('href'),
-			type: 'POST',
+			type: 'post',
 			success: function(response) {
-
 				if(response)
 				{
-					
 					mcs.init_smallBox("Success", response.message);
-					$('.project-selector').trigger('click');
-					
+					mcs.init();
 				}
 				else
 				{
 					mcs.init_smallBox("error", response.message);
 				} 
-
 			}
 		});
-		e.preventDefault();
-		
+		e.preventDefault();	
 	});
 </script>

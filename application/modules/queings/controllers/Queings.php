@@ -23,6 +23,8 @@ class Queings extends Secure
         parent::__construct();
 
         $this->load->model('Queing');
+        $this->load->library('cart');
+        $this->load->library('que');
     }
 
     function _remap($method, $params = array()) 
@@ -49,36 +51,46 @@ class Queings extends Secure
         
 	}
 	
-	function move_in($id)
+	function move_in()
 	{
-
+		
 		$this->load->model('patients/Patient');
 
-		$info = $this->Patient->get_profile_info($id);
-	
-		$data = array(
-			'que_id'  		=> $this->Queing->last_row($this->client_id)->que_id + 1, //unique id
-			'que_date'		=> date('Y-m-d'),
-			'que_license' 	=> $this->client_id,
-			'que_patient_id'    	=> $info->id, //id of patient
-			'que_name'    	=> $info->firstname.', '.$info->lastname //name of patient
-		);
+		$info = $this->Patient->get_info($this->input->post('patient_id'));
 
-		if($this->Queing->save($data))
-		{
-			echo json_encode(array('success' => true, 'message' => 'Patient successfully move to wating list!'));
-		} 
+		if(!$this->que->in_cart($info->id)) {
+
+			$num = $this->cart->total_items() + 1;
+			$data = array(
+			        'id'      => 'MCS-00'.$num,
+			        'qty'     => 1,
+			        'price'   => 250.00,//initial pf
+			        'name'    => $info->firstname.' '. $info->lastname,
+			        'options' => array(
+			        	'patient_id' => $info->id, 
+			        	'type' => $this->input->post('visit_type')
+			        )
+			);
+			if($this->cart->insert($data))
+			{
+				echo json_encode(array('success' => true, 'message' => 'Patient successfully move to wating list!'));
+			} 
+		}
 		else 
 		{
-			echo json_encode(array('success' => false, 'message' => 'Patient cannot be move to wating list!'));
+			echo json_encode(array('success' => false, 'message' => 'Patient already in waiting list!'));
 		}
 		
 	}
 	
-	function move_out($rowid, $status) 
+	function move_out($rowid) 
 	{ 
+		$data = array(
+           'rowid' => $rowid,
+           'qty'   => 0
+        );
 
-        if($this->Queing->delete($rowid, $status, $this->client_id))
+        if($this->cart->update($data))
         {
 			echo json_encode(array('success' => true, 'message' => 'Patient successfully remove in wating list!'));
 		} 
@@ -91,7 +103,7 @@ class Queings extends Secure
 	function clear_all()
 	{
 		
-		if($this->Queing->delete_list($this->client_id))
+		if($this->cart->destroy())
 		{
 			echo json_encode(array('success' => true, 'message' => 'Cleaning wating list done!'));
 		} 
@@ -101,6 +113,25 @@ class Queings extends Secure
 		}
 	}
 	
+	function get_in()
+	{
+		
+		$this->load->view('manage');
+
+	}
+	
+	function get_list()
+	{
+		
+		$this->load->view('list');
+
+	}
+	
+	function get_counts()
+	{
+		echo json_encode(array('counts' => $this->cart->total_items()));
+	}
+
 	function preview($id, $date, $mainteinable = false)
 	{
 		//preview/4/2018-6-1/no
@@ -225,24 +256,5 @@ class Queings extends Secure
 
     }
 	
-	function get_in()
-	{
-		
-		$this->load->view('manage');
-
-	}
 	
-	function get_list()
-	{
-		
-		$this->load->view('list');
-
-	}
-	
-	function get_counts()
-	{
-		$counts = 0;
-		$counts = $this->Queing->count_all($this->client_id);
-		echo json_encode(array('counts' => $counts));
-	}
 }
