@@ -4,66 +4,123 @@
 
 	<!-- col -->
 	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4"> 
-		<h1 class="page-title txt-color-blueDark"><!-- PAGE HEADER --><?php echo $module ;?> <small><?php //echo $this->lang->line('module_patients_desc');?></small></h1>
+		<h1 class="page-title txt-color-blueDark"><!-- PAGE HEADER --><?php echo $module ;?> <small></small></h1>
 	</div>
+
 	<!-- end col -->
-	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8 text-right">
+<!-- 	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8 text-right">
 		<div class="btn-group">
-			<!--
+			
 			<button type="button" class="btn btn-primary">Record</button>
 			<button type="button" class="btn btn-primary">Delete</button>
 			<button type="button" class="btn btn-primary">Update</button>
-			-->
-			<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('roles', $this->role_id, 'create',  $this->client_id) : true) { ?>
-				<a href="<?php echo site_url('roles/view/-1/');?>" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="preview btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo $this->lang->line('__common_create');?></a>
-			<?php } ?>
+			
+			
 		</div>
+	</div> -->
+	<!-- right side of the page with the sparkline graphs -->
+	<!-- col -->
+	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
+		
 	</div>
+	<!-- end col -->
 </div>
 <!-- end row -->
 
-<!--
-The ID "widget-grid" will start to initialize all widgets below
-You do not need to use widgets if you dont want to. Simply remove
-the <section></section> and you can use wells or panels instead
--->
+<!-- NEW WIDGET START -->
+<article class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
+	<!-- Widget ID (each widget will need unique ID)-->
+	<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-colorbutton="true" data-widget-editbutton="false">
+		<!-- widget options:
+			usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+			
+			data-widget-colorbutton="false"	
+			data-widget-editbutton="false"
+			data-widget-togglebutton="false"
+			data-widget-deletebutton="false"
+			data-widget-fullscreenbutton="false"
+			data-widget-custombutton="false"
+			data-widget-collapsed="true" 
+			data-widget-sortable="false"
+			
+		-->
+	<!-- 	<header>
+			<h2><strong>Fixed</strong> <i>Height</i></h2>				
+			
+		</header> -->
 
-<!-- widget grid -->
-<section id="widget-grid" class="">
-
-
-	<div class="row">
-	
-		<div class="col-sm-12 col-lg-12">
-
-			<table class="table table-striped" id="table-role">
-				<thead>
-					<tr>
-						<th>&nbsp;</th>
-						<th>Name</th>
-						<th class="text-center">Counts</th>
-						<th>Description</th>
-						<th>&nbsp;</th>
-						<th>&nbsp;</th>
-						<th class="text-right">&nbsp;</th>
-						<th>&nbsp;</th>
-					</tr>
-				</thead>
-				<tbody>
+		<!-- widget div-->
+		<div>
+			
+			<!-- widget edit box -->
+			<div class="jarviswidget-editbox">
+				<!-- This area used as dropdown edit box -->
+				<input class="form-control" type="text">
+				<span class="note"><i class="fa fa-check text-success"></i> Change title to update and save instantly!</span>
+				
+			</div>
+			<!-- end widget edit box -->
+			
+			<!-- widget content -->
+			<div class="widget-body no-padding">
+				<div class="widget-body-toolbar">
 					
-				</tbody>
-			</table>
-		
+					<div class="row">
+						
+						<div class="col-xs-9 col-sm-5 col-md-5 col-lg-5">
+							<!-- <div class="input-group">
+								<span class="input-group-addon"><i class="fa fa-search"></i></span>
+								<input class="form-control" id="prepend" placeholder="Filter" type="text">
+							</div> -->
+						</div>
+						<div class="col-xs-3 col-sm-7 col-md-7 col-lg-7 text-right">
+
+							<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('roles', $this->role_id, 'create',  $this->client_id) : true) { ?>
+								<a href="<?php echo site_url('roles/view/-1/');?>" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="preview btn btn-success btn-sm"><i class="fa fa-plus"></i>&nbsp;<span class="hidden-mobile"><?php echo $this->lang->line('__common_create');?></span> </a>
+								
+							<?php } ?>
+						</div>
+						
+					</div>
+					
+						
+
+				</div>
+				
+				<div class="custom-scroll table-responsive" style="overflow-y: scroll;">
+
+					<table class="table table-striped" id="table-role">
+						<thead>
+							<tr>
+								<th>&nbsp;</th>
+								<th>Name</th>
+								<th class="text-center">Counts</th>
+								<th>Description</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th class="text-right">&nbsp;</th>
+								<th>&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody>
+							
+						</tbody>
+					</table>
+				
+					
+				</div>	
+					
+			</div>
+			<!-- end widget content -->
 			
 		</div>
+		<!-- end widget div -->
 		
 	</div>
+	<!-- end widget -->
 
-	<!-- end row -->
-
-</section>
-<!-- end widget grid -->
-
+</article>
+<!-- WIDGET END -->
 <script type="text/javascript">
 
 	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('roles', $this->role_id, 'view',   $this->client_id) : true; ?>';
