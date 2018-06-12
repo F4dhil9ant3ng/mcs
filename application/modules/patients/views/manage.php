@@ -10,7 +10,7 @@
 
 	<!-- col -->
 	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4"> 
-		<h1 class="page-title txt-color-blueDark"><!-- PAGE HEADER --><?php echo $module ;?> <small><?php //echo $this->lang->line('module_patients_desc');?></small></h1>
+		<h1 class="page-title txt-color-blueDark"><!-- PAGE HEADER --><?php echo $module ;?> <small></small></h1>
 	</div>
 
 	<!-- end col -->
@@ -81,7 +81,7 @@
 						<div class="col-xs-3 col-sm-7 col-md-7 col-lg-7 text-right">
 
 							<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'create',  $this->client_id) : true) { ?>
-								<a href="<?php echo site_url('patients/view/-1/');?>" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="preview btn btn-success btn-sm"><i class="fa fa-plus"><span class="hidden-mobile">&nbsp;<?php echo $this->lang->line('__common_create');?></i> </a>
+								<a href="<?php echo site_url('patients/view/-1/');?>" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="preview btn btn-success btn-sm"><i class="fa fa-plus"></i>&nbsp;<span class="hidden-mobile"><?php echo $this->lang->line('__common_create');?></span> </a>
 								
 							<?php } ?>
 						</div>
