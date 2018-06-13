@@ -14,5 +14,7 @@
 /ubt-developments
 /forum
 /ticket
+/admin
 /uploads/*
 /arrowchat/includes/config.php
+/error_log.txt
