@@ -1,1 +1,3 @@
 
+[09-Jun-2018 11:30:13 Asia/Hong_Kong] PHP Fatal error:  Call to undefined method CI_Output::set_template() in /home/myclinicsoft/public_html/application/modules/auth/controllers/Auth.php on line 302
+[10-Jun-2018 16:28:10 Asia/Hong_Kong] PHP Fatal error:  Call to undefined method CI_Output::set_template() in /home/myclinicsoft/public_html/application/modules/auth/controllers/Auth.php on line 302
