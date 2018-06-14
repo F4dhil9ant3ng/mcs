@@ -22,12 +22,10 @@ class Dashboard extends Secure {
         parent::__construct();
 
         $this->load->language('dashboard', 'english');
-        $this->load->language('posts/posts', 'english');
     }
 
     function _remap($method, $params = array()) 
     {
- 
         if (method_exists($this, $method)) {
             return call_user_func_array(array($this, $method), $params);
         }
@@ -37,10 +35,11 @@ class Dashboard extends Secure {
 
 	function index()
 	{
+		$data['module'] = 'Dashboard';
+		$this->load->model('reports/Report');
 		$this->layout->title('Dashboard');
-		$data['module'] = get_class();
 
-		if ($this->input->is_ajax_request()) 
+		if ($this->is_ajax) 
 		{
 			$this->load->view('manage', $data);
         } 
@@ -52,20 +51,4 @@ class Dashboard extends Secure {
 		
 	}
 
-	function tojson() {
-
-		$fields = array(
-			'firstname' => array (
-				'required' => true,
-				'maxlength'=> 50
-			),
-			'lastname' => array (
-				'required' => true,
-				'maxlength'=> 50
-			)
-		);
-		
-		echo json_encode($fields);
-
-	}
 }
