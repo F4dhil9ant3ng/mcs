@@ -256,7 +256,7 @@ class Custom extends CI_Model
 	}
 
 	
-	function get_all_custom($type, $user_id, $client_id = null, $maintainable = null)
+	function get_all_custom($type, $user_id, $client_id = null, $maintainable = null, $is_current = false)
 	{
 		$table = ($client_id != null) ? 'records_'.$type.'_'.$client_id : 'records_'.$type;
 		$this->db->from($table); 

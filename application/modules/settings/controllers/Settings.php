@@ -420,6 +420,7 @@ class Settings extends Secure
 			'prc'=>$this->input->post('prc'),
 			'ptr'=>$this->input->post('ptr'),
 			's2'=>$this->input->post('s2'),
+			'pf'=>$this->input->post('pf'),
 			'morning_open_time'=>$this->input->post('morning_open_time'),
 			'morning_close_time'=>$this->input->post('morning_close_time'),
 			'afternoon_open_time'=>$this->input->post('afternoon_open_time'),
