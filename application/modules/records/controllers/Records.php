@@ -230,7 +230,7 @@ class Records extends Secure
     function delete_custom_field($id, $type)
     {
 
-    	if ($res = $this->Custom->delete($id, $type)) 
+    	if ($this->Custom->delete($id, $type)) 
     	{
 
 			echo json_encode(array('success' => true, 'message' => 'Record successfully deleted!'));
@@ -239,7 +239,7 @@ class Records extends Secure
 		else 
 		{
 
-			echo json_encode(array('success' => false, 'message' => $res ));
+			echo json_encode(array('success' => false, 'message' => 'failed to save record!' ));
 
 		}
 
@@ -289,15 +289,14 @@ class Records extends Secure
 	}
 
 	function create_custom($type, $user_id, $cdate = null, $client_id = null)
-	{ //$id=-1, 
+	{ 
 		$data['user_id'] = $user_id;
 		$data['title'] = sprintf($this->lang->line('records_title'), $type);
 		$data['type'] = $type;
 		$data['cdate'] = $cdate;
 		
 		$this->load->model('custom_fields/Custom_field');
-		// $data['custom_fields'] = $this->Custom_field->get_custom('records_'.$type)->result();
-
+		
 		$table = ($client_id != null) ? 'custom_records' : 'records';
 		// $data['info'] = $this->Record->get_info_by_id($id, $table);
 
@@ -356,7 +355,7 @@ class Records extends Secure
 		}
 		$record_data['user_id'] = $this->input->post('user_id');
 		$record_data['date'] 	= date('Y-m-d');
-		
+		//records_height_height
 		if($res = $this->Custom->save($record_data, $type, $id))
 		{
 			
@@ -379,11 +378,11 @@ class Records extends Secure
 		if($res = $this->Custom->save($record_data, $type, $id))
 		{
 			
-			echo json_encode(array('success'=>true, 'records'=>$record_data, 'type'=>$type, 'message'=>'Successfully saved!'));
+			echo json_encode(array('success'=>true, 'records'=>$record_data, 'id'=>$res['record_id'], 'message'=>'Successfully saved!'));
 		}
 		else//failure
 		{	
-			echo json_encode(array('success'=>false, 'id'=>$res['id'], 'message'=>sprintf($this->lang->line('records_response_failed_message'), $this->lang->line('records_'.strtolower(str_replace(' ', '_', $type))))));
+			echo json_encode(array('success'=>false, 'id'=>$res['record_id'], 'message'=>sprintf($this->lang->line('records_response_failed_message'), $this->lang->line('records_'.strtolower(str_replace(' ', '_', $type))))));
 		}
 	}
 
@@ -401,11 +400,11 @@ class Records extends Secure
 		if($res = $this->Custom->save($record_data, $type, $id))
 		{
 			
-			echo json_encode(array('success'=>true, 'records'=>$record_data, 'type'=>$type, 'message'=>'Successfully saved!'));
+			echo json_encode(array('success'=>true, 'records'=>$record_data, 'id'=>$res['record_id'], 'message'=>'Successfully saved!'));
 		}
 		else//failure
 		{	
-			echo json_encode(array('success'=>false, 'id'=>$res['id'], 'message'=>sprintf($this->lang->line('records_response_failed_message'), $this->lang->line('records_'.strtolower(str_replace(' ', '_', $type))))));
+			echo json_encode(array('success'=>false, 'id'=>$res['record_id'], 'message'=>sprintf($this->lang->line('records_response_failed_message'), $this->lang->line('records_'.strtolower(str_replace(' ', '_', $type))))));
 		}
 	}
 

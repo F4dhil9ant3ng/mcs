@@ -181,8 +181,8 @@ class Custom extends CI_Model
         {
             if($this->db->insert('records_'.$type, $record_data))
             {
-                $record_data['id']=$this->db->insert_id();
-                return true;
+                $record_id = $this->db->insert_id();
+                return array('record_id' => $record_id);
             }
             return false;
         }

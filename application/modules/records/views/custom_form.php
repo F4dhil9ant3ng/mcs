@@ -120,25 +120,25 @@ echo form_open('records/save_custom_record/-1/'.$type,array('id'=>'record_form',
 				{
 					$(form).ajaxSubmit({
 						beforeSend: function () {
-							$('#submit').html('Please wait...');
-							$('#submit').attr("disabled", "disabled");
+							$(form).find('#submit').html('Please wait...');
+							$(form).find('#submit').attr("disabled", "disabled");
 						},
 						success:function(response)
 						{
+
 							if(response.success)
 							{
-								mcs.init_smallBox("Success", response.message);
-								
+								mcs.init_smallBox("success", response.message);
 								$('.close').trigger('click');
 								checkURL(); 
 							}
 							else
 							{
-								mcs.init_smallBox("Error", response.message);
+								mcs.init_smallBox("error", response.message);
 							}  
 
-							$('#submit').html('Submit');
-							$('#submit').removeAttr("disabled");	
+							$(form).find('#submit').html('Submit');
+							$(form).find('#submit').removeAttr("disabled");
 						},
 						dataType:'json'
 					});
