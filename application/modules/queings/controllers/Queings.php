@@ -160,7 +160,7 @@ class Queings extends Secure
 		$que_info = $this->cart->get_item($rowId);
 		$info = $this->Patient->get_info($que_info['options']['patient_id']);
 		
-		$next_visit = $this->Custom->get_record('next_visit', $info->id, false, $date);
+		//$next_visit = $this->Custom->get_record('next_visit', $info->id, false, $date);
 
 		$age = (date("md", date("U", mktime(0, 0, 0, $info->bMonth, $info->bDay, $info->bYear))) > date("md")
 				? ((date("Y") - $info->bYear) - 1)
@@ -210,7 +210,7 @@ class Queings extends Secure
 				"{{patient_mobile}}",
 				//preserve details				
 				"{{consultation_date}}", 
-				"{{next_visit}}",
+				//"{{next_visit}}",
 				"{{prescriptions}}",
 				//configuration details
 				"{{business_name}}", 
@@ -244,7 +244,7 @@ class Queings extends Secure
 				($info->mobile) ? $info->mobile : '--',
 				//preserve details
 				date('m/d/Y'),
-				(count($next_visit) > 0) ? date('m/d/Y', strtotime($next_visit[0]['next_visit'])) : '--',
+				//(count($next_visit) > 0) ? date('m/d/Y', strtotime($next_visit[0]['next_visit'])) : '--',
 				$prescriptions,
 				//configuration details
 				($this->config->item('business_name')) ? $this->config->item('business_name') : '--',

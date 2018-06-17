@@ -30,19 +30,13 @@ div#blocks h1 {
     font-weight: 100;
     font-size: 28px;
 }
-div#blocks .record-data {
-    position: relative;
-}
-div#blocks .record-data a.delete_record {
-    position: absolute;
-    bottom: 10%;
-    right: 5%;
-    visibility: hidden;
-}
-div#blocks .record-data:hover a.delete_record {
+div#blocks .record-data:hover .direct {
     visibility: visible;
 }
-
+div#blocks .direct {
+    float: right;
+    visibility: hidden;
+}
 .table>tbody>tr>td:last-child a {
     visibility: hidden;
 }
@@ -196,15 +190,10 @@ div#prescriptions {
 								<div class="col-md-4 text-center record-data">
 									<h3> <?php echo $records_block->name;?></h3>
 									<?php 
-									//$record_data = $this->Custom->get_all_custom($records_block->slug, $info->id); 
 									$record_data = $this->Custom->get_all_current_custom($records_block->slug, $info->id, date('Y-m-d'));
 									if(count($record_data) > 0) { 
 
-										$custom_fields = $this->Custom_field->get_custom('records_'.$records_block->slug);
-										// echo '<pre>';
-										// print_r($custom_fields->result());
-										// echo '</pre>';
-										?>
+										$custom_fields = $this->Custom_field->get_custom('records_'.$records_block->slug); ?>
 
 												<?php foreach($record_data as $row) { ?>
 													<div id="row-<?php echo $row['id'];?>">
@@ -213,8 +202,7 @@ div#prescriptions {
 
 											                foreach ($custom_fields->result() as $custom_field) { ?>
 											                    
-											                    <h1>
-																	<strong id="block-<?php echo $row['id'];?>"><?php echo $row[''.$custom_field->custom_field_column.'']; ?></strong>
+											                    <h1><strong id="block-<?php echo $row['id'];?>"><?php echo $row[''.$custom_field->custom_field_column.'']; ?></strong>
 																<small><?php if($custom_field->custom_field_symbol != null) echo '( '.$custom_field->custom_field_symbol.' )';?></small></h1>
 											                	<span class="text-muted"><?php echo date($this->config->item('dateformat'), strtotime($row['date']));?></span>
 											                <?php }
@@ -288,9 +276,7 @@ div#prescriptions {
 								$i = 0;
 								foreach ($records_tabs->result() as $records_tab) { ?>
 								<div class="tab-pane fade <?php if($i == 0) echo 'active in';?>" id="record_<?php echo $records_tab->record_id;?>">
-									<?php 
-									// $record_data = $this->Custom->get_all_custom($records_tab->slug, $info->id);
-									$record_data = $this->Custom->get_all_current_custom($records_tab->slug, $info->id, date('Y-m-d'));
+									<?php $record_data = $this->Custom->get_all_current_custom($records_tab->slug, $info->id, date('Y-m-d'));
 									if(count($record_data) > 0) { 
 
 										$custom_fields = $this->Custom_field->get_custom('records_'.$records_tab->slug);
@@ -329,8 +315,8 @@ div#prescriptions {
 
 											                foreach ($custom_fields->result() as $custom_field) { ?>
 											                    <td>
-																	<p><strong id="history-<?php echo $row['id'];?>"><?php echo $row[''.$custom_field->custom_field_column.'']; ?></strong>
-																	<span><?php if($custom_field->custom_field_symbol != null) echo '( '.$custom_field->custom_field_symbol.' )';?></span></p>
+																	<?php echo $row[''.$custom_field->custom_field_column.'']; ?>
+																	<span><?php if($custom_field->custom_field_symbol != null) echo '( '.$custom_field->custom_field_symbol.' )';?></span>
 																</td>
 																
 											                <?php }
@@ -418,9 +404,8 @@ div#prescriptions {
 								$i = 0;
 								foreach ($custom_records_tabs->result() as $custom_records_tab) { ?>
 								<div class="tab-pane fade <?php if($i == 0) echo 'active in';?>" id="record_<?php echo $custom_records_tab->record_id;?>">
-									<?php 
-									// $record_data = $this->Custom->get_all_custom($custom_records_tab->slug, $info->id, $this->client_id);
-									$record_data = $this->Custom->get_all_current_custom($custom_records_tab->slug, $info->id, date('Y-m-d'), $this->client_id);
+									<?php $record_data = $this->Custom->get_all_current_custom($custom_records_tab->slug, $info->id, date('Y-m-d'), $this->client_id);
+									
 									if(count($record_data) > 0) { 
 
 										$custom_fields = $this->Custom_field->get_custom('records_'.$custom_records_tab->slug.'_'.$this->client_id);
@@ -450,8 +435,9 @@ div#prescriptions {
 											<tbody>
 												<?php foreach($record_data as $row) { ?>
 													<tr id="row-<?php echo $row['id'];?>">
+													
 														<td>
-															<span class="text-muted"><?php echo $row['date']; ?></span>
+															<span class="text-muted"><?php echo date($this->config->item('dateformat'), strtotime($row['date'])); ?></span>
 															
 														</td>
 														<?php 
@@ -459,8 +445,8 @@ div#prescriptions {
 
 											                foreach ($custom_fields->result() as $custom_field) { ?>
 											                    <td>
-																	<p><strong id="history-<?php echo $row['id'];?>"><?php echo $row[''.$custom_field->custom_field_column.'']; ?></strong>
-																	<span><?php if($custom_field->custom_field_symbol != null) echo '( '.$custom_field->custom_field_symbol.' )';?></span></p>
+																	<?php echo $row[''.$custom_field->custom_field_column.'']; ?>
+																	<span><?php if($custom_field->custom_field_symbol != null) echo '( '.$custom_field->custom_field_symbol.' )';?></span>
 																</td>
 																
 											                <?php }
@@ -563,7 +549,9 @@ div#prescriptions {
 						    </div>
 						    <div class="panel panel-default">
 						        <div class="panel-heading">
-						            <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#prescriptions" class="collapsed" aria-expanded="false"> <i class="fa fa-lg fa-angle-down pull-right"></i> <i class="fa fa-lg fa-angle-up pull-right"></i> Prescriptions</a></h4>
+						            <h4 class="panel-title">
+						            	<a id="prescription-link" data-toggle="collapse" data-parent="#accordion" href="#prescriptions" class="collapsed" aria-expanded="false"> <i class="fa fa-lg fa-angle-down pull-right"></i> <i class="fa fa-lg fa-angle-up pull-right"></i> Prescriptions</a>
+						            </h4>
 						        </div>
 						        <div id="prescriptions" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
 						            <div class="panel-body">
@@ -677,7 +665,7 @@ div#prescriptions {
 
 							                foreach ($custom_fields->result() as $custom_field) { ?>
 							                    
-												<strong id="aside-<?php echo $row['id'];?>"><?php echo $row[''.$custom_field->custom_field_column.'']; ?></strong><span><?php if($custom_field->custom_field_symbol != null) echo '( '.$custom_field->custom_field_symbol.' )';?></span></br>
+												<?php echo $row[''.$custom_field->custom_field_column.'']; ?><span><?php if($custom_field->custom_field_symbol != null) echo '( '.$custom_field->custom_field_symbol.' )';?></span></br>
 												
 							                <?php }
 							            } ?>
@@ -700,13 +688,6 @@ div#prescriptions {
 	</div>
 </div>
 <script type="text/javascript">
-	// $(document).ready(function() {
- 
-	// 	mcs.init_dialog();
-	// 	mcs.init_action();
-
-	// });
-	
 
 	pageSetUp();
 	
@@ -741,7 +722,7 @@ div#prescriptions {
 	 */
 	var patient_id = '<?php echo $info->id;?>';
 	var rowId = '<?php echo $que_info['rowid'];?>';
-
+	
 	get_diagnoses(patient_id);
 
  	function get_diagnoses(patient_id){
@@ -792,7 +773,7 @@ div#prescriptions {
 			},               
 			dataType: 'json',
 			success: function (response) {
-				console.log(response);
+	
 				if (response.length === 0) {
 					
 					$('<div class="alert alert-info text-center empty-post">Add prescription.</div>').appendTo('#prescription-results');
@@ -803,33 +784,35 @@ div#prescriptions {
 					var d = new Date();
 					var _date = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
 
-					item += '<table class="table prescription_block"><tbody>';
 					$(response).each(function( i, v ) {
-						
-						
+
 						item += '<tr class=" ';
 							if (v.is_mainteinable === 'yes') {
 							    item += 'maintainable';
 							}
 						item += '">'+
-									'<td class="num">'+ xnum++ +'. </td> '+
-									'<td class="medicine">'+v.medicine+'</td>'+
-									'<td class="prep">'+v.preparation+'</td> '+
-									'<td class="sig">'+v.sig+'</td>'+
-									'<td class="qty"># '+v.qty+'</td>'+
-									'<td><a href="'+BASE_URL+'records/delete_custom_field/'+v.id+'/prescription" id="'+v.id+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a></td>'+	
-								'</tr>';
-						
-						
+								'<td class="num">'+ xnum++ +'. </td> '+
+								'<td class="medicine">'+v.medicine+'</td>'+
+								'<td class="prep">'+v.preparation+'</td> '+
+								'<td class="sig">'+v.sig+'</td>'+
+								'<td class="qty"># '+v.qty+'</td>'+
+								'<td><a href="'+BASE_URL+'records/delete_custom_field/'+v.id+'/prescription" id="'+v.id+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a></td>'+	
+							'</tr>';
+
 					});
 					
-					item += '</tbody><tfoot>'+
-						'<tr>'+
-							'<td colspan="6"><a title="Rx Preview" href="'+BASE_URL+'queings/preview/'+ rowId +'/'+_date+'/no" class="rx-preview btn btn-success btn-sm pull-right" ><i class="fa fa-eye"></i> Rx Preview</a></td>'+
-						'</tr>'+
-					'</tfoot></table>';
-
-					$(item).appendTo('#prescription-results');
+					$('<table class="table" id="prescription-table"><tbody>'+item+'</tbody></table>').appendTo('#prescription-results');
+					
+					if ($('#prescription-table tbody tr').length) { 
+						item = '<tfoot>'+
+									'<tr>'+
+										'<td colspan="6"><a title="Rx Preview" href="'+BASE_URL+'queings/preview/'+ rowId +'/'+_date+'/no" class="rx-preview btn btn-success btn-sm pull-right" ><i class="fa fa-eye"></i> Rx Preview</a></td>'+
+									'</tr>'+
+								'</tfoot>';
+						$(item).appendTo('#prescription-table');
+					}
+					
+					
 				}
 			}
 		});
@@ -957,16 +940,30 @@ div#prescriptions {
 					},
 					success:function(response)
 					{
+						var rec = response.records;
+				
 						if(response.success)
 						{
-							
-							mcs.init_smallBox("Success", response.message);
-							
-							checkURL(); 
+							var _diagnoses = rec.diagnoses;
+							if(_diagnoses.length > 150) _diagnoses = _diagnoses.substring(0,150)+'...';
+							items = '<tr><td style="width:90%;" class="complaints-row group-'+rec.date+'">'+_diagnoses+'</td>'+
+								'<td><a href="'+BASE_URL+'records/delete_custom_field/'+response.id+'/diagnoses" id="'+response.id+'" class="delete"><i class="fas fa-times-circle fa-lg"></i></a></td></tr>';	
+
+							if ($('#complain-table tbody tr').length) {
+								$('#complain-table tbody tr:last').after(items);
+							} else {
+								$('#diagnoses-results').empty();
+								$('<table class="table" id="complain-table"><tbody>'+items+'</tbody></table>').appendTo('#diagnoses-results');
+							}
+
+							$(form)[0].reset();
+							$('#prescription-link').trigger('click');
+							mcs.init_smallBox("success", response.message);
+			
 						}
 						else
 						{
-							mcs.init_smallBox("Error", response.message);
+							mcs.init_smallBox("error", response.message);
 						}  
 
 						$(form).find('#submit').html('Submit');
@@ -1009,40 +1006,47 @@ div#prescriptions {
 					},
 					success:function(response)
 					{
-						
+						var rec = response.records;
 						if(response.success)
 						{
-							
+							var rows = $('#prescription-table tbody tr').length;
+							console.log(rows);
+							var xnum = rows + 1;
+							items = '<tr class=" ';
+							if (rec.is_mainteinable === 'yes') {
+							    items += 'maintainable';
+							}
+							items += '">'+
+								'<td class="num">'+ xnum++ +'. </td> '+
+								'<td class="medicine">'+rec.medicine+'</td>'+
+								'<td class="prep">'+rec.preparation+'</td> '+
+								'<td class="sig">'+rec.sig+'</td>'+
+								'<td class="qty"># '+rec.qty+'</td>'+
+								'<td><a href="'+BASE_URL+'records/delete_custom_field/'+response.id+'/prescription" id="'+response.id+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a></td>'+	
+							'</tr>';
+
+							if ($('#prescription-table tbody tr').length) {
+								$('#prescription-table tbody tr:last').after(items);
+							} else {
+								$('#prescription-results').empty();
+								$('<table class="table" id="prescription-table"><tbody>'+items+'</tbody></table>').appendTo('#prescription-results');
+							}
+
+							if ($('#prescription-table tbody tr').length) {
+								if (!$('#prescription-table tfoot').length) {  
+									item = '<tfoot>'+
+												'<tr>'+
+													'<td colspan="6"><a title="Rx Preview" href="'+BASE_URL+'queings/preview/'+ rowId +'/'+rec.date+'/no" class="rx-preview btn btn-success btn-sm pull-right" ><i class="fa fa-eye"></i> Rx Preview</a></td>'+
+												'</tr>'+
+											'</tfoot>';
+									$(item).appendTo('#prescription-table');
+								}
+							}
+
+							$(form)[0].reset();
+
 							mcs.init_smallBox("success", response.message);
-							//checkURL();
-							//complaints-2017-08-09
-
-							var d = new Date();
-							var _date = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
-							// var _date = $('#medication_date').val();
-							var _user_id = $('#user_id').val();
-							var _medicine = $('#medicine').val();
-							var _preparation = $('#preparation').val();
-							var _sig = $('#sig').val();
-							var _qty = $('#qty').val();
-							var _is_mainteinable = $('#is_mainteinable').val();
 							
-							var item = [];
-							var xnum = 1;
-							var count = $('.prescription_block tbody tr').length + 1;
-							
-							item += '<tr class="">'+
-										'<td class="num">'+ count +'. </td> '+
-										'<td class="medicine">'+_medicine+'</td>'+
-										'<td class="prep">'+_preparation+'</td> '+
-										'<td class="sig">'+_sig+'</td>'+
-										'<td class="qty"># '+_qty+'</span></td>'+
-										'<td><a href="'+BASE_URL+'records/delete_custom_field/'+_user_id+'/prescription" id="'+_user_id+'" class="direct"><i class="far fa-trash-alt fa-lg"></i></a></td>'+	
-									'</tr>';
-
-	
-							$(item).appendTo('.prescription_block tbody');
-							checkURL(); 
 						}
 						else
 						{
@@ -1084,9 +1088,9 @@ div#prescriptions {
 						message: '<p class="text-center"><img src="'+BASE_URL+'img/ajax-loader.gif"/></p>'
 					});
 					dialog.init(function(){
-						setTimeout(function(){
+						//setTimeout(function(){
 							dialog.find('.bootbox-body').html(response);
-						}, 3000);
+						//}, 3000);
 					});
 				}
 			});
@@ -1121,7 +1125,7 @@ div#prescriptions {
 			e.preventDefault();
 			
 		});
-		//get_value();
+		
 		$('#move-out').click(function(e) {
 			$.ajax({
 				url: $(this).attr('href'),

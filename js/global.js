@@ -98,9 +98,9 @@ var mcs = (function() {
 
 	that.init_dialog = function () {
 
-		$('.preview').click(function (e) {
-			var title = $(this).attr('data-original-title');
-			var link = $(this).attr('href');
+		// $('.preview').click(function (e) {
+		$(document).on('click', '.preview', function (e) {
+			var title = ($(this).attr('data-original-title')) ? $(this).attr('data-original-title') : $(this).attr('title');
 			var link = $(this).attr('href');
 			e.preventDefault();
 				$.ajax({
@@ -115,9 +115,9 @@ var mcs = (function() {
 							message: '<p class="text-center"><img src="'+BASE_URL+'img/ajax-loader.gif"/></p>'
 						});
 						dialog.init(function(){
-							setTimeout(function(){
+							// setTimeout(function(){
 								dialog.find('.bootbox-body').html(response);
-							}, 3000);
+							//}, 3000);
 						});
 					}
 				});
@@ -127,20 +127,23 @@ var mcs = (function() {
 
 	that.init_action = function (action, class_width) {
 
-		$('.direct').click(function (e) {
+		// $('.direct').click(function (e) {
+		$(document).on('click', '.direct', function (e) {
 			e.preventDefault();
 			$.ajax({
 				url: $(this).attr('href'),
 				success: function (response)
 				{
-					if(response)
+					var obj = JSON.parse(response);
+				
+					if(obj.success)
 					{
-						that.init_smallBox("Success", response.message);
+						that.init_smallBox("success", obj.message);
 						checkURL();
 					}
 					else
 					{
-						that.init_smallBox("Error", response.message);
+						that.init_smallBox("error", obj.message);
 					} 
 				}
 			});
@@ -245,82 +248,6 @@ var mcs = (function() {
 
 			});
 		}
-	}
-
-	that.init_ajax_form = function (validate_form) {
-
-		var validatefunction = function() {
-			
-			$('#'+validate_form).validate({
-				// rules : fields_rules,
-	            // messages : fields_msg,
-	            highlight: function(element) {
-	                $(element).closest('.form-group').addClass('has-error');
-	            },
-	            unhighlight: function(element) {
-	                $(element).closest('.form-group').removeClass('has-error');
-	            },
-	            errorElement: 'span',
-	            errorClass: 'text-danger',
-	            errorPlacement: function(error, element) {
-	                if(element.parent('.input-group').length) {
-	                    error.insertAfter(element.parent());
-	                }else{
-	                    error.insertAfter(element);
-	                }
-	            },
-				// Ajax form submition
-				submitHandler : function(form) {
-					
-					$(form).ajaxSubmit({
-						beforeSend: function () {
-							$(form).find('#submit').html("<?php echo $this->lang->line('__common_please_wait');?>");
-							$(form).find('#submit').attr("disabled", "disabled");
-						},
-						success:function(response)
-						{
-							if(response.success)
-							{
-								that.init_smallBox("success", response.message);
-								$('.bootbox-close-button').trigger('click');
-							}
-							else
-							{
-								that.init_smallBox("error", response.message);	
-							}                   
-							$(form).find('#submit').text("<?php echo $this->lang->line('__common_update');?>");
-							$(form).find('#submit').removeAttr("disabled");
-						},
-						dataType:'json'
-					});
-				}
-			});
-
-			$('.is_required').each(function() {
-				var _self = $(this);
-				var _messages = _self.attr('name');
-			    _self.rules('add', {
-			        required: true,  // example rule
-			        messages : '<i class="fa fa-times-circle"></i> '+_messages+' is required!',
-			        // another rule, etc.
-			    });
-			});
-
-			$('.has_max').each(function() {
-				var _self = $(this);
-				var _length = _self.attr('data-max');
-				var _messages = _self.attr('name');
-			    _self.rules('add', {
-			        maxlength: _length,  // example rule
-			        messages : '<i class="fa fa-times-circle"></i> '+_messages+' can not exceed '+_length+' characters in length.',
-			        // another rule, etc.
-			    });
-			});
-
-		}
-		loadScript(BASE_URL+"js/plugin/jquery-validate/jquery.validate.min.js", function(){
-			loadScript(BASE_URL+"js/plugin/jquery-form/jquery-form.min.js", validatefunction);
-		});
 	}
 
     return that;
