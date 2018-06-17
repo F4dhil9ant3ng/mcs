@@ -277,36 +277,19 @@ class Patients extends Secure
 	    }
 	}
 
-	function encode($id)
-	{
-	
-		redirect('patients/records/'.url_base64_encode($id));
-	}
-	
-	function decoded($id)
-	{
-
-		redirect('patients/records/'.url_base64_encode($id));
-		
-	}
-
-	function records($id, $page = null)
+	function records($id)
 	{
 		
-		$this->load->library('pagination');
-
 		$this->load->library('cart');
 		$this->load->model('queings/Queing');
 		$this->load->model('records/Custom');
 		$this->load->model('records/Record');
-
-		$this->layout->title('Patient Records');
-		$data['module'] = 'Patient Records';
-		
 		$this->load->model('custom_fields/Custom_field');
 		$this->load->model('vaccines/Vaccine');
 		$this->load->model('doses/Dose');
 
+		$this->layout->title('Patient Records');
+		$data['module'] = 'Patient Records';
 
 		$rowId = url_base64_decode($id);
 		$data['que_info'] = $this->cart->get_item($rowId);
@@ -320,14 +303,14 @@ class Patients extends Secure
 
 		$data['paginates'] = $paginates;
 
-		$data['info'] = $this->Patient->get_profile_info($data['que_info']['options']['patient_id']);
-		$data['custom_fields'] = $this->Custom_field->get_custom('users_custom')->result();
+		$data['info'] 					= $this->Patient->get_profile_info($data['que_info']['options']['patient_id']);
+		$data['custom_fields'] 			= $this->Custom_field->get_custom('users_custom')->result();
 
-		$data['records_blocks'] = $this->Record->get_all('blocks');
-		$data['records_asides'] = $this->Record->get_all('asides');
-		$data['records_tabs'] = $this->Record->get_all('tabs');
+		$data['records_blocks'] 		= $this->Record->get_all('blocks');
+		$data['records_asides'] 		= $this->Record->get_all('asides');
+		$data['records_tabs'] 			= $this->Record->get_all('tabs');
 
-		$data['custom_records_tabs'] = $this->Custom->get_all($this->client_id);
+		$data['custom_records_tabs'] 	= $this->Custom->get_all($this->client_id);
 
 		$vaccines = array();
 		foreach($this->Vaccine->get_all()->result_array() as $row)

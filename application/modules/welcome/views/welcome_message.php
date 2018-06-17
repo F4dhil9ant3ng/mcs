@@ -37,8 +37,7 @@
 			<div class="col-sm-12 col-md-12 col-lg-12 text-center">
 				<ul class="list-inline list-social">
 					<li style="display:none;"><a target="blank" href="https://twitter.com/serggg" class="btn btn-link"><i class="fa fa-twitter fa-fw"></i> Twitter</a></li>
-					<li><a target="blank" href="https://github.com/randycrebucas/mcs" class="btn btn-link"><i class="fa fa-github fa-fw"></i> Github</a></li>
-					<li style="display:none;"><a target="blank" href="https://www.linkedin.com/in/randy-rebucas-1a896943/" class="btn btn-link"><i class="fa fa-linkedin fa-fw"></i> LinkedIn</a></li>
+					<li><a target="blank" href="https://www.linkedin.com/company/myclinicsoft" class="btn btn-link"><i class="fa fa-linkedin fa-fw"></i> LinkedIn</a></li>
 					<li><a target="blank" href="https://business.facebook.com/myclinicsoftware/" class="btn btn-link" ><i class="fa fa-facebook fa-fw"></i> Facebook</a></li>
 				</ul>
 			</div>
