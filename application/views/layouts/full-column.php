@@ -198,7 +198,9 @@
 
 		<!-- JARVIS WIDGETS -->
 		<script src="<?php echo base_url(); ?>js/smartwidgets/jarvis.widget.min.js"></script>
-
+		
+		<!-- EASY PIE Chart -->
+		<script src="<?php echo base_url(); ?>js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
 		<!-- SPARKLINES -->
 		<script src="<?php echo base_url(); ?>js/plugin/sparkline/jquery.sparkline.min.js"></script>
 

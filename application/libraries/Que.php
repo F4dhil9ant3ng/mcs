@@ -58,6 +58,28 @@ class Que extends CI_Cart {
 
         return $total;
     }
+
+    /*
+     * Returns row id
+     * 
+     */
+    public function next() {
+
+        if ($this->total_items() > 0)
+        {
+            $cart = array();
+            // Fetch data for all products in cart
+            foreach ($this->contents() AS $items)
+            {
+                $cart[$items['rowid']] = $items['qty'];
+            }
+            //always select second array
+            $second = array_slice($cart, 1);
+            //get the key of second array
+            return key($second);
+        }
+        return null;    
+    }
 }
  /* End of file: MY_Cart.php */
  /* Location: ./application/libraries/MY_Cart.php */

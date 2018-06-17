@@ -96,11 +96,6 @@ div#colsultation h2 {
     margin: 0;
     text-decoration: underline;
 }
-div#colsultation {
-    display: grid;
-    grid-template-columns: 30% 70%;
-}
-
 .complaints-row {
     position: relative;
 }
@@ -206,6 +201,9 @@ div#prescriptions {
 									if(count($record_data) > 0) { 
 
 										$custom_fields = $this->Custom_field->get_custom('records_'.$records_block->slug);
+										// echo '<pre>';
+										// print_r($custom_fields->result());
+										// echo '</pre>';
 										?>
 
 												<?php foreach($record_data as $row) { ?>
@@ -221,13 +219,13 @@ div#prescriptions {
 											                	<span class="text-muted"><?php echo date($this->config->item('dateformat'), strtotime($row['date']));?></span>
 											                <?php }
 											            } ?>
-											            <a href="<?php echo site_url('records/delete_custom_field/'.$row['id'].'/'.$records_block->slug);?>" id="<?php echo $row['id'];?>" class="delete_record"><i class="far fa-trash-alt fa-lg"></i></a>
+											            <a href="<?php echo site_url('records/delete_custom_field/'.$row['id'].'/'.$records_block->slug);?>" id="<?php echo $row['id'];?>" class="direct"><i class="far fa-trash-alt fa-lg"></i></a>
 													</div>
 												<?php } ?>
 											
 									<?php }else{?>
 										<p class="text-center"> No Record Found! <br/>
-											<a title="Add new" href="<?php echo site_url('records/create_custom/'.$records_block->slug.'/'.$info->id);?>" class="btn btn-success btn-xs bootbox">Add New</a></p>
+											<a title="Add new" href="<?php echo site_url('records/create_custom/'.$records_block->slug.'/'.$info->id);?>" class="btn btn-success btn-xs preview">Add New</a></p>
 									<?php } ?>
 								</div>
 							<?php 
@@ -311,7 +309,7 @@ div#prescriptions {
 										            } ?>
 										            
 													<th>
-														<a title="Add new" href="<?php echo site_url('records/create_custom/'.$records_tab->slug.'/'.$info->id);?>" class="bootbox pull-right btn btn-success btn-xs">
+														<a title="Add new" href="<?php echo site_url('records/create_custom/'.$records_tab->slug.'/'.$info->id);?>" class="preview pull-right btn btn-success btn-xs">
 															<i class="fa fa-plus"></i> <?php echo $this->lang->line('common_add_new');?>
 														</a>
 													</th>
@@ -336,7 +334,7 @@ div#prescriptions {
 											                <?php }
 											            } ?>
 														<td class="text-right">
-															<a href="<?php echo site_url('records/delete_custom_field/'.$row['id'].'/'.$records_tab->slug);?>" id="<?php echo $row['id'];?>" class="delete_record"><i class="far fa-trash-alt fa-lg"></i></a>
+															<a href="<?php echo site_url('records/delete_custom_field/'.$row['id'].'/'.$records_tab->slug);?>" id="<?php echo $row['id'];?>" class="direct"><i class="far fa-trash-alt fa-lg"></i></a>
 														</td>
 													</tr>
 												<?php } ?>
@@ -344,7 +342,7 @@ div#prescriptions {
 										</table>
 									<?php }else{?>
 										<div id="empty-content">
-											<h3>No <?php echo ucfirst(str_replace('_', ' ', $records_tab->slug));?> Record Found! <a title="Add new" href="<?php echo site_url('records/create_custom/'.$records_tab->slug.'/'.$info->id);?>" class="bootbox">Add new</a></h3>
+											<h3>No <?php echo ucfirst(str_replace('_', ' ', $records_tab->slug));?> Record Found! <a title="Add new" href="<?php echo site_url('records/create_custom/'.$records_tab->slug.'/'.$info->id);?>" class="preview">Add new</a></h3>
 										</div>
 									<?php } ?>				
 										
@@ -439,7 +437,7 @@ div#prescriptions {
 										            } ?>
 										            
 													<th>
-														<a title="Add new" href="<?php echo site_url('records/create_custom/'.$custom_records_tab->slug.'_'.$this->client_id.'/'.$info->id);?>" class="bootbox pull-right btn btn-success btn-xs">
+														<a title="Add new" href="<?php echo site_url('records/create_custom/'.$custom_records_tab->slug.'_'.$this->client_id.'/'.$info->id);?>" class="preview pull-right btn btn-success btn-xs">
 															<i class="fa fa-plus"></i> <?php echo $this->lang->line('common_add_new');?>
 														</a>
 													</th>
@@ -464,7 +462,7 @@ div#prescriptions {
 											                <?php }
 											            } ?>
 														<td class="text-right">
-															<a href="<?php echo site_url('records/delete_custom_field/'.$row['id'].'/'.$custom_records_tab->slug.'_'.$this->client_id);?>" id="<?php echo $row['id'];?>" class="delete_record"><i class="far fa-trash-alt fa-lg"></i></a>
+															<a href="<?php echo site_url('records/delete_custom_field/'.$row['id'].'/'.$custom_records_tab->slug.'_'.$this->client_id);?>" id="<?php echo $row['id'];?>" class="direct"><i class="far fa-trash-alt fa-lg"></i></a>
 														</td>
 													</tr>
 												<?php } ?>
@@ -472,7 +470,7 @@ div#prescriptions {
 										</table>
 									<?php }else{?>
 										<div id="empty-content">
-											<h3>No <?php echo ucfirst(str_replace('_', ' ', $custom_records_tab->slug));?> Record Found! <a title="Add new" href="<?php echo site_url('records/create_custom/'.$custom_records_tab->slug.'_'.$this->client_id.'/'.$info->id);?>" class="bootbox">Add new</a></h3>
+											<h3>No <?php echo ucfirst(str_replace('_', ' ', $custom_records_tab->slug));?> Record Found! <a title="Add new" href="<?php echo site_url('records/create_custom/'.$custom_records_tab->slug.'_'.$this->client_id.'/'.$info->id);?>" class="preview">Add new</a></h3>
 										</div>
 									<?php } ?>				
 										
@@ -534,85 +532,95 @@ div#prescriptions {
 				<!-- widget content -->
 				<div class="widget-body">
 					<div class="tab-content" id="colsultation">
-						<div class="private-access active" id="diagnoses">
-						<!-- Diagnoses & Condition-->
-							<h2>Diagnoses & Condition</h2>
-							<div id="diagnoses-results">
-								
-							</div>
-							<?php echo form_open('records/create_diagnoses/-1/diagnoses',array('id'=>'diagnoses-form','class'=>'smart-form', 'role'=>'form'));?>
-								<input type="hidden" name="user_id" value="<?php echo $info->id;?>"/>
-								<section>
-									<label class="textarea textarea-resizable">
-										<textarea class="form-control" name="diagnoses" id="diagnoses" rows="3"></textarea>
-									</label>
-								</section>
-								<section>
-							        <button type="submit" id="submit" class="btn btn-primary pull-right btn-sm">Submit</button>
-							    </section>
-							<?php echo form_close();?>
-
+						
+						<div class="panel-group smart-accordion-default" id="accordion">
+						    <div class="panel panel-default">
+						        <div class="panel-heading">
+						            <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#diagnoses" aria-expanded="true" class=""> <i class="fa fa-lg fa-angle-down pull-right"></i> <i class="fa fa-lg fa-angle-up pull-right"></i>Diagnoses & Condition </a></h4>
+						        </div>
+						        <div id="diagnoses" class="panel-collapse collapse in" aria-expanded="true">
+						            <div class="panel-body">
+						            	<div id="diagnoses-results">
+														
+										</div>
+										<?php echo form_open('records/create_diagnoses/-1/diagnoses',array('id'=>'diagnoses-form','class'=>'smart-form', 'role'=>'form'));?>
+											<input type="hidden" name="user_id" value="<?php echo $info->id;?>"/>
+											<section>
+												<label class="textarea textarea-resizable">
+													<textarea class="form-control" name="diagnoses" id="diagnoses" rows="3"></textarea>
+												</label>
+											</section>
+											<section>
+										        <button type="submit" id="submit" class="btn btn-primary pull-right btn-sm">Submit</button>
+										    </section>
+										<?php echo form_close();?>
+						            </div>
+						        </div>
+						    </div>
+						    <div class="panel panel-default">
+						        <div class="panel-heading">
+						            <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#prescriptions" class="collapsed" aria-expanded="false"> <i class="fa fa-lg fa-angle-down pull-right"></i> <i class="fa fa-lg fa-angle-up pull-right"></i> Prescriptions</a></h4>
+						        </div>
+						        <div id="prescriptions" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+						            <div class="panel-body">
+						            	<div id="prescription-results">
+														
+										</div>
+										<?php echo form_open('records/create_prescription/-1/prescription',array('id'=>'prescription-form','class'=>'smart-form', 'role'=>'form'));?>
+											<input type="hidden" name="user_id" value="<?php echo $info->id;?>"/>
+											<table class="table">
+												<thead>
+													<tr>
+														<th style="width:35%;">
+															Medicine
+														</th>
+														<th style="width:20%;">
+															Preparation
+														</th>
+														<th style="width:30%;">
+															Sig
+														</th>
+														<th style="width:10%;">
+															Qty
+														</th>
+														<th style="width:5%;">
+															<abbr title="Is Maintainable"><i class="far fa-question-circle"></i></abbr>
+														</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>
+															<input type="text" name="medicine" id="medicine" class="form-control" >
+														</td>
+														<td>
+															<input type="text" name="preparation" id="preparation" class="form-control" >
+														</td>
+														<td>			
+															<input type="text" name="sig" id="sig" class="form-control" >
+														</td>
+														<td>
+															<input type="text" name="qty" id="qty" class="form-control" >
+														</td>
+														<td>
+															<input type="checkbox" name="is_mainteinable" id="is_mainteinable" value="1">
+														</td>
+													</tr>
+												</tbody>
+												<tfoot>
+													<tr>
+														<td colspan="5">
+															<button type="submit" id="submit" class="btn btn-primary pull-right btn-sm">Submit</button>
+														</td>
+													</tr>
+												</tfoot>
+											</table>
+										<?php echo form_close();?>
+						            </div>
+						        </div>
+						    </div>
 						</div>
-						<div class="private-access" id="prescriptions">
-							
-						<!-- Prescriptions -->
-							<h2>Prescriptions</h2>
-							<!-- prescription -->
-							<div id="prescription-results">
-								
-							</div>
-							<?php echo form_open('records/create_prescription/-1/prescription',array('id'=>'prescription-form','class'=>'smart-form', 'role'=>'form'));?>
-								<input type="hidden" name="user_id" value="<?php echo $info->id;?>"/>
-								<table class="table">
-									<thead>
-										<tr>
-											<th style="width:35%;">
-												Medicine
-											</th>
-											<th style="width:20%;">
-												Preparation
-											</th>
-											<th style="width:30%;">
-												Sig
-											</th>
-											<th style="width:10%;">
-												Qty
-											</th>
-											<th style="width:5%;">
-												<abbr title="Is Maintainable"><i class="far fa-question-circle"></i></abbr>
-											</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>
-												<input type="text" name="medicine" id="medicine" class="form-control" >
-											</td>
-											<td>
-												<input type="text" name="preparation" id="preparation" class="form-control" >
-											</td>
-											<td>			
-												<input type="text" name="sig" id="sig" class="form-control" >
-											</td>
-											<td>
-												<input type="text" name="qty" id="qty" class="form-control" >
-											</td>
-											<td>
-												<input type="checkbox" name="is_mainteinable" id="is_mainteinable" value="1">
-											</td>
-										</tr>
-									</tbody>
-									<tfoot>
-										<tr>
-											<td colspan="5">
-												<button type="submit" id="submit" class="btn btn-primary pull-right btn-sm">Submit</button>
-											</td>
-										</tr>
-									</tfoot>
-								</table>
-							<?php echo form_close();?>
-							
-						</div>
+						
 					</div>
 				</div>
 				<!-- end widget content -->
@@ -634,11 +642,11 @@ div#prescriptions {
 					$img = $this->gravatar->get($info->email, 200);
 				} ?>
 				<img src="<?php echo $img;?>" style="width:100%;" class="img-fluid"/>
-				<h1 class="txt-color-blueDark"><a href="<?php echo site_url('patients/details/'.$info->id);?>" class="bootbox"><?php echo $info->firstname.', '.$info->lastname;?></a></h1>
+				<h1 class="txt-color-blueDark"><a href="<?php echo site_url('patients/details/'.$info->id);?>" class="preview"><?php echo $info->firstname.', '.$info->lastname;?></a></h1>
 			</div>
 			<div id="action">
 
-					<a href="<?php echo site_url('queings/move_out/'.$que_info['rowid']);?>" id="move-out" class=" btn btn-danger btn-block"><i class="fa fa-sign-out fa-fw"></i> Move out to waiting list!</a>
+					<a href="<?php echo site_url('queings/process/'.$que_info['rowid'].'/0');?>" id="move-out" class=" btn btn-danger btn-block"><i class="fa fa-sign-out fa-fw"></i> Move out to waiting list!</a>
 
 				
 			</div>
@@ -650,7 +658,7 @@ div#prescriptions {
 		<?php if($records_asides->num_rows() > 0) { 
 			foreach ($records_asides->result() as $records_aside) { ?>
 				<div class="asides-blocks">
-					<h3> <?php echo $records_aside->name;?> <small><a title="Add new" href="<?php echo site_url('records/create_custom/'.$records_aside->slug.'/'.$info->id);?>" class="bootbox">Add new</a></small></h3>
+					<h3> <?php echo $records_aside->name;?> <small><a title="Add new" href="<?php echo site_url('records/create_custom/'.$records_aside->slug.'/'.$info->id);?>" class="preview">Add new</a></small></h3>
 					<?php 
 					$record_data = $this->Custom->get_all_custom($records_aside->slug, $info->id); 
 
@@ -669,7 +677,7 @@ div#prescriptions {
 												
 							                <?php }
 							            } ?>
-							            <a href="<?php echo site_url('records/delete_custom_field/'.$row['id'].'/'.$records_aside->slug);?>" id="<?php echo $row['id'];?>" class="delete_record"><i class="fas fa-times-circle fa-lg"></i></a>
+							            <a href="<?php echo site_url('records/delete_custom_field/'.$row['id'].'/'.$records_aside->slug);?>" id="<?php echo $row['id'];?>" class="direct"><i class="fas fa-times-circle fa-lg"></i></a>
 									</li>
 							<?php }
 							echo '</ul>'; 
@@ -683,13 +691,21 @@ div#prescriptions {
 		</div>
 
 		<div id="patient-profile-menu" class="hidden">
-			<a href="<?php echo site_url('records/docs/'.$info->id);?>" id="<?php echo $info->id;?>" title="Print Form" class="hidden bootbox btn btn-success"><i class="fa fa-print fa-fw"></i>Print</a>
+			<a href="<?php echo site_url('records/docs/'.$info->id);?>" id="<?php echo $info->id;?>" title="Print Form" class="hidden preview btn btn-success"><i class="fa fa-print fa-fw"></i>Print</a>
 		</div>
 	</div>
 </div>
 <script type="text/javascript">
+	// $(document).ready(function() {
+ 
+	// 	mcs.init_dialog();
+	// 	mcs.init_action();
+
+	// });
+	
 
 	pageSetUp();
+	
 	/* DO NOT REMOVE : GLOBAL FUNCTIONS!
 	 *
 	 * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS
@@ -720,6 +736,7 @@ div#prescriptions {
 	 *
 	 */
 	var patient_id = '<?php echo $info->id;?>';
+	var rowId = '<?php echo $que_info['rowid'];?>';
 
 	get_diagnoses(patient_id);
 
@@ -748,7 +765,7 @@ div#prescriptions {
 						if(_diagnoses.length > 150) _diagnoses = _diagnoses.substring(0,150)+'...';
 						console.log(val.date);
 						items += '<tr><td style="width:90%;" class="complaints-row group-'+val.date+'">'+_diagnoses+'</td>'+
-								'<td><a href="'+BASE_URL+'records/delete_custom_field/'+val.id+'/diagnoses" id="'+val.id+'" class="delete"><i class="fas fa-times-circle fa-lg"></i></a></td></tr>';	
+								'<td><a href="'+BASE_URL+'records/delete_custom_field/'+val.id+'/diagnoses" id="'+val.id+'" class="direct"><i class="fas fa-times-circle fa-lg"></i></a></td></tr>';	
 					});
 				
 					$('<table class="table" id="complain-table"><tbody>'+items+'</tbody></table>').appendTo('#diagnoses-results');
@@ -796,7 +813,7 @@ div#prescriptions {
 									'<td class="prep">'+v.preparation+'</td> '+
 									'<td class="sig">'+v.sig+'</td>'+
 									'<td class="qty"># '+v.qty+'</td>'+
-									'<td><a href="'+BASE_URL+'records/delete_custom_field/'+v.id+'/prescription" id="'+v.id+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a></td>'+	
+									'<td><a href="'+BASE_URL+'records/delete_custom_field/'+v.id+'/prescription" id="'+v.id+'" class="direct"><i class="far fa-trash-alt fa-lg"></i></a></td>'+	
 								'</tr>';
 						
 						
@@ -804,7 +821,7 @@ div#prescriptions {
 					
 					item += '</tbody><tfoot>'+
 						'<tr>'+
-							'<td colspan="6"><a title="Rx Preview" href="'+BASE_URL+'queings/preview/'+ patient_id +'/'+_date+'/no" class="ajax-btn btn btn-success btn-sm pull-right" ><i class="fa fa-eye"></i> Rx Preview</a></td>'+
+							'<td colspan="6"><a title="Rx Preview" href="'+BASE_URL+'queings/preview/'+ rowId +'/'+_date+'/no" class="rx-preview btn btn-success btn-sm pull-right" ><i class="fa fa-eye"></i> Rx Preview</a></td>'+
 						'</tr>'+
 					'</tfoot></table>';
 
@@ -1016,7 +1033,7 @@ div#prescriptions {
 										'<td class="prep">'+_preparation+'</td> '+
 										'<td class="sig">'+_sig+'</td>'+
 										'<td class="qty"># '+_qty+'</span></td>'+
-										'<td><a href="'+BASE_URL+'records/delete_custom_field/'+_user_id+'/prescription" id="'+_user_id+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a></td>'+	
+										'<td><a href="'+BASE_URL+'records/delete_custom_field/'+_user_id+'/prescription" id="'+_user_id+'" class="direct"><i class="far fa-trash-alt fa-lg"></i></a></td>'+	
 									'</tr>';
 
 	
@@ -1043,32 +1060,10 @@ div#prescriptions {
 
 
 	var pagefunction = function() {
+		mcs.init_dialog();
+		mcs.init_action();
 
-		$(".bootbox").click(function (e) {
-			var title = $(this).attr('title');
-			e.preventDefault();
-			$.ajax({
-				url: $(this).attr('href'),
-				onError: function () {
-					bootbox.alert('<?php echo $this->lang->line('__bootbox_error');?>');
-				},
-				success: function (response)
-				{
-					var dialog = bootbox.dialog({
-						title: title,
-						message: '<p class="text-center"><img src="'+BASE_URL+'img/ajax-loader.gif"/></p>'
-					});
-					dialog.init(function(){
-						setTimeout(function(){
-							dialog.find('.bootbox-body').html(response);
-						}, 3000);
-					});
-				}
-			});
-			return false;  
-		});
-
-		$(document).on('click', '.ajax-btn', function (e) {
+		$(document).on('click', '.rx-preview', function (e) {
 			var title = $(this).attr('title');
 			e.preventDefault();
 			$.ajax({
@@ -1092,126 +1087,26 @@ div#prescriptions {
 			});
 			return false;  
 		});
-
-		$(document).on('click', '.print-docs', function (e) {
-			var title = $(this).attr('title');
-			e.preventDefault();
-			$.ajax({
-				url: $(this).attr('href'),
-				onError: function () {
-					bootbox.alert('Some network problem try again later.');
-				},
-				success: function (response)
-				{
-					var dialog = bootbox.dialog({
-						title: title,
-						message: '<p class="text-center"><img src="'+BASE_URL+'img/ajax-loader.gif"/></p>'
-					});
-					dialog.init(function(){
-						setTimeout(function(){
-							dialog.find('.bootbox-body').html(response);
-						}, 3000);
-					});
-				}
-			});
-			return false;  
-		});
-
-		$(document).on('click', '#empty-block-condition', function (e) {
-			var title = $(this).attr('title');
-			e.preventDefault();
-			$.ajax({
-				url: BASE_URL+'records/create/conditions/'+active_user_id,
-				onError: function () {
-					bootbox.alert('Some network problem try again later.');
-				},
-				success: function (response)
-				{
-					var dialog = bootbox.dialog({
-						title: 'Add Conditions',
-						className: "modal70",
-						message: '<p class="text-center"><img src="'+BASE_URL+'img/ajax-loader.gif"/></p>'
-					});
-					dialog.init(function(){
-						setTimeout(function(){
-							dialog.find('.bootbox-body').html(response);
-						}, 3000);
-					});
-				}
-			});
-			return false;  
-		});
-
-		$(document).on('click', '.delete_record', function (e) {
-		
-			var url	= $(this).attr('href');
-			var id	= $(this).attr('id');
-
-			$.ajax({
-				url: url,
-				type: 'POST',
-				success: function(response) {
-
-					if(response)
-					{
-
-						mcs.init_smallBox("Success", response.message);
-
-						$('#row-'+id).fadeOut();
-					}
-					else
-					{
-						mcs.init_smallBox("Error", response.message);
-
-					} 
-
-				}
-			});
-			e.preventDefault();
-			
-		});
-
-		$(document).on('click', '.delete', function (e) {
-			var url	= $(this).attr('href');
-			var id	= $(this).attr('id');
-			$.ajax({
-				url: url,
-				type: 'POST',
-				success: function(response) {
-
-					if(response)
-					{
-						mcs.init_smallBox("Success", response.message);
-
-						checkURL();
-					}
-					else
-					{
-						mcs.init_smallBox("error", response.message);
-
-					} 
-
-				}
-			});
-			e.preventDefault();
-			
-		});
-
-		
 		//get_value();
 		$('#move-out').click(function(e) {
 			$.ajax({
 				url: $(this).attr('href'),
 				type: 'post',
 				success: function(response) {
-					if(response)
+
+					var obj = JSON.parse(response);
+					
+					if(obj.success)
 					{
-						mcs.init_smallBox("success", response.message);
+						mcs.init_smallBox("success", obj.message);
 						mcs.init();
+				
+						window.location.replace(obj.redirect);
+		
 					}
 					else
 					{
-						mcs.init_smallBox("error", response.message);
+						mcs.init_smallBox("error", obj.message);
 					} 
 				}
 			});
@@ -1222,6 +1117,7 @@ div#prescriptions {
 	}
 
 	var pagedestroy = function(){
+
 		
 		/*
 		Example below:

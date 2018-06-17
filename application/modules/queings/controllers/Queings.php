@@ -64,7 +64,7 @@ class Queings extends Secure
 			$data = array(
 			        'id'      => 'MCS-00'.$num,
 			        'qty'     => 1,
-			        'price'   => 250.00,//initial pf
+			        'price'   => ($this->config->item('pf') != '') ? $this->config->item('pf') : 250.00,//initial pf
 			        'name'    => $info->firstname.' '. $info->lastname,
 			        'options' => array(
 			        	'patient_id' => $info->id, 
@@ -83,23 +83,37 @@ class Queings extends Secure
 		
 	}
 	
-	function move_out($rowid) 
+	function process($rowid, $status = 1) 
 	{ 
-		$data = array(
-           'rowid' => $rowid,
-           'qty'   => 0
-        );
+		$que_info = $this->cart->get_item($rowid);
+    	
+		if ($this->Queing->process($que_info['options']['patient_id'], $que_info['options']['type'], $this->client_id, $status)) {
+    		
+    		$data = array(
+	           'rowid' => $rowid,
+	           'qty'   => 0
+	        );
 
-        if($this->cart->update($data))
-        {
-			echo json_encode(array('success' => true, 'message' => 'Patient successfully remove in wating list!'));
-		} 
-		else 
-		{
-			echo json_encode(array('success' => false, 'message' => 'Patient cannot be remove in wating list!'));
-		}
+	        if($this->cart->update($data))
+	        {
+	        	$redirect = ($this->que->next()) ? base_url().'patients/records/'.url_base64_encode($this->que->next()) : base_url();
+				echo json_encode(
+					array(
+						'success' => true, 
+						'message' => 'Patient successfully remove in wating list!', 
+						'redirect'=> $redirect
+					)
+				);
+			} 
+			else 
+			{
+				echo json_encode(array('success' => false, 'message' => 'Patient cannot be remove in wating list!'));
+			}
+
+    	}
+
 	}
-	
+
 	function clear_all()
 	{
 		
@@ -132,7 +146,7 @@ class Queings extends Secure
 		echo json_encode(array('counts' => $this->cart->total_items()));
 	}
 
-	function preview($id, $date, $mainteinable = false)
+	function preview($rowId, $date, $mainteinable = false)
 	{
 		//preview/4/2018-6-1/no
 		$this->load->library('location_lib');
@@ -143,7 +157,8 @@ class Queings extends Secure
 		$this->load->model('templates/Template');
 		$this->load->model('templates/Presets');
 
-		$info = $this->Patient->get_profile_info($id);
+		$que_info = $this->cart->get_item($rowId);
+		$info = $this->Patient->get_info($que_info['options']['patient_id']);
 		
 		$next_visit = $this->Custom->get_record('next_visit', $info->id, false, $date);
 
@@ -162,7 +177,7 @@ class Queings extends Secure
 		$i = 1;
 		$prescriptions = '';
 	    $prescriptions.='<table id="rx-contents" width="100%"><tbody>';
-		foreach ($this->Custom->get_record('prescription', $id, false, $date) as $row) {
+		foreach ($this->Custom->get_record('prescription', $que_info['options']['patient_id'], false, $date) as $row) {
 			$prescriptions.="<tr>";
 			$prescriptions.='<td style="font-size: 20px; vertical-align: top; width:10%; padding-bottom: 5px;"><strong>'. $i .'</strong></td>';
 			$prescriptions.='<td style="font-size: 20px; vertical-align: top; width:75%; padding-bottom: 5px;"><strong>' .  $row['medicine'].' '.$row['preparation']. '</strong><br> ';
