@@ -256,7 +256,7 @@ class Custom extends CI_Model
 	}
 
 	
-	function get_all_custom($type, $user_id, $client_id = null, $maintainable = null, $is_current = false)
+	function get_all_custom($type, $user_id, $client_id = null, $maintainable = null)
 	{
 		$table = ($client_id != null) ? 'records_'.$type.'_'.$client_id : 'records_'.$type;
 		$this->db->from($table); 
@@ -271,4 +271,21 @@ class Custom extends CI_Model
 
 		return $qry->result_array();
 	}
+
+	function get_all_current_custom($type, $user_id, $is_current = null, $client_id = null)
+	{
+		$table = ($client_id != null) ? 'records_'.$type.'_'.$client_id : 'records_'.$type;
+		$this->db->from($table); 
+
+		$this->db->order_by('id', 'desc');
+		$this->db->where('user_id', $user_id);
+		if($is_current)
+		{
+			$this->db->where('date', $is_current);
+		}
+		$qry = $this->db->get();
+
+		return $qry->result_array();
+	}
+	
 }

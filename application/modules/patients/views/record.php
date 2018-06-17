@@ -196,8 +196,8 @@ div#prescriptions {
 								<div class="col-md-4 text-center record-data">
 									<h3> <?php echo $records_block->name;?></h3>
 									<?php 
-									$record_data = $this->Custom->get_all_custom($records_block->slug, $info->id); 
-
+									//$record_data = $this->Custom->get_all_custom($records_block->slug, $info->id); 
+									$record_data = $this->Custom->get_all_current_custom($records_block->slug, $info->id, date('Y-m-d'));
 									if(count($record_data) > 0) { 
 
 										$custom_fields = $this->Custom_field->get_custom('records_'.$records_block->slug);
@@ -288,7 +288,9 @@ div#prescriptions {
 								$i = 0;
 								foreach ($records_tabs->result() as $records_tab) { ?>
 								<div class="tab-pane fade <?php if($i == 0) echo 'active in';?>" id="record_<?php echo $records_tab->record_id;?>">
-									<?php $record_data = $this->Custom->get_all_custom($records_tab->slug, $info->id);
+									<?php 
+									// $record_data = $this->Custom->get_all_custom($records_tab->slug, $info->id);
+									$record_data = $this->Custom->get_all_current_custom($records_tab->slug, $info->id, date('Y-m-d'));
 									if(count($record_data) > 0) { 
 
 										$custom_fields = $this->Custom_field->get_custom('records_'.$records_tab->slug);
@@ -416,7 +418,9 @@ div#prescriptions {
 								$i = 0;
 								foreach ($custom_records_tabs->result() as $custom_records_tab) { ?>
 								<div class="tab-pane fade <?php if($i == 0) echo 'active in';?>" id="record_<?php echo $custom_records_tab->record_id;?>">
-									<?php $record_data = $this->Custom->get_all_custom($custom_records_tab->slug, $info->id, $this->client_id);
+									<?php 
+									// $record_data = $this->Custom->get_all_custom($custom_records_tab->slug, $info->id, $this->client_id);
+									$record_data = $this->Custom->get_all_current_custom($custom_records_tab->slug, $info->id, date('Y-m-d'), $this->client_id);
 									if(count($record_data) > 0) { 
 
 										$custom_fields = $this->Custom_field->get_custom('records_'.$custom_records_tab->slug.'_'.$this->client_id);
@@ -660,8 +664,8 @@ div#prescriptions {
 				<div class="asides-blocks">
 					<h3> <?php echo $records_aside->name;?> <small><a title="Add new" href="<?php echo site_url('records/create_custom/'.$records_aside->slug.'/'.$info->id);?>" class="preview">Add new</a></small></h3>
 					<?php 
-					$record_data = $this->Custom->get_all_custom($records_aside->slug, $info->id); 
-
+					// $record_data = $this->Custom->get_all_custom($records_aside->slug, $info->id); 
+					$record_data = $this->Custom->get_all_current_custom($records_aside->slug, $info->id, date('Y-m-d'));
 					if(count($record_data) > 0) { 
 
 						$custom_fields = $this->Custom_field->get_custom('records_'.$records_aside->slug);
@@ -765,7 +769,7 @@ div#prescriptions {
 						if(_diagnoses.length > 150) _diagnoses = _diagnoses.substring(0,150)+'...';
 						console.log(val.date);
 						items += '<tr><td style="width:90%;" class="complaints-row group-'+val.date+'">'+_diagnoses+'</td>'+
-								'<td><a href="'+BASE_URL+'records/delete_custom_field/'+val.id+'/diagnoses" id="'+val.id+'" class="direct"><i class="fas fa-times-circle fa-lg"></i></a></td></tr>';	
+								'<td><a href="'+BASE_URL+'records/delete_custom_field/'+val.id+'/diagnoses" id="'+val.id+'" class="delete"><i class="fas fa-times-circle fa-lg"></i></a></td></tr>';	
 					});
 				
 					$('<table class="table" id="complain-table"><tbody>'+items+'</tbody></table>').appendTo('#diagnoses-results');
@@ -813,7 +817,7 @@ div#prescriptions {
 									'<td class="prep">'+v.preparation+'</td> '+
 									'<td class="sig">'+v.sig+'</td>'+
 									'<td class="qty"># '+v.qty+'</td>'+
-									'<td><a href="'+BASE_URL+'records/delete_custom_field/'+v.id+'/prescription" id="'+v.id+'" class="direct"><i class="far fa-trash-alt fa-lg"></i></a></td>'+	
+									'<td><a href="'+BASE_URL+'records/delete_custom_field/'+v.id+'/prescription" id="'+v.id+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a></td>'+	
 								'</tr>';
 						
 						
@@ -1009,7 +1013,7 @@ div#prescriptions {
 						if(response.success)
 						{
 							
-							mcs.init_smallBox("Success", response.message);
+							mcs.init_smallBox("success", response.message);
 							//checkURL();
 							//complaints-2017-08-09
 
@@ -1038,10 +1042,11 @@ div#prescriptions {
 
 	
 							$(item).appendTo('.prescription_block tbody');
+							checkURL(); 
 						}
 						else
 						{
-							mcs.init_smallBox("Error", response.message);
+							mcs.init_smallBox("error", response.message);
 						} 
 
 						$(form).find('#submit').html('Submit');
@@ -1086,6 +1091,35 @@ div#prescriptions {
 				}
 			});
 			return false;  
+		});
+		
+		$(document).on('click', '.delete', function (e) {
+		
+			var url	= $(this).attr('href');
+			var id	= $(this).attr('id');
+
+			$.ajax({
+				url: url,
+				type: 'POST',
+				success: function(response) {
+
+					if(response)
+					{
+						
+						mcs.init_smallBox("success", response.message);
+						mcs.init();
+						
+						checkURL();
+					}
+					else
+					{
+						mcs.init_smallBox("error", response.message);
+					} 
+
+				}
+			});
+			e.preventDefault();
+			
 		});
 		//get_value();
 		$('#move-out').click(function(e) {
