@@ -59,8 +59,11 @@
 			.table>tbody>tr:hover>td:last-child a {
 			    visibility: visible;
 			}
-			.dialog-50 > .modal-dialog {
+			.dialog-40 > .modal-dialog {
 				width: 50% !important;
+			}
+			.dialog-50 > .modal-dialog {
+				width: 40% !important;
 			}
 			.dialog-60 > .modal-dialog {
 				width: 60% !important;

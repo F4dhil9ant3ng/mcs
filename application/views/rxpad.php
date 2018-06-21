@@ -56,34 +56,75 @@
 		var printhis = function() {
 	
 			$('#printThis').click(function(){
+				
+				$("#printableArea").printThis({
+					debug: false,               //* show the iframe for debugging
+					importCSS: true,            //* import page CSS
+					importStyle: true,         //* import style tags
+					printContainer: true,       //* grab outer container as well as the contents of the selector
+					pageTitle: "",           //   * add title to print page
+					removeInline: false,        //* remove all inline styles from print elements
+					header: "",               // prefix to html
+					footer: "",               // postfix to html
+				});
 
-				$.ajax({
-					url: BASE_URL+'queings/process/'+rowId+'/1',
-					type: 'post',
-					success: function(response) {
-
-						var obj = JSON.parse(response);
-						
-						if(obj.success)
-						{
-							
-							$("#printableArea").printThis({
-							   	debug: false,               //* show the iframe for debugging
-							   	importCSS: true,            //* import page CSS
-							   	importStyle: true,         //* import style tags
-							   	printContainer: true,       //* grab outer container as well as the contents of the selector
-							   	pageTitle: "",           //   * add title to print page
-							   	removeInline: false,        //* remove all inline styles from print elements
-							   	header: "",               // prefix to html
-		  						footer: "",               // postfix to html
-							});
-
-							window.location.replace(obj.redirect);
 			
+				/*var beforePrint = function() {
+					console.log('Functionality to run before printing.');
+				};
+				var afterPrint = function() {
+					console.log('Functionality to run after printing');
+					$.ajax({
+						url: BASE_URL+'queings/process/'+rowId+'/1',
+						type: 'post',
+						success: function(response) {
+
+							var obj = JSON.parse(response);
+							
+							if(obj.success)
+							{
+								window.location.replace(obj.redirect);
+				
+							}
+							
 						}
-						
-					}
-				});		
+					});	
+				};
+
+				// supported by Chrome 9+ and Safari 5.1+
+				if (window.matchMedia) {
+					var mediaQueryList = window.matchMedia('print');
+					mediaQueryList.addListener(function(mql) {
+						if (mql.matches) {
+							beforePrint();
+						} else {
+							afterPrint();
+						}
+					});
+				}
+
+				// supported by IE 5+ and FireFox 6+
+				window.onbeforeprint = beforePrint;
+				window.onafterprint = afterPrint;*/
+			
+				setTimeout(function(){ 
+
+					$.ajax({
+						url: BASE_URL+'queings/process/'+rowId+'/1',
+						type: 'post',
+						success: function(response) {
+
+							var obj = JSON.parse(response);
+							
+							if(obj.success)
+							{
+								window.location.replace(obj.redirect);
+				
+							}
+							
+						}
+					});	
+				}, 3000);	
 			});
 		}
 		loadScript(BASE_URL+"js/printThis.js", printhis);

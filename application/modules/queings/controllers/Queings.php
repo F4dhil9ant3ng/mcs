@@ -96,7 +96,7 @@ class Queings extends Secure
 
 	        if($this->cart->update($data))
 	        {
-	        	$redirect = ($this->que->next()) ? base_url().'patients/records/'.url_base64_encode($this->que->next()) : base_url();
+	        	$redirect = ($this->que->next()) ? base_url().'patients/records/'.url_base64_encode($this->que->next()) : site_url('patients');
 				echo json_encode(
 					array(
 						'success' => true, 

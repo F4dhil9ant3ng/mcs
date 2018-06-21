@@ -161,6 +161,26 @@
 		
 		</label>
 	</section>
+	<legend>Role</legend>
+	<div class="row">
+		<section class="col col-4">
+			<label for="role">Role</label>
+			<label class="select">
+				
+				<?php
+				$roles = array('' => 'Select');
+		
+				foreach ($this->Role->get_all($this->client_id, 1)->result_array() as $row) 
+				{
+					$roles[$row['role_id']] = $row['role_name'];
+				}
+			
+				echo form_dropdown('role',$roles, '','tabindex="16" id="role"'); ?>
+				<i></i>
+
+			</label>
+		</section>
+	</div>
 	<?php if ($info->id === '') { ?>
 	
 	<legend>Login Information</legend>
