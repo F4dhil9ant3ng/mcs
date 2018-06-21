@@ -97,9 +97,10 @@ the <section></section> and you can use wells or panels instead
 											<section>
 												<label class="label"><?php echo $this->lang->line('setting_business_logo');?></label>
 												<div class="input input-file">
-													<span class="button"><input type="file" id="logo" name="logo" onchange="this.parentNode.nextSibling.value = this.value">Upload business logo</span><input type="text" readonly="">
+													<span class="button"><input type="file" id="logo" name="logo" onchange="this.parentNode.nextSibling.value = this.value">Upload</span><input type="text" readonly="">
 												</div>
 											</section>
+											
 											<div class="row">
 												<section class="col col-6">
 													<label class="label"><?php echo $this->lang->line('setting_business_name'); ?></label>
@@ -123,24 +124,32 @@ the <section></section> and you can use wells or panels instead
 											</section>
 											
 											<div class="row">
-												<section class="col col-4">
+												<section class="col col-3">
 													<label class="label"><?php echo $this->lang->line('setting_prc'); ?></label>
 													<label class="input">
 														<input type="text" name="prc" id="prc" value="<?php echo $this->config->item('prc');?>" class="form-control"/>
 													</label>
 												</section>
 												
-												<section class="col col-4">
+												<section class="col col-3">
 													<label class="label"><?php echo $this->lang->line('setting_ptr'); ?></label>
 													<label class="input">
 														<input type="text" name="ptr" id="ptr" value="<?php echo $this->config->item('ptr');?>" class="form-control"/>
 													</label>
 												</section>
-												
-												<section class="col col-4">
+
+												<section class="col col-3">
 													<label class="label"><?php echo $this->lang->line('setting_s2'); ?></label>
 													<label class="input">
 														<input type="text" name="s2" id="s2" value="<?php echo $this->config->item('s2');?>" class="form-control"/>
+													</label>
+												</section>
+
+												<section class="col col-3">
+													<label class="label">Consultation Fee (PF)</label>
+													<label class="input">
+														<input type="text" name="pf" id="pf" value="<?php echo $this->config->item('pf');?>" class="form-control text-right"/>
+														<span class="help">No decimal</span>
 													</label>
 												</section>
 											</div>
@@ -189,13 +198,14 @@ the <section></section> and you can use wells or panels instead
 													</label>
 												</section>
 											</div>
-
+											<p class="alert alert-info">Please note that all of details provided will be use in our listings module for patients want to have an appointments. Except on the consultation fee detail. Consultation fee only use in revenue tracking.</p>
 											<button type="submit" id="submit" class="btn btn-primary btn-sm">Update configurations</button>
 										</div>
 										<div class="col-md-3 text-center">
 											<?php if($this->config->item('company_logo')) { 
 											echo '<img src="'. base_url().'uploads/'.$this->client_id.'/logo/sizes/250/'.$this->config->item('company_logo').'"/>';
 											} ?>
+											
 										</div>
 									</div>
 								</fieldset>
@@ -478,6 +488,11 @@ the <section></section> and you can use wells or panels instead
 				s2 : {
                     maxlength: 15
                 },
+                pf : {
+                	currency : ["$", false],
+                	required : true,
+                    maxlength: 10
+                },
 				morning_open_time : {
                     required : true
                 },
@@ -519,6 +534,10 @@ the <section></section> and you can use wells or panels instead
                 },
 				s2 : {
                     maxlength: '<i class="fa fa-exclamation-circle"></i> <?php echo sprintf($this->lang->line('__validate_maxlength'), 15);?>'
+                },
+                pf : {
+                	required : '<i class="fa fa-exclamation-circle"></i> <?php echo sprintf($this->lang->line('__validate_required'), 'consultation fee (PF)');?>',
+                    maxlength: '<i class="fa fa-exclamation-circle"></i> <?php echo sprintf($this->lang->line('__validate_maxlength'), 10);?>'
                 },
                 morning_open_time : {
                     required : '<i class="fa fa-exclamation-circle"></i> <?php echo sprintf($this->lang->line('__validate_required'), 'morning open time');?>'
@@ -581,6 +600,21 @@ the <section></section> and you can use wells or panels instead
 				});
 			}
 		});
+
+		// Validation method for US currency
+		$.validator.addMethod( "currency", function( value, element, param ) {
+		    var isParamString = typeof param === "string",
+		        symbol = isParamString ? param : param[ 0 ],
+		        soft = isParamString ? true : param[ 1 ],
+		        regex;
+
+		    symbol = symbol.replace( /,/g, "" );
+		    symbol = soft ? symbol + "]" : symbol + "]?";
+		    regex = "^[" + symbol + "([1-9]{1}[0-9]{0,2}(\\,[0-9]{3})*(\\.[0-9]{0,2})?|[1-9]{1}[0-9]{0,}(\\.[0-9]{0,2})?|0(\\.[0-9]{0,2})?|(\\.[0-9]{1,2})?)$";
+		    regex = new RegExp( regex );
+		    return this.optional( element ) || regex.test( value );
+
+		}, "Please specify a valid currency" );
 	}
 	loadScript(BASE_URL+"js/plugin/jquery-validate/jquery.validate.min.js", function(){
 		loadScript(BASE_URL+"js/plugin/jquery-form/jquery-form.min.js", validatefunction);

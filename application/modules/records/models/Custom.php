@@ -181,8 +181,8 @@ class Custom extends CI_Model
         {
             if($this->db->insert('records_'.$type, $record_data))
             {
-                $record_data['id']=$this->db->insert_id();
-                return true;
+                $record_id = $this->db->insert_id();
+                return array('record_id' => $record_id);
             }
             return false;
         }
@@ -271,4 +271,21 @@ class Custom extends CI_Model
 
 		return $qry->result_array();
 	}
+
+	function get_all_current_custom($type, $user_id, $is_current = null, $client_id = null)
+	{
+		$table = ($client_id != null) ? 'records_'.$type.'_'.$client_id : 'records_'.$type;
+		$this->db->from($table); 
+
+		$this->db->order_by('id', 'desc');
+		$this->db->where('user_id', $user_id);
+		if($is_current)
+		{
+			$this->db->where('date', $is_current);
+		}
+		$qry = $this->db->get();
+
+		return $qry->result_array();
+	}
+	
 }
