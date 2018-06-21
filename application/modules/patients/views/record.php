@@ -750,7 +750,7 @@ div#prescriptions {
 						if(_diagnoses.length > 150) _diagnoses = _diagnoses.substring(0,150)+'...';
 						console.log(val.date);
 						items += '<tr><td style="width:90%;" class="complaints-row group-'+val.date+'">'+_diagnoses+'</td>'+
-								'<td><a href="'+BASE_URL+'records/delete_custom_field/'+val.id+'/diagnoses" id="'+val.id+'" class="delete"><i class="fas fa-times-circle fa-lg"></i></a></td></tr>';	
+								'<td><a href="'+BASE_URL+'records/delete_custom_field/'+val.id+'/diagnoses" id="'+val.id+'" class="direct"><i class="fas fa-times-circle fa-lg"></i></a></td></tr>';	
 					});
 				
 					$('<table class="table" id="complain-table"><tbody>'+items+'</tbody></table>').appendTo('#diagnoses-results');
@@ -796,7 +796,7 @@ div#prescriptions {
 								'<td class="prep">'+v.preparation+'</td> '+
 								'<td class="sig">'+v.sig+'</td>'+
 								'<td class="qty"># '+v.qty+'</td>'+
-								'<td><a href="'+BASE_URL+'records/delete_custom_field/'+v.id+'/prescription" id="'+v.id+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a></td>'+	
+								'<td><a href="'+BASE_URL+'records/delete_custom_field/'+v.id+'/prescription" id="'+v.id+'" class="direct"><i class="far fa-trash-alt fa-lg"></i></a></td>'+	
 							'</tr>';
 
 					});
@@ -806,7 +806,7 @@ div#prescriptions {
 					if ($('#prescription-table tbody tr').length) { 
 						item = '<tfoot>'+
 									'<tr>'+
-										'<td colspan="6"><a title="Rx Preview" href="'+BASE_URL+'queings/preview/'+ rowId +'/'+_date+'/no" class="rx-preview btn btn-success btn-sm pull-right" ><i class="fa fa-eye"></i> Rx Preview</a></td>'+
+										'<td colspan="6"><a title="Rx Preview" href="'+BASE_URL+'queings/preview/'+ rowId +'/'+_date+'/no" class="preview btn btn-success btn-sm pull-right custom-w" data-width="40" ><i class="fa fa-eye"></i> Rx Preview</a></td>'+
 									'</tr>'+
 								'</tfoot>';
 						$(item).appendTo('#prescription-table');
@@ -947,7 +947,7 @@ div#prescriptions {
 							var _diagnoses = rec.diagnoses;
 							if(_diagnoses.length > 150) _diagnoses = _diagnoses.substring(0,150)+'...';
 							items = '<tr><td style="width:90%;" class="complaints-row group-'+rec.date+'">'+_diagnoses+'</td>'+
-								'<td><a href="'+BASE_URL+'records/delete_custom_field/'+response.id+'/diagnoses" id="'+response.id+'" class="delete"><i class="fas fa-times-circle fa-lg"></i></a></td></tr>';	
+								'<td><a href="'+BASE_URL+'records/delete_custom_field/'+response.id+'/diagnoses" id="'+response.id+'" class="direct"><i class="fas fa-times-circle fa-lg"></i></a></td></tr>';	
 
 							if ($('#complain-table tbody tr').length) {
 								$('#complain-table tbody tr:last').after(items);
@@ -1022,7 +1022,7 @@ div#prescriptions {
 								'<td class="prep">'+rec.preparation+'</td> '+
 								'<td class="sig">'+rec.sig+'</td>'+
 								'<td class="qty"># '+rec.qty+'</td>'+
-								'<td><a href="'+BASE_URL+'records/delete_custom_field/'+response.id+'/prescription" id="'+response.id+'" class="delete"><i class="far fa-trash-alt fa-lg"></i></a></td>'+	
+								'<td><a href="'+BASE_URL+'records/delete_custom_field/'+response.id+'/prescription" id="'+response.id+'" class="direct"><i class="far fa-trash-alt fa-lg"></i></a></td>'+	
 							'</tr>';
 
 							if ($('#prescription-table tbody tr').length) {
@@ -1036,7 +1036,7 @@ div#prescriptions {
 								if (!$('#prescription-table tfoot').length) {  
 									item = '<tfoot>'+
 												'<tr>'+
-													'<td colspan="6"><a title="Rx Preview" href="'+BASE_URL+'queings/preview/'+ rowId +'/'+rec.date+'/no" class="rx-preview btn btn-success btn-sm pull-right" ><i class="fa fa-eye"></i> Rx Preview</a></td>'+
+													'<td colspan="6"><a title="Rx Preview" href="'+BASE_URL+'queings/preview/'+ rowId +'/'+rec.date+'/no" class="preview btn btn-success btn-sm pull-right custom-w" data-width="40"><i class="fa fa-eye"></i> Rx Preview</a></td>'+
 												'</tr>'+
 											'</tfoot>';
 									$(item).appendTo('#prescription-table');
@@ -1071,60 +1071,6 @@ div#prescriptions {
 	var pagefunction = function() {
 		mcs.init_dialog();
 		mcs.init_action();
-
-		$(document).on('click', '.rx-preview', function (e) {
-			var title = $(this).attr('title');
-			e.preventDefault();
-			$.ajax({
-				url: $(this).attr('href'),
-				onError: function () {
-					bootbox.alert('Some network problem try again later.');
-				},
-				success: function (response)
-				{
-					var dialog = bootbox.dialog({
-						title: title,
-						className: "modal70",
-						message: '<p class="text-center"><img src="'+BASE_URL+'img/ajax-loader.gif"/></p>'
-					});
-					dialog.init(function(){
-						//setTimeout(function(){
-							dialog.find('.bootbox-body').html(response);
-						//}, 3000);
-					});
-				}
-			});
-			return false;  
-		});
-		
-		$(document).on('click', '.delete', function (e) {
-		
-			var url	= $(this).attr('href');
-			var id	= $(this).attr('id');
-
-			$.ajax({
-				url: url,
-				type: 'POST',
-				success: function(response) {
-
-					if(response)
-					{
-						
-						mcs.init_smallBox("success", response.message);
-						mcs.init();
-						
-						checkURL();
-					}
-					else
-					{
-						mcs.init_smallBox("error", response.message);
-					} 
-
-				}
-			});
-			e.preventDefault();
-			
-		});
 		
 		$('#move-out').click(function(e) {
 			$.ajax({

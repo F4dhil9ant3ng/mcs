@@ -260,7 +260,7 @@
                         if(response.success)
                         {
                             mcs.init_smallBox("Success", response.message);
-							bootbox-close-button').trigger('click');
+							$('.bootbox-close-button').trigger('click');
                             checkURL();
                         }
                         else

@@ -96,7 +96,7 @@ class User extends Secure
 			$this->load->library('location_lib');
 
 			$data['info'] = $this->Patient->get_info($id);
-			
+
 			$data['option'] = $this->session->userdata('option');
 	        $this->load->view("form", $data);
 	        
@@ -122,6 +122,7 @@ class User extends Secure
 				'email'         =>($this->input->post('email') != '') ? $this->input->post('email') : 'patient@myclinicsoft.com',
 				'password'      =>$this->pass_secured->encrypt($this->input->post('password')),
 				'client_id'		=>$this->client_id,
+				'role_id'		=>$this->input->post('role'),
 				'last_ip'       =>$this->input->ip_address(),
 				'created'       => date('Y-m-d H:i:s'),
 				'token'			=> date('Ymd').'-'.random_string('numeric',8)
