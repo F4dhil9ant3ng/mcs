@@ -135,38 +135,7 @@
 	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'update',   $this->client_id) : true; ?>';
 	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'delete',   $this->client_id) : true; ?>';
 
-	$('input[type=radio]').on('change', function(e) {
-		var val = $("input[name='option']:checked").val();
-		var url = '<?php echo site_url();?>course/'+val;
-		history.pushState(null, null, url);
-		checkURL();
-
-		var title = $("input[name='option']:checked").parent().text();
-
-		// change page title from global var
-		document.title = (title || document.title);
-		
-		e.preventDefault();
-		
-	});
-	
 	pageSetUp();
-
-	var pagedestroy = function() {
-
-		/*
-		 Example below:
-
-		 $("#calednar").fullCalendar( 'destroy' );
-		 if (debugState){
-		 root.console.log("✔ Calendar destroyed");
-		 }
-
-		 For common instances, such as Jarviswidgets, Google maps, and Datatables, are automatically destroyed through the app.js loadURL mechanic
-
-		 */
-	}
-	// end destroy
 
 	// run pagefunction
 	var user_link = '<?php echo site_url('settings/encryptID/');?>';
@@ -245,14 +214,14 @@
 					$('#table-patients').find('td:first').css('width', '40px');
 					$('#table-patients').css('width', '100%');
 					
-					mcs.init_dialog();
-					mcs.init_action();
+					
 					
 					$("[rel=tooltip]").tooltip();
 				},
 		        //run on first time when datatable create
 		        "initComplete": function () {
-					
+					mcs.init_dialog();
+					mcs.init_action();
 		        },
 		        //End
 		        // Internationalisation. For more info refer to http://datatables.net/manual/i18n
@@ -409,6 +378,22 @@
 		
 	};
 
+	var pagedestroy = function() {
+
+		/*
+		 Example below:
+
+		 $("#calednar").fullCalendar( 'destroy' );
+		 if (debugState){
+		 root.console.log("✔ Calendar destroyed");
+		 }
+
+		 For common instances, such as Jarviswidgets, Google maps, and Datatables, are automatically destroyed through the app.js loadURL mechanic
+
+		 */
+	}
+	// end destroy
+
 	loadScript(BASE_URL+"js/bootbox.min.js", function(){
 		loadScript(BASE_URL+"js/plugin/datatables/jquery.dataTables.min.js", function(){
 
@@ -418,5 +403,5 @@
 				
 		});
 	});
-		
+
 </script>

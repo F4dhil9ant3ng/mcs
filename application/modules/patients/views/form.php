@@ -7,6 +7,14 @@
    
 
 	<?php $this->load->view('include/common_form_ints');?>
+	<fieldset>
+
+		<section>
+			<input type="checkbox" name="show_advance_form_input" id="show_advance_form_input" value="1" <?php if($option == 1) echo 'checked';?>>	
+			<?php echo $this->lang->line('config_show_advance_form_input'); ?>
+			<span id="show_advance_form_input_loader" class="pull-right"></span>
+		</section>
+	</fieldset>
 	<fieldset class="advance">
 		<legend>Custom Fields</legend>
 	<?php
@@ -430,4 +438,14 @@
 		
 	}
 	
+	var pagedestroy = function(){
+		
+		
+		// debug msg
+		if (debugState){
+			root.console.log("✔  destroyed");
+		} 
+
+
+	}
 </script>

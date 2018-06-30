@@ -97,38 +97,41 @@ var mcs = (function() {
     }
 
     that.init_dialog = function() {
-
-        $(document).on('click', '.preview', function(e) {
+        
+        $('.preview').click(function(e) {
             var title = ($(this).attr('data-original-title')) ? $(this).attr('data-original-title') : $(this).attr('title');
             var link = $(this).attr('href');
-            var w = '';
+            var w = '0';
             if ($(this).hasClass('custom-w')) {
                 var w = $(this).attr('data-width');
             }
             e.preventDefault();
+
             $.ajax({
                 url: link,
                 onError: function() {
                     bootbox.alert("<?php echo $this->lang->line('__bootbox_error');?>");
                 },
                 success: function(response) {
+                    bootbox.hideAll();
                     var dialog = bootbox.dialog({
                         title: title,
-                        message: '<p class="text-center"><img src="' + BASE_URL + 'img/ajax-loader.gif"/></p>',
+                        message: '<p><i class="fa fa-spin fa-spinner"></i> Loading...</p>',
                         className: 'dialog-' + w
                     });
                     dialog.init(function() {
-                        dialog.find('.bootbox-body').html(response);
+                        setTimeout(function(){
+                            dialog.find('.bootbox-body').html(response);
+                        }, 3000);
                     });
                 }
             });
-            return false;
+            
         });
     }
 
     that.init_action = function() {
-
-        $(document).on('click', '.direct', function(e) {
+        $('.direct').click(function(e) {
             e.preventDefault();
             $.ajax({
                 url: $(this).attr('href'),
@@ -145,6 +148,7 @@ var mcs = (function() {
             });
         });
 
+        
     }
 
     that.init_location = function(country, city, state) {

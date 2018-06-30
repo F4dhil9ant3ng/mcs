@@ -28,9 +28,11 @@ class Appointment extends CI_Model
 	
 	function get_all($client_id)
     {
-		$this->db->select('app_id as id, title, description, CONCAT(schedule_date, '.', schedule_time) AS start', FALSE);
+		$this->db->select('app_id as id, title, description, CONCAT(schedule_date, '. ', schedule_time) AS start,  CONCAT(firstname, '. ', lastname) AS fullname, avatar, username', FALSE);
         $this->db->from($this->table); 
-		$this->db->where('client_id',$client_id);
+        $this->db->join('users',$this->table.'.patient_id = users.id');
+        $this->db->join('users_profiles',$this->table.'.patient_id = users_profiles.user_id');
+		$this->db->where('users.client_id',$client_id);
         $this->db->order_by($this->pk, $this->dOrder);
         return $this->db->get();
     }

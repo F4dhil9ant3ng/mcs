@@ -161,26 +161,7 @@
 		
 		</label>
 	</section>
-	<legend>Role</legend>
-	<div class="row">
-		<section class="col col-4">
-			<label for="role">Role</label>
-			<label class="select">
-				
-				<?php
-				$roles = array('' => 'Select');
-		
-				foreach ($this->Role->get_all($this->client_id, 1)->result_array() as $row) 
-				{
-					$roles[$row['role_id']] = $row['role_name'];
-				}
-			
-				echo form_dropdown('role',$roles, '','tabindex="16" id="role"'); ?>
-				<i></i>
-
-			</label>
-		</section>
-	</div>
+	
 	<?php if ($info->id === '') { ?>
 	
 	<legend>Login Information</legend>
@@ -215,10 +196,6 @@
 	</section>	
 <?php } ?>
 	
-	<section>
-		<input type="checkbox" name="show_advance_form_input" id="show_advance_form_input" value="1" <?php if($option == 1) echo 'checked';?>>	
-		<?php echo $this->lang->line('config_show_advance_form_input'); ?>
-		<span id="show_advance_form_input_loader" class="pull-right"></span>
-	</section>
+	
 
 </fieldset>

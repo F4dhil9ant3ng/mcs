@@ -133,46 +133,6 @@
 	
 	pageSetUp();
 
-	$('input[type=radio]').on('change', function(e) {
-		var val = $("input[name='option']:checked").val();
-		var url = '<?php echo site_url();?>course/'+val;
-		history.pushState(null, null, url);
-		checkURL();
-
-		var title = $("input[name='option']:checked").parent().text();
-
-		// change page title from global var
-		document.title = (title || document.title);
-		
-		e.preventDefault();
-		
-	});
-	
-	// pagefunction
-
-	var pagefunction = function() {
-		// clears the variable if left blank
-		
-	};
-
-	// end pagefunction
-
-	var pagedestroy = function() {
-
-		/*
-		 Example below:
-
-		 $("#calednar").fullCalendar( 'destroy' );
-		 if (debugState){
-		 root.console.log("✔ Calendar destroyed");
-		 }
-
-		 For common instances, such as Jarviswidgets, Google maps, and Datatables, are automatically destroyed through the app.js loadURL mechanic
-
-		 */
-	}
-	// end destroy
-
 	// run pagefunction
 	var user_link = '<?php echo site_url('settings/encryptID/');?>';
 	
@@ -250,15 +210,13 @@
 					responsiveHelper_dt_basic.respond();
 					$('#table-patients').find('td:first').css('width', '10px');
 					$('#table-patients').css('width', '100%');
-					
-					mcs.init_dialog();
-					mcs.init_action();
-					
+
 					$("[rel=tooltip]").tooltip();
 				},
 		        //run on first time when datatable create
 		        "initComplete": function () {
-
+		        	mcs.init_dialog();
+					mcs.init_action();
 		        },
 		        //End
 		        "order": [
@@ -417,6 +375,21 @@
 		
 	};
 
+	var pagedestroy = function() {
+
+		/*
+		 Example below:
+
+		 $("#calednar").fullCalendar( 'destroy' );
+		 if (debugState){
+		 root.console.log("✔ Calendar destroyed");
+		 }
+
+		 For common instances, such as Jarviswidgets, Google maps, and Datatables, are automatically destroyed through the app.js loadURL mechanic
+
+		 */
+	}
+	// end destroy
 	loadScript(BASE_URL+"js/bootbox.min.js", function(){
 		loadScript(BASE_URL+"js/plugin/datatables/jquery.dataTables.min.js", function(){
 			loadScript(BASE_URL+"js/plugin/datatables/dataTables.bootstrap.min.js", function(){
