@@ -2,6 +2,33 @@
 <?php echo form_open('user/doSave/'.$info->id,'class="smart-form" id="members-form"');?>
    
 	<?php $this->load->view('include/common_form_ints');?>
+	<fieldset>
+		<legend>Role</legend>
+		<div class="row">
+			<section class="col col-4">
+				<label for="role">Role</label>
+				<label class="select">
+					
+					<?php
+					$roles = array('' => 'Select');
+			
+					foreach ($this->Role->get_all($this->client_id, 1)->result_array() as $row) 
+					{
+						$roles[$row['role_id']] = $row['role_name'];
+					}
+				
+					echo form_dropdown('role',$roles, '','tabindex="16" id="role"'); ?>
+					<i></i>
+
+				</label>
+			</section>
+		</div>
+		<section>
+			<input type="checkbox" name="show_advance_form_input" id="show_advance_form_input" value="1" <?php if($option == 1) echo 'checked';?>>	
+			<?php echo $this->lang->line('config_show_advance_form_input'); ?>
+			<span id="show_advance_form_input_loader" class="pull-right"></span>
+		</section>
+	</fieldset>
 	<fieldset class="advance">
 		<legend>Custom Fields</legend>
 	<?php
@@ -409,5 +436,16 @@
 		});
 
 		
+	}
+
+	var pagedestroy = function(){
+		
+		
+		// debug msg
+		if (debugState){
+			root.console.log("✔  destroyed");
+		} 
+
+
 	}
 </script>

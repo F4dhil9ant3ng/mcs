@@ -21,9 +21,9 @@
 	 * a new database for ArrowChat.
 	*/
 	define('DB_SERVER','localhost'); 
-	define('DB_USERNAME','myclinicsoft_U'); 
-	define('DB_PASSWORD','J)bxX[f3N]xX'); 
-	define('DB_NAME','myclinicsoft_main');	
+	define('DB_USERNAME','root'); 
+	define('DB_PASSWORD',''); 
+	define('DB_NAME','mcs');	
 		
 	/**
 	 * The table prefix can be left blank. A quick example of what you should input here:

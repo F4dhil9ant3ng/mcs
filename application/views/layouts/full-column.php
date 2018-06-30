@@ -186,7 +186,7 @@
                 document.write('<script src="<?php echo base_url();?>js/plugin/moment/moment.min.js"><\/script>');
             }
         </script>
-		
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 		<!-- IMPORTANT: APP CONFIG -->
 		<script src="<?php echo base_url(); ?>js/app.config.js"></script>
 

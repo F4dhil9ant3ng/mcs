@@ -79,6 +79,22 @@ class Report extends CI_Model
 		return $this->db->count_all_results();
 	}
 	
+	function matrix($start, $end, $client_id)
+	{
+		// ['Year', 'Sales', 'Expenses'],
+  //         ['2013',  1000,      400],
+  //         ['2014',  1170,      460],
+  //         ['2015',  660,       1120],
+  //         ['2016',  1030,      540]
+		$this->db->select('COUNT(status) as total, visit_type as type');
+		$this->db->from('visits');
+		$this->db->where('client_id', $client_id);
+		$this->db->where('visit_date >', $start);
+		$this->db->where('visit_date <', $end);
+		$this->db->group_by('type'); 
+		return $this->db->get()->result();
+	}
+
 	function get_sum($dates, $license_key)
 	{
 
