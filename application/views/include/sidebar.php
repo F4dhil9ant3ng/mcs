@@ -38,26 +38,26 @@
 			
 			<ul>
 				<li>
-					<a title="<?php echo $this->lang->line('__dashboard');?>" href="<?php echo site_url('dashboard'); ?>"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__dashboard');?></span></a>
+					<a title="<?php echo $this->lang->line('__dashboard');?>" href="<?php echo site_url('dashboard'); ?>"><i class="fas fa-lg fa-fw fa-home"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__dashboard');?></span></a>
 				</li>
 				<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'view',   $this->client_id) : true) { ?>
 				<li>
-					<a title="<?php echo $this->lang->line('__patients');?>" href="<?php echo site_url('patients'); ?>"><i class="fa fa-lg fa-fw fa-users"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__patients');?></span></a>
+					<a title="<?php echo $this->lang->line('__patients');?>" href="<?php echo site_url('patients'); ?>"><i class="fas fa-lg fa-fw fa-users"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__patients');?></span></a>
 				</li>
 				<?php } ?>
 				<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('users', $this->role_id, 'view',   $this->client_id) : true) { ?>
 				<li>
-					<a title="<?php echo $this->lang->line('__users');?>" href="<?php echo site_url('users'); ?>"><i class="fa fa-lg fa-fw fa-users"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__users');?></span></a>
+					<a title="<?php echo $this->lang->line('__users');?>" href="<?php echo site_url('users'); ?>"><i class="fas fa-lg fa-fw fa-user-friends"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__users');?></span></a>
 				</li>
 				<?php } ?>
 				<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('roles', $this->role_id, 'view',   $this->client_id) : true) { ?>
 				<li>
-					<a title="<?php echo $this->lang->line('__roles');?>" href="<?php echo site_url('roles'); ?>"><i class="fa fa-lg fa-fw fa-key"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__roles');?></span></a>
+					<a title="<?php echo $this->lang->line('__roles');?>" href="<?php echo site_url('roles'); ?>"><i class="fas fa-lg fa-fw fa-user-lock"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__roles');?></span></a>
 				</li>
 				<?php } ?>
 				<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('templates', $this->role_id, 'view',   $this->client_id) : true) { ?>
 				<li>
-					<a title="<?php echo $this->lang->line('__templates');?>" href="<?php echo site_url('templates'); ?>"><i class="fa fa-lg fa-fw fa-list"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__templates');?></span></a>
+					<a title="<?php echo $this->lang->line('__templates');?>" href="<?php echo site_url('templates'); ?>"><i class="fas fa-lg fa-fw fa-folder"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__templates');?></span></a>
 				</li>
 				<?php } ?>
 				<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('records', $this->role_id, 'view',   $this->client_id) : true) { ?>
@@ -67,21 +67,25 @@
 				<?php } ?>
 				<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('reports', $this->role_id, 'view',   $this->client_id) : true) { ?>
 				<li>
-					<a title="<?php echo $this->lang->line('__reports');?>" href="<?php echo site_url('reports'); ?>"><i class="fa fa-lg fa-fw fa-bar-chart-o"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__reports');?></span></a>
+					<a title="<?php echo $this->lang->line('__reports');?>" href="<?php echo site_url('reports'); ?>"><i class="fas fa-lg fa-fw fa-chart-bar"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__reports');?></span></a>
 				</li>
 				<?php } ?>
 				<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('appointments', $this->role_id, 'view',   $this->client_id) : true) { ?>
 				<li>
-					<a title="<?php echo $this->lang->line('__appointments');?>" href="<?php echo site_url('appointments'); ?>"><i class="fa fa-lg fa-fw fa-calendar"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__appointments');?></span></a>
+					<a title="<?php echo $this->lang->line('__appointments');?>" href="<?php echo site_url('appointments'); ?>"><i class="fas fa-lg fa-fw fa-calendar-alt"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__appointments');?></span></a>
 				</li>
 				<?php } ?>
+				<li>
+					<a title="Import" href="<?php echo site_url('import'); ?>"><i class="fas fa-lg fa-fw fa-file-import"></i> <span class="menu-item-parent">Import</span></a>
+				</li>
 				<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('settings', $this->role_id, 'view',   $this->client_id) : true) { ?>
 				<li>
-					<a title="<?php echo $this->lang->line('__settings');?>" href="<?php echo site_url('settings/profile'); ?>"><i class="fa fa-lg fa-fw fa-cogs"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__settings');?></span></a>
+					<a title="<?php echo $this->lang->line('__settings');?>" href="<?php echo site_url('settings/profile'); ?>"><i class="fas fa-lg fa-fw fa-cogs"></i> <span class="menu-item-parent"><?php echo $this->lang->line('__settings');?></span></a>
 				</li>
 				<?php } ?>
+
 				<li class="">
-					<a href="#"><i class="fa fa-lg fa-fw fa-windows"></i> <span class="menu-item-parent">Help & Support</span><b class="collapse-sign"><em class="fa fa-plus-square-o"></em></b></a>
+					<a href="#"><i class="fab fa-lg fa-fw fa-windows"></i> <span class="menu-item-parent">Help & Support</span><b class="collapse-sign"><em class="fa fa-plus-square-o"></em></b></a>
 					<ul style="display: none;">
 						
 						<li>
@@ -102,6 +106,6 @@
 			</ul>
 		</nav>
 		
-	<span class="minifyme" data-action="minifyMenu"> <i class="fa fa-arrow-circle-left hit"></i> </span>
+	<span class="minifyme" data-action="minifyMenu"> <i class="fas fa-arrow-circle-left hit"></i> </span>
 
 </aside>

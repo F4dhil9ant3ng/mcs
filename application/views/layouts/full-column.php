@@ -15,7 +15,7 @@
 		<!-- Basic Styles -->
 		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>css/font-awesome.min.css">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 		<!-- SmartAdmin Styles : Caution! DO NOT change the order -->
 		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>css/smartadmin-production-plugins.min.css">
 		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>css/smartadmin-production.min.css">
@@ -103,6 +103,10 @@
 			}
 			span#que-counts {
 			    color: inherit;
+			}
+
+			article.sortable-grid {
+			    overflow: hidden;
 			}
 		</style>
 

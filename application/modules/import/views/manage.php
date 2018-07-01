@@ -1,9 +1,3 @@
-<style type="text/css">
-	
-	.widget-body {
-			    border-top: 1px solid #ccc;
-			}
-</style>
 <!-- Bread crumb is created dynamically -->
 <!-- row -->
 <div class="row">
@@ -81,10 +75,9 @@
 									</div> -->
 								</div>
 								<div class="col-xs-3 col-sm-7 col-md-7 col-lg-7 text-right">
-									<a href="<?php echo site_url('export/');?>" class="btn btn-warning btn-sm"><i class="fas fa-lg fa-fw fa-file-export"></i>&nbsp;<span class="hidden-mobile">Export</span> </a>
 
-									<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'create',  $this->client_id) : true) { ?>
-										<a href="<?php echo site_url('patients/view/-1/');?>" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="preview btn btn-success btn-sm"><i class="fa fa-plus"></i>&nbsp;<span class="hidden-mobile"><?php echo $this->lang->line('__common_create');?></span> </a>
+									<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('roles', $this->role_id, 'create',  $this->client_id) : true) { ?>
+										<a href="<?php echo site_url('import/view/');?>" data-original-title="Import" class="preview btn btn-success btn-sm"><i class="fas fa-file-import"></i>&nbsp;<span class="hidden-mobile">Import</span> </a>
 										
 									<?php } ?>
 								</div>
@@ -97,19 +90,15 @@
 						
 						<div class="custom-scroll table-responsive" style="overflow-y: scroll;">
 
-							<table class="table table-striped table-forum" id="table-patients">
+							<table class="table table-striped" id="table-import">
 								<thead>
 									<tr>
 										<th>&nbsp;</th>
-										<th><?php echo $this->lang->line('common_fullname');?></th>
-										<th>Birth Date</th>
-										<th><?php echo $this->lang->line('common_address');?></th>
-										<th><?php echo $this->lang->line('common_contacts');?></th>
-										<th>&nbsp;</th>
-										<th>&nbsp;</th>
-										<th>&nbsp;</th>
-										<th>&nbsp;</th>
-										<th>&nbsp;</th>
+										<th>Filename</th>
+										<th>Created</th>
+										<th class="text-center">Success</th>
+										<th class="text-center">Failed</th>
+										<th class="text-center">Total</th>
 										<th>&nbsp;</th>
 									</tr>
 								</thead>
@@ -134,20 +123,48 @@
 		<!-- WIDGET END -->
 	</div>
 </section>
-
 <script type="text/javascript">
-	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'view',   $this->client_id) : true; ?>';
-	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'update',   $this->client_id) : true; ?>';
-	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'delete',   $this->client_id) : true; ?>';
 
+	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('import', $this->role_id, 'view',   $this->client_id) : true; ?>';
+	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('import', $this->role_id, 'update',   $this->client_id) : true; ?>';
+	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('import', $this->role_id, 'delete',   $this->client_id) : true; ?>';
+	
+	var admin_role_id = '<?php echo $this->admin_role_id;?>';
+	var patient_role_id = '<?php echo $this->patient_role_id;?>';
+
+	
 	pageSetUp();
 
+	// pagefunction
+
+	var pagefunction = function() {
+		// clears the variable if left blank
+		
+	};
+
+	// end pagefunction
+
+	var pagedestroy = function() {
+
+		/*
+		 Example below:
+
+		 $("#calednar").fullCalendar( 'destroy' );
+		 if (debugState){
+		 root.console.log("✔ Calendar destroyed");
+		 }
+
+		 For common instances, such as Jarviswidgets, Google maps, and Datatables, are automatically destroyed through the app.js loadURL mechanic
+
+		 */
+	}
+	// end destroy
+
 	// run pagefunction
-	var user_link = '<?php echo site_url('settings/encryptID/');?>';
 	
 	var pagefunction = function() {
 		//console.log("cleared");
-		var module = '<?php echo $module;?>';
+		
 		/* // DOM Position key index //
 		
 			l - Length changing (dropdown)
@@ -175,7 +192,7 @@
 				phone : 480
 			};
 			
-			$('#table-patients').dataTable({
+			$('#table-import').dataTable({
 				'destroy': true,
 		        'filter': true,
 		        'processing': true, 
@@ -186,11 +203,8 @@
 						"t"+
 						"<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
 		        "ajax": {
-		            url: BASE_URL + 'patients/load_ajax/',
+		            url: BASE_URL + 'import/load_ajax/',
 		            type: 'POST',
-		            data: {
-		                filter: 0
-		            }
 		        },
 				"oLanguage": {
 					"sSearch": '<span class="input-group-addon"><i class="fa fa-search"></i></span>',
@@ -203,12 +217,12 @@
 					"sLoadingRecords": '<?php echo $this->lang->line('__dt_sLoadingRecords');?>',
 					"sProcessing": '<?php echo $this->lang->line('__dt_sProcessing');?>',
 					"sZeroRecords": '<?php echo $this->lang->line('__dt_sZeroRecords');?>'
-		        },	
+				},		
 				"autoWidth" : true,
 				"preDrawCallback" : function() {
 					// Initialize the responsive datatables helper once.
 					if (!responsiveHelper_dt_basic) {
-						responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($('#table-patients'), breakpointDefinition);
+						responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($('#table-import'), breakpointDefinition);
 					}
 				},
 				"rowCallback" : function(nRow) {
@@ -216,20 +230,21 @@
 				},
 				"drawCallback" : function(oSettings) {
 					responsiveHelper_dt_basic.respond();
-					$('#table-patients').find('td:first').css('width', '40px');
-					$('#table-patients').css('width', '100%');
+					$('#table-import').find('td:first').css('width', '40%');
+					$('#table-import').css('width', '100%');
 					
-					
-					
+					mcs.init_dialog();
+					mcs.init_action();
+
 					$("[rel=tooltip]").tooltip();
 				},
 		        //run on first time when datatable create
-		        "initComplete": function () {
-					mcs.init_dialog();
-					mcs.init_action();
+		        "initComplete": function (row) {
+					
 		        },
 		        //End
 		        // Internationalisation. For more info refer to http://datatables.net/manual/i18n
+		        
 		        "order": [
 		            [0, 'asc']
 		        ],
@@ -242,34 +257,30 @@
 		        //{"id":"2","username":"Randy","email":"rebucasrandy1986@gmail.com","rolename":"Administrator","created":"February 08, 2017","fullname":"Randy, Rebucas"}
 		        aoColumns: [
 		            {mData: 'id'},   
-		            {mData: 'fullname'},         
-		            {mData: 'username'},
-		            {mData: 'email'},
-		            {mData: 'created'},
-		            {mData: 'avatar'},
-					{mData: 'birthday'},
-					{mData: 'address'},
-					{mData: 'mobile'},
-					{mData: 'client_id'},
-					{mData: null},
+		            {mData: 'filename'},
+					{mData: 'created'},         
+		            {mData: 'success_count'},
+		            {mData: 'failed_count'},
+		            {mData: 'total'},
+					{mData: null}
 		        ],
 		        "aoColumnDefs": [
-		            {'bSearchable': true, 'aTargets': [0, 1, 2, 3, 8, 9]},
+		            {'bSearchable': false, 'aTargets': [0]},
+					{'bSearchable': true, 'aTargets': [1]},
 		            {
-		                "targets": [6,7,8,9,10],
+		                "targets": [0],
 		                "visible": false,
 		                "searchable": false,
 		            },
+		            
 		            {
 		                // The `data` parameter refers to the data for the cell (defined by the
 		                // `data` option, which defaults to the column being worked with, in
 		                // this case `data: 0`.
 		                "render": function (data, type, row) {
-							if(row['avatar']){
-								newData =  '<img src="'+BASE_URL+'uploads/'+row['client_id']+'/profile-picture/'+row['avatar']+'" alt="'+row['username']+'" style="width:25px; height:25px;" />';
-							}else{ 
-								newData =  '<img src="<?php echo $this->gravatar->get("'+row['email']+'", 25);?>" />';
-							}
+		
+							newData =  row['id'];
+							
 							return newData;
 		                },
 		                "targets": 0
@@ -280,52 +291,34 @@
 		                // this case `data: 1`.
 		                //row['statuses'] != 0
 		                "render": function (data, type, row) {
-		                    newData = "";
-							
-							if(can_view){
-								newData += '<a rel="tooltip" data-placement="top" data-original-title="<?php echo $this->lang->line('__common_details');?>" href="'+user_link+'/'+row['id']+'">'+ row['fullname'] + '</a>';
-							}else{
-								newData += row['fullname']
-							}
-		                   
+
+		                    newData = row['filename'];
 		                    return newData;
 
 		                },
 		                "targets": 1
 		            },
-		            {
+					{
 		                // The `data` parameter refers to the data for the cell (defined by the
 		                // `data` option, which defaults to the column being worked with, in
 		                // this case `data: 1`.
 		                //row['statuses'] != 0
 		                "render": function (data, type, row) {
-		                    newData = "";
-		                   
-		                   if(row['birthday']){
-								newData = row['birthday'];
-							}else{
-								newData = '--';
-							}
+		                    newData  = row['created'];
+							
 		                    return newData;
 
 		                },
 		                "targets": 2
 		            },
-		            {
+					{
 		                // The `data` parameter refers to the data for the cell (defined by the
 		                // `data` option, which defaults to the column being worked with, in
 		                // this case `data: 1`.
 		                //row['statuses'] != 0
 		                "render": function (data, type, row) {
-		                    newData = "";
-
-							if(row['address']){
-								address = row['address'];
-							}else{
-								address = '--';
-							}
-		                    newData  = address;
-							
+		                    
+		                    newData  = '<div class="text-center">'+row['success_count']+'</div>';
 		                    return newData;
 
 		                },
@@ -337,22 +330,28 @@
 		                // this case `data: 1`.
 		                //row['statuses'] != 0
 		                "render": function (data, type, row) {
-		                    newData = "";
-
-							if(row['mobile']){
-								mobile = row['mobile'];
-							}else{
-								mobile = '--';
-							}
+		                    newData = '<div class="text-center">'+row['failed_count']+'</div>';
 							
-		                    newData = mobile ;
-
 		                    return newData;
 
 		                },
 		                "targets": 4
-		            }, 
+		            },
 		            {
+		                // The `data` parameter refers to the data for the cell (defined by the
+		                // `data` option, which defaults to the column being worked with, in
+		                // this case `data: 1`.
+		                //row['statuses'] != 0
+		                "render": function (data, type, row) {
+
+		                    newData = '<div class="text-center">'+row['total']+'</div>';
+							
+		                    return newData;
+
+		                },
+		                "targets": 5
+		            },
+		           {
 		                // The `data` parameter refers to the data for the cell (defined by the
 		                // `data` option, which defaults to the column being worked with, in
 		                // this case `data: 4`.
@@ -360,15 +359,12 @@
 		                    newData = "";
 
 							if(can_delete){
-								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'patients/delete/'+row['id']+'/" class="direct"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
+								newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'import/delete/'+row['id']+'" class="direct"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
 							}
-							if(can_update){
-								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'patients/view/'+row['id']+'/" class="preview"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
-							}
-							newData += '<a rel="tooltip" data-placement="bottom" data-original-title="Que" href="'+BASE_URL+'patients/patients/que/'+row['id']+'" class="preview"><i class="fas fa-book fa-lg"></i></a>&nbsp;';
-		                    return newData;
+							
+							return newData;
 		                },
-		                "targets": 5
+		                "targets": 6
 		            },
 		        ],
 		        "createdRow": function (row, data, index)
@@ -383,30 +379,12 @@
 		
 	};
 
-	var pagedestroy = function() {
-
-		/*
-		 Example below:
-
-		 $("#calednar").fullCalendar( 'destroy' );
-		 if (debugState){
-		 root.console.log("✔ Calendar destroyed");
-		 }
-
-		 For common instances, such as Jarviswidgets, Google maps, and Datatables, are automatically destroyed through the app.js loadURL mechanic
-
-		 */
-	}
-	// end destroy
-
 	loadScript(BASE_URL+"js/bootbox.min.js", function(){
 		loadScript(BASE_URL+"js/plugin/datatables/jquery.dataTables.min.js", function(){
-
 			loadScript(BASE_URL+"js/plugin/datatables/dataTables.bootstrap.min.js", function(){
 				loadScript(BASE_URL+"js/plugin/datatable-responsive/datatables.responsive.min.js", pagefunction)
 			});
-				
 		});
 	});
-
+		
 </script>

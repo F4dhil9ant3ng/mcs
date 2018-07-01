@@ -190,8 +190,8 @@ class Queings extends Secure
 
 		//get default rxpad template
 		//rx_template
-		
-		$tx_template = ($this->config->item('rx_template') != '') ? $this->Template->get_info($this->config->item('rx_template'))->temp_content : $this->Presets->get_info(1)->temp_content;
+		$tx_template = html_entity_decode(html_entity_decode($this->load->view('rxpad', '', TRUE)));
+		//$tx_template = ($this->config->item('rx_template') != '') ? $this->Template->get_info($this->config->item('rx_template'))->temp_content : $this->Presets->get_info(1)->temp_content;
 
 		//Replace variables from the Templates
         $html_ = str_replace(
