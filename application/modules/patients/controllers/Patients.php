@@ -226,10 +226,10 @@ class Patients extends Secure
     function delete($user_id)
     {
 
-    	if ($this->users->delete_user($user_id)) {
-			echo json_encode(array('success' => true, 'message' => 'User successfully deletd!'));
+    	if ($this->Patient->delete($user_id)) {
+			echo json_encode(array('success' => true, 'message' => 'Patient successfully deletd!'));
 		} else {
-			echo json_encode(array('success' => false, 'message' => 'User cannot be deletd!'));
+			echo json_encode(array('success' => false, 'message' => 'Patient cannot be deleted!'));
 		}
 
     }

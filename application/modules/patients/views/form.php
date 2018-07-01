@@ -279,8 +279,8 @@
                 
                 $(form).ajaxSubmit({
                     beforeSend: function () {
-                        $('#submit').html('Please wait...');
-                        $('#submit').attr("disabled", "disabled");
+                        $(form).find('#submit').html('Please wait...');
+                        $(form).find('#submit').attr("disabled", "disabled");
                     },
                     success:function(response)
                     {
@@ -294,8 +294,8 @@
                         {
                             mcs.init_smallBox("Error", response.message);
                         }                   
-                        $('#submit').text('Submit');
-                        $('#submit').removeAttr("disabled");
+                        $(form).find('#submit').text('Submit');
+                        $(form).find('#submit').removeAttr("disabled");
 
                         $('body').find('.create').attr('disabled', false);
                     },

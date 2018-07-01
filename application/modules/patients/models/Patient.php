@@ -119,4 +119,10 @@ class Patient extends User_model
 		return $success;
 		
 	}
+
+	function delete($id)
+	{
+		$this->db->where('id', $id);
+		return $this->db->delete('users');
+	}
 }
