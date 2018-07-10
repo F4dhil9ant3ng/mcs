@@ -11,6 +11,7 @@
  * @link        http://www.myclinicsoft.com
  * 
  */
+
 class Template extends CI_Model
 {	
 	private $table              = 'templates';              

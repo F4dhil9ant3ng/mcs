@@ -81,5 +81,5 @@ class Que extends CI_Cart {
         return null;    
     }
 }
- /* End of file: MY_Cart.php */
- /* Location: ./application/libraries/MY_Cart.php */
+ /* End of file: Que.php */
+ /* Location: ./application/libraries/Que.php */

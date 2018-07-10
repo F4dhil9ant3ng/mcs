@@ -12,7 +12,7 @@
  * @license			http://philsturgeon.co.uk/code/dbad-license
  * @link			http://getsparks.org/packages/template/show
  */
-class Layout
+class Layouts
 {
 	private $_module = '';
 	private $_controller = '';

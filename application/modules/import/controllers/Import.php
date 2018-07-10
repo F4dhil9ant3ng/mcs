@@ -19,7 +19,8 @@ class Import extends Secure {
 	public function __construct()
 	{
 		parent::__construct();
-		
+        $this->load->model('import/Import_mdl');
+        $this->load->model('auth/Users');
 	}
 	
 	function _remap($method, $params = array()) {
@@ -90,27 +91,9 @@ class Import extends Secure {
 	
 	public function import_csv() {
 		$this->load->model('patients/Patient');
-		$this->load->model('import/Import_mdl');
+		
         $msg = 'do_excel_import';
- 
-//        echo $_FILES['file_path']['tmp_name'];
-//        if (($handle = fopen($_FILES['file_path']['tmp_name'], "r")) !== FALSE) {
-//            while (($data = fgetcsv($handle)) !== FALSE) {
-//                echo "<pre>";
-//                print_r($data);
-////                $sql = "INSERT INTO record ( id, name, marks) VALUES ( '" . mysql_escape_string($data[0]) . "','" . mysql_escape_string($data[1]) . "','" . mysql_escape_string($data[2]) . "')";
-////                $query = mysql_query($sql);
-////                if ($query) {
-////                    echo "row inserted\n";
-////                } else {
-////                    echo die(mysql_error());
-////                }
-//            }
-//            fclose($handle);
-//        }
-//
-//        exit;
- 
+
         $failCodes = array();
         $successCounts = array();
         $totalRecord = 0;
@@ -120,107 +103,100 @@ class Import extends Secure {
         $ext = explode("/", $_FILES['file_path']['type']);
         $type = strtolower(str_replace("\"", "", $ext[1]));
  
-        // if (!in_array($type, array('csv', 'x-comma-separated-values', 'comma-separated-values', 'vnd.ms-excel'))) {
-        //     $msg = 'Import file type not suported';
- 
-        //     $this->session->set_flashdata('alert_error', $msg);
-        //     redirect('');
-        // }
- 
-        // if ($_FILES['file_path']['error'] != UPLOAD_ERR_OK) {
-        //     $msg = 'Import file failed';
- 
-        //     $this->session->set_flashdata('alert_error', $msg);
-        //     redirect('');
+        if ($_FILES['file_path']['error'] != UPLOAD_ERR_OK) {
+            
+            $msg = 'Import file failed';
 
-        // } else {
+        } else {
 
-            //$config['upload_path'] = './uploads/';
             $config['upload_path'] = FCPATH . '/uploads/'.$this->client_id.'/imported-file/';
             $config['file_name'] = random_string('numeric', 5) . '_' . date('YmdHis', time()) . $_FILES['file_path']['name'];
             $config['allowed_types'] = 'csv|comma-separated-values|vnd.ms-excel';
             $this->load->library('upload', $config);
-            //  $this->upload->do_upload('file_path');
+            
             //check directory if exists
 			if(!is_dir($config['upload_path']))
 			{
 				//create if not
 				mkdir($config['upload_path'], 0755, TRUE);
-			}
-
-            $import_data['filename'] = $config['file_name'];
- 
-            if (($handle = fopen($_FILES['file_path']['tmp_name'], "r")) !== FALSE) {
-                //Skip first row
-//                fgetcsv($handle);
-            	$is_header_removed = FALSE;
-                $i = 0;
-                while (($data = fgetcsv($handle)) !== FALSE) {
- 					if($i > 0) {
-
-	                    $import_data['module'] = "Patients";
-	                    if ($this->_checkBlankRow($data) == 0) {
-	                        $blankRow++;
-	                        continue;
-	                    }
-
-	                    $all_data = $this->_set_data($data);
-
-	                    $user_data = $all_data['user_data'];
-	                    $profile_data = $all_data['profile_data'];
-	                    $custom_data = $all_data['custom_data'];
-
-	                    //print_trace($all_data,false,true);
-	                    if (empty($user_data['email']) || empty($user_data['username'])) {
-	                        $failCodes[] = $i;
-	                        $totalRecord++;
-	                        continue;
-	                    }
-	                    if(!$this->Patient->save($user_data, $profile_data, $custom_data, $id = -1)) {
-	                        $failCodes[] = $i;
-	                        $totalRecord++;
-	                    } else {
-	                        $successCounts[] = $i;
-	                        $totalRecord++;
-	                    }
-	                             
-	                    
-	                }
-	                $i++;
-                }
-                fclose($handle);
- 
-                $import_data['created'] = date("Y-m-d H:i:s");
-                $import_data['client_id'] = $this->client_id;
-            } else {
-                $this->session->set_flashdata('alert_error', 'Your upload file has no data or not in supported format.');
-                redirect('');
             }
-        // }
- 
+            
+            if ($this->upload->do_upload('file_path'))
+			{
+                $import_data['filename'] = $config['file_name'];
+    
+                if (($handle = fopen($_FILES['file_path']['tmp_name'], "r")) !== FALSE) {
+
+                    $is_header_removed = FALSE;
+                    $i = 0;
+                    while (($data = fgetcsv($handle)) !== FALSE) {
+
+                        if($i > 0) {
+
+                            $import_data['module'] = "Patients";
+                            if ($this->_checkBlankRow($data) == 0) {
+                                $blankRow++;
+                                continue;
+                            }
+
+                            $all_data = $this->_set_data($data);
+
+                            $user_data = $all_data['user_data'];
+                            $profile_data = $all_data['profile_data'];
+                            $custom_data = $all_data['custom_data'];
+                            
+                            // don't duplicate people with same email
+                            $id = -1;
+
+                            // if ($this->Users->_get_user_by_email($data[1])->num_rows() > 0) {
+                            //     $failCodes[] = $i;
+                            //     $totalRecord++;
+                                // $id = $this->Users->_get_user_by_email($data[1])->row('id');
+    
+                            //     continue;
+                            // }
+                    
+                            if(!$this->Patient->save($user_data, $profile_data, $custom_data, $id)) {
+                                $failCodes[] = $i;
+                                $totalRecord++;
+                            } else {
+                                $successCounts[] = $i;
+                                $totalRecord++;
+                            }
+
+                        }
+                        $i++;
+                    }
+                    fclose($handle);
+    
+                    $import_data['created'] = date("Y-m-d H:i:s");
+                    $import_data['client_id'] = $this->client_id;
+                }
+            }else{
+                $success  = false;
+                $msg = $this->upload->display_errors();
+            }
+        }
+        
         $import_data['success_count'] = count($successCounts);
         $import_data['failed_count'] = count($failCodes);
         $import_data['total_records'] = $totalRecord;
  
         $success = true;
+
         if (count($failCodes) > 1) {
             $msg = "Most tasks imported. But some were not, here is list of their CODE (" . count($failCodes) . "): " . implode(", ", $failCodes);
             $success = false;
         } else {
         	
-            $this->Import_mdl->save($import_data, $this->client_id);
+            $this->Import_mdl->insert($import_data);
             $msg = "Successfully tasks imported.";
         }
  
-        $retVal = ($success == true) ? 'alert_success' : 'alert_error';
-        $this->session->set_flashdata($retVal, $msg);
-        redirect('');
+        echo json_encode(array('success' => $success, 'message' => $msg));
     }
 
     private function _checkBlankRow($data) {
-//            if(strpos("/$type/",strtolower($data[0])))
-//                    return 0;
-//            strpos($type, 'are') !== false
         $str = implode(",", $data);
         $str = trim(str_replace(",", "", $str));
         return strlen($str);
@@ -258,12 +234,12 @@ class Import extends Secure {
         );
     }
 
-	function delete($id)
+    function delete($id)
 	{
 
-    	if ($res = $this->Custom_field->delete($id)) 
+    	if ($res = $this->Import_mdl->delete($id)) 
     	{
-			echo json_encode(array('success' => true, 'message' => 'Custom fiels successfully deletd!'));
+			echo json_encode(array('success' => true, 'message' => 'Import file successfully deleted!'));
 		} 
 		else 
 		{

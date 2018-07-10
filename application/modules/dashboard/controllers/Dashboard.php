@@ -1,5 +1,5 @@
 <?php
-require_once APPPATH. 'modules/secure/controllers/Secure.php';
+// require_once APPPATH. 'modules/secure/controllers/Secure.php';
 
 /*
  * MyClinicSoft
@@ -14,7 +14,7 @@ require_once APPPATH. 'modules/secure/controllers/Secure.php';
  * 
  */
 
-class Dashboard extends Secure {
+class Dashboard extends Admin_Controller {
 
 	function __construct() 
 	{
@@ -35,20 +35,29 @@ class Dashboard extends Secure {
 
 	function index()
 	{
-		$data['module'] = 'Dashboard';
-		$this->load->model('reports/Report');
-		$this->layout->title('Dashboard');
+		// $data['module'] = 'Dashboard';
+		// $this->load->model('reports/Report');
+		// $this->layout->title('Dashboard');
 
-		if ($this->is_ajax) 
-		{
-			$this->load->view('manage', $data);
-        } 
-		else
-		{
-			$this->_set_layout($data);
-			$this->layout->build('manage', $data);
-		}
+		// if ($this->is_ajax) 
+		// {
+		// 	$this->load->view('manage', $data);
+        // } 
+		// else
+		// {
+		// 	$this->_set_layout($data);
+		// 	$this->layout->build('manage', $data);
+		// }
 		
+		// Set data in the layout
+        $this->layout->set(
+            array(
+                'module'           => 'Dashboard'
+            )
+        );
+
+        $this->layout->buffer('content', 'manage');
+        $this->layout->render();
 	}
 
 	function check_matrix() {

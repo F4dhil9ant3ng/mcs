@@ -13,7 +13,7 @@
  */
 class Setting extends CI_Model 
 {
-	
+	public $settings = array();
 	function exists($client_id, $key)
 	{
 		$this->db->from('app_config');	
@@ -93,6 +93,26 @@ class Setting extends CI_Model
 	function delete_all()
 	{
 		return $this->db->empty_table('app_config'); 
+	}
+
+	public function load_settings()
+	{
+		$app_configs = $this->db->get('fi_settings')->result();
+
+		foreach ($app_configs as $data)
+		{
+			$this->settings[$data->setting_key] = $data->setting_value;
+		}
+	}
+
+	public function setting($key)
+	{
+		return (isset($this->settings[$key])) ? $this->settings[$key] : '';
+	}
+
+	public function set_setting($key, $value)
+	{
+		$this->settings->$key = $value;
 	}
 	/**/
 	function get_client_info($client_id) {

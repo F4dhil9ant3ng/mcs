@@ -74,6 +74,7 @@
                     },
                     success:function(response)
                     {
+                        console.log(response);
                         if(response.success)
                         {
                             mcs.init_smallBox("success", response.message);
